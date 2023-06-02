@@ -11,5 +11,6 @@ router.get('/logout', Users.logout);
 router.post('/searchUserData', Users.searchUserData);
 router.post('/forgotPassword', Users.forgotPassword);
 router.post('/getUserInfo', Users.getUserInfo);
+router.post('/deleteUser', Users.deleteUser);
 
 module.exports = router;

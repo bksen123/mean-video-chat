@@ -6,43 +6,37 @@ require("dotenv").config();
 
 exports.saveUserInfo = async (req, res) => {
   const postData = req.body;
-  if (postData.password) {
-    postData.password = globalService.encryptString(postData.password);
-  }
+  // if (postData.password) {
+  //   postData.password = globalService.encryptString(postData.password);
+  // }
 
   if (postData._id) {
     postData.updatedAt = new Date();
-    if (postData.profileOldImage) {
-      globalService.removeFile(postData.profileOldImage, () => {});
-    }
-    User.updateOne({
-        _id: postData._id,
-      },
-      postData,
-      (err, resp) => {
-        if (err) {
-          return res.json({
-            status: 500,
-            message: "There are some error while update.",
-            data: err,
-          });
-        } else {
-          if (!postData.password) {
-            req.session.currentUser = postData;
-          } else {
-            req.session.destroy();
-          }
-          let checkPassword = postData.password;
-          delete postData.password;
-          return res.json({
-            status: 200,
-            message: checkPassword ?
-              "Your password has been changed successfully." : "User Profile Updated successfully.",
-            data: postData,
-          });
-        }
+    // if (postData.profileOldImage) {
+    //   globalService.removeFile(postData.profileOldImage, () => { });
+    // }
+    let resp = await User.updateOne({ _id: postData._id }, postData);
+    if (resp) {
+      if (!postData.password) {
+        req.session.currentUser = postData;
+      } else {
+        req.session.destroy();
       }
-    );
+      let checkPassword = postData.password;
+      delete postData.password;
+      return res.json({
+        status: 200,
+        message: checkPassword ?
+          "Your password has been changed successfully." : "User Profile Updated successfully.",
+        data: postData,
+      });
+    } else {
+      return res.json({
+        status: 500,
+        message: "There are some error while update.",
+        data: err,
+      });
+    }
   } else {
     postData.email = postData.email.toLowerCase();
     const addUser = new User();
@@ -76,16 +70,19 @@ exports.saveUserInfo = async (req, res) => {
 
 exports.doSignIn = async (req, res) => {
   const postData = req.body;
+  console.log("postData=======", postData);
   postData.email = postData.email.toLowerCase();
   process.env.HOST_NAME = "http://" + req.headers.host + "/";
   process.env.WEBSITE_URL = "http://" + req.headers.host + "/#/";
-  postData.password = globalService.encryptString(postData.password);
   if (postData.email) {
     // delete postData.password;
     delete postData.remember;
+    let userDetails = null
     try {
-      let userDetails = await User.findOne(postData);
+      userDetails = await User.findOne({ email: postData.email });
       if (userDetails) {
+        console.log("userDetails00000000", userDetails);
+
         var token = jwt.sign({
           _id: userDetails._id
         }, process.env.JWT_SECRETKEY, {
@@ -95,17 +92,48 @@ exports.doSignIn = async (req, res) => {
         userDetails = JSON.parse(JSON.stringify(userDetails));
         userDetails.authorization = token;
         req.session.currentUser = userDetails;
-        delete userDetails.password;
         return res.json({
           message: "You have signin successfully!",
           status: 200,
           data: userDetails,
         });
       } else {
-        return res.json({
-          message: "Please provide valid email or password.",
-          status: 400,
+        postData.email = postData.email.toLowerCase();
+        const addUser = new User();
+        Object.keys(postData).forEach((key) => {
+          addUser[key] = postData[key];
         });
+        try {
+          userDetails = await addUser.save();
+          if (userDetails) {
+            var token = jwt.sign({
+              _id: userDetails._id
+            }, process.env.JWT_SECRETKEY, {
+              expiresIn: process.env.TOKEN_EXPIRE // expires in 24 hours 1h, 5m, "10h", "7d"
+            });
+            // console.log("process.env.TOKEN_EXPIRE======", process.env.TOKEN_EXPIRE)
+            userDetails = JSON.parse(JSON.stringify(userDetails));
+            userDetails.authorization = token;
+            req.session.currentUser = userDetails;
+            return res.json({
+              message: "You have signin successfully!",
+              status: 200,
+              data: userDetails,
+            });
+          } else {
+            return res.json({
+              message: "Failed to create account.",
+              status: 500,
+              error: "Getting issue while creating user account.",
+            });
+          }
+        } catch (error) {
+          return res.json({
+            message: "Failed to create an user account.",
+            status: 500,
+            error: error.message,
+          });
+        }
       }
     } catch (error) {
       return res.json({
@@ -181,11 +209,11 @@ exports.forgotPassword = (req, res) => {
 
         const rString = globalService.generateString();
         User.updateOne({
-            _id: user._id,
-          }, {
-            forgotLink: rString,
-            forgotStatus: 1,
-          },
+          _id: user._id,
+        }, {
+          forgotLink: rString,
+          forgotStatus: 1,
+        },
           (err, forgotResp) => {
             if (forgotResp) {
               const linkParam =
@@ -283,24 +311,24 @@ exports.logout = (req, res) => {
 exports.searchUserData = (req, res) => {
   var postData = req.body;
   User.find({
-      $or: [{
-          firstName: {
-            $regex: new RegExp(
-              ".*" + postData.quickSearch.toLowerCase() + ".*",
-              "i"
-            ),
-          },
-        },
-        {
-          lastName: {
-            $regex: new RegExp(
-              ".*" + postData.quickSearch.toLowerCase() + ".*",
-              "i"
-            ),
-          },
-        },
-      ],
+    $or: [{
+      firstName: {
+        $regex: new RegExp(
+          ".*" + postData.quickSearch.toLowerCase() + ".*",
+          "i"
+        ),
+      },
     },
+    {
+      lastName: {
+        $regex: new RegExp(
+          ".*" + postData.quickSearch.toLowerCase() + ".*",
+          "i"
+        ),
+      },
+    },
+    ],
+  },
     (err, data) => {
       if (data === null) {
         return res.json({
@@ -352,5 +380,23 @@ exports.getUserInfo = async (req, res) => {
     }
   } else {
     return res.json(globalService.linkExpiryError());
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  var postData = req.body;
+  let resp = await User.findOneAndDelete({ _id: postData._id });
+  if (resp) {
+    return res.json({
+      status: 200,
+      message: 'User Deleted successfully.',
+      data: resp
+    });
+  } else {
+    return res.json({
+      status: 400,
+      message: 'There are some error while Deleting User.',
+      data: err
+    });
   }
 };
