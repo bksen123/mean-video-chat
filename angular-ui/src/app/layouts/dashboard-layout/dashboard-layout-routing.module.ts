@@ -23,13 +23,13 @@ const routes: Routes = [
             (mod) => mod.UsersModule
           ),
       },
-      {
-        path: 'meet-online',
-        loadChildren: () =>
-          import('../../views/dashboard-pages/zoom-meeting/zoom-meeting.module').then(
-            (mod) => mod.ZoomMeetingModule
-          ),
-      }
+      // {
+      //   path: 'meet-online',
+      //   loadChildren: () =>
+      //     import('../../views/dashboard-pages/zoom-meeting/zoom-meeting.module').then(
+      //       (mod) => mod.ZoomMeetingModule
+      //     ),
+      // }
     ],
   },
 ];

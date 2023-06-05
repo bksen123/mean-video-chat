@@ -1,23 +1,10 @@
+var createError = require("http-errors");
 const express = require("express");
 const app = express();
-const server = require("http").Server(app);
-const { v4: uuidv4 } = require("uuid");
-const cors = require("cors")
-app.set("view engine", "ejs");
-const io = require("socket.io")(server, {
-  cors: {
-    origin: '*'
-  }
-});
-const { ExpressPeerServer } = require("peer");
-const opinions = {
-  debug: true,
-}
-
-var createError = require("http-errors");
 const session = require('express-session');
 var path = require("path");
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser'),
+  cors = require("cors")
 const mongoose = require('mongoose')
 var cookieParser = require("cookie-parser");
 const logger = require('morgan');
@@ -35,11 +22,23 @@ DBConnection.then(
     console.log("connection failed ", err);
   }
 );
+var indexRouter = require("./routes/index");
 var userRouter = require("./routes/users");
 
 if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
 
 
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('./swagger-3.json');
+app.use('/swagger-json-api', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc))
+
+
+/* var YAML = require('yamljs');
+var swaggerYAMLDocument = YAML.load('./swagger-3.yaml');
+app.use('/swagger-yaml-api', swaggerUi.serve, swaggerUi.setup(swaggerYAMLDocument)); */
+
+// session setup
 app.use(session({
   secret: process.env.SESSION_SECRETKEY,
   proxy: true,
@@ -48,6 +47,8 @@ app.use(session({
 }));
 
 
+
+// view engine setup
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(express.static('photos'));
@@ -55,12 +56,12 @@ app.use(logger('dev'));
 app.use(express.json()); //Used to parse JSON bodies
 app.use(
   cors({
-    origin: true,
+    origin: ["http://localhost:4200"],
     credentials: true,
   })
 );
-
-/* app.use(async (req, res) => {
+// HERE WE ARE DOING AUTHORIZATION WITH API/UI WITHOUT UI WE CAN'T ACCESS OUR API. IT WILL BE CHANGE AFTER LOGIN ENV.authorization
+app.use(async (req, res) => {
   const authorization = req.headers.authorization
   if (authorization) {
     const authorization = req.headers.authorization.split(" ")[1]
@@ -89,37 +90,6 @@ app.use(
     }
   }
 })
- */
-
-app.use(express.static("socket-assets"));
-app.use(express.static("views"));
-
-// app.get("/", (req, res) => {
-//   res.redirect(`/${uuidv4()}`);
-// });
-
-app.use("/peerjs", ExpressPeerServer(server, opinions));
-app.get("/:room", (req, res) => {
-  console.log("req.params", req.params);
-  let room = req.params.room;
-  var meetingDetails = room.split("zoom");
-  // console.log("meetingDetails=======", meetingDetails);
-  if (meetingDetails.length > 0) {
-    res.render("room", { roomId: req.params.room });
-  }
-});
-
-io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, userName) => {
-    socket.join(roomId);
-    setTimeout(() => {
-      socket.to(roomId).broadcast.emit("user-connected", userId);
-    }, 1000)
-    socket.on("message", (message) => {
-      io.to(roomId).emit("createMessage", message, userName);
-    });
-  });
-});
 
 app.use(express.urlencoded({
   extended: true
@@ -129,6 +99,30 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.use("/", indexRouter);
 app.use("/users", userRouter);
+app.use('/uploadImage', require('./controllers/localFileUpload'));
+app.use('/fileUploadProgress', require('./controllers/fileUploadProgress'));
 
-server.listen(process.env.PORT || 3000);
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render("error");
+});
+
+// PLEASE UNCOMMENT CODE ON AWS/DIGITALOCEAN SERVER FOR PM2 AND FOREVER but don't need it with microservice
+// app.listen(process.env.PORT, function () {
+//   console.log('Listening on ', process.env.PORT);
+// });
+module.exports = app;
