@@ -1,0 +1,25 @@
+<aside class="sidebar collapse navbar-collapse">
+  <div role="nav" class="sidebar-nav ps">
+    <ul class="nav">
+      <li *ngFor="let navItem of navItems; let parentIndex = index" class="nav-item">
+        <a (click)="addSubmenu(parentIndex)" type="button" class="nav-link" [ngClass]="{'active': navItem.class}"
+          [routerLink]="!navItem.children ? [navItem.url] : []"
+          [class.dropDown-div]="navItem.children && navItem.children.length">
+          <i class="{{navItem.icon}}"></i>
+          {{navItem.name}}
+        </a>
+        <ng-container *ngIf="navItem.children && navItem.children.length">
+          <ul class="list-unstyled dropDown" role="menu" aria-labelledby="button-animated"
+            [class.open]="navItem.showHide">
+            <li (click)="addSubmenu(parentIndex, childIndex);" class=" nav-item" role="menuitem"
+              *ngFor="let subMenu of navItem.children; let childIndex = index">
+              <a class="nav-link " [routerLink]="subMenu.url" [ngClass]="{'submenu-active': subMenu.class}">
+                <i class="{{subMenu.icon}}" [ngClass]="{'submenu-active': subMenu.class}"></i> {{subMenu.name}}
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+      </li>
+    </ul>
+  </div>
+</aside>

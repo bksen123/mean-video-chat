@@ -1,0 +1,73 @@
+@font-face {
+  font-family: 'Nexa';
+  src: url('Nexa-Light.eot');
+  src: url('Nexa-Light.eot?#iefix') format('embedded-opentype'),
+       url('Nexa-Light.svg#Nexa-Light') format('svg'),
+       url('Nexa-Light.ttf') format('truetype'),
+       url('Nexa-Light.woff') format('woff'),
+       url('Nexa-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  src: url('NexaRegular.eot');
+  src: url('NexaRegular.eot?#iefix') format('embedded-opentype'),
+       url('NexaRegular.svg#NexaRegular') format('svg'),
+       url('NexaRegular.ttf') format('truetype'),
+       url('NexaRegular.woff') format('woff'),
+       url('NexaRegular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  src: url('Nexa-Regular-Italic.eot');
+  src: url('Nexa-Regular-Italic.eot?#iefix') format('embedded-opentype'),
+       url('Nexa-Regular-Italic.svg#Nexa-Regular-Italic') format('svg'),
+       url('Nexa-Regular-Italic.ttf') format('truetype'),
+       url('Nexa-Regular-Italic.woff') format('woff'),
+       url('Nexa-Regular-Italic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: italic;
+}
+
+
+@font-face {
+  font-family: 'Nexa';
+  src: url('Nexa-Bold.eot');
+  src: url('Nexa-Bold.eot?#iefix') format('embedded-opentype'),
+       url('Nexa-Bold.svg#Nexa-Bold') format('svg'),
+       url('Nexa-Bold.ttf') format('truetype'),
+       url('Nexa-Bold.woff') format('woff'),
+       url('Nexa-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  src: url('Nexa-Bold-Italic.eot');
+  src: url('Nexa-Bold-Italic.eot?#iefix') format('embedded-opentype'),
+       url('Nexa-Bold-Italic.svg#Nexa-Bold-Italic') format('svg'),
+       url('Nexa-Bold-Italic.ttf') format('truetype'),
+       url('Nexa-Bold-Italic.woff') format('woff'),
+       url('Nexa-Bold-Italic.woff2') format('woff2');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  src: url('NexaHeavy.eot');
+  src: url('NexaHeavy.eot?#iefix') format('embedded-opentype'),
+       url('NexaHeavy.svg#NexaHeavy') format('svg'),
+       url('NexaHeavy.ttf') format('truetype'),
+       url('NexaHeavy.woff') format('woff'),
+       url('NexaHeavy.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+

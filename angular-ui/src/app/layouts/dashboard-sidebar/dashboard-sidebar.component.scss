@@ -1,0 +1,19 @@
+@import "../../../scss/_variables";
+
+.nav-item {
+  border-radius: 0px;
+  border: none;
+  background-color: transparent;
+  color: white;
+  transition: all 0.4s ease 0s;
+  text-transform: capitalize;
+  cursor: pointer;
+  // border-top: 0.1px solid #dee2e6 !important;
+  border-top: 0.1px solid rgb(128, 128, 128) !important;
+
+  &.submenu-active {
+    color: $clrwhite !important;
+    background-color: $customActiveMenu !important;
+    // border-left: blue 5px solid;
+  }
+}

@@ -1,0 +1,134 @@
+<div class="d-flex flex-row">
+  <div class="col-12">
+    <h4 class="opacity-50">AMW Users</h4>
+    <hr />
+  </div>
+</div>
+<div class="container-fluid app-user bg-white py-3 dataDisplaySection">
+  <div class="d-flex justify-content-end mb-3">
+    <div>
+      <button class="btn btn-sm btn-primary ms-3" (click)="showAddEditModal()"><i class="fas fa-plus me-2"></i>Add
+        New</button>
+    </div>
+  </div>
+  <!-- list -->
+  <table [dtOptions]="dtOptions" datatable [dtTrigger]="dtTrigger"
+    class="table table-bordered table-hover table-striped">
+    <thead>
+      <tr class="text-nowrap">
+        <th>S.No</th>
+        <th>Username</th>
+        <th>Email I'd</th>
+        <th>Account Type</th>
+        <th>Created At</th>
+        <th>Status</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="text-wrap">
+      <tr *ngFor="let user of usersList; let i=index">
+        <th scope="row">{{i+1}}</th>
+        <td>{{user.userName}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.role === 'admin' ? 'Admin' : 'User'}}</td>
+        <td>{{user.createdAt | date:'d/M/yyyy'}}</td>
+        <td>
+          <ui-switch (change)="changeUserStatus(user)" [(ngModel)]="user.status" color="#4285F4"
+            defaultBgColor="#d9d9d9" labelOn="Active" labelOff="Inactive">
+          </ui-switch>
+        </td>
+        <td class="text-center">
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-sm edit me-1" (click)="showAddEditModal(user)"><i
+                class="far fa-edit"></i></button>
+            <button type="button" class="btn btn-sm delete" (click)="showUserDeleteModal(user)"><i
+                class="far fa-trash-alt"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- <pre [innerHtml]="usersList | json"> </pre> -->
+
+<div bsModal #showAddEditUserModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',  keyboard: false, animated: true}">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{userInfo._id ? 'Edit' : 'Add'}} User</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row row-xs align-items-center">
+          <div class="mb-3">
+            <label for="userName" class="form-label">User's Full Name
+              <sup [ngClass]="checkvalidation('userName')"><i class="fas fa-star fa-xs"></i></sup>
+            </label>
+            <input type="text" class="form-control" id="userName" maxlength="15" placeholder="Enter userName"
+              name="userName" [(ngModel)]="userInfo.userName">
+          </div>
+          <div class="mb-3">
+            <label for="Email" class="form-label">Email address
+              <sup [ngClass]="checkvalidation('email')"><i class="fas fa-star fa-xs"></i></sup>
+            </label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="Email" placeholder="Enter Email Address" autocomplete="off"
+                maxlength="15" name="email" [(ngModel)]="userInfo.email"
+                (ngModelChange)="patternMatchCheck(userInfo.email, 'email')" [disabled]="userInfo._id ? true :false">
+              <span *ngIf="!userInfo._id" class="input-group-text">@amwebtech.com</span>
+            </div>
+            <div *ngIf="userInfo._id" id="emailHelp" class="form-text">You Can't change the user email address.</div>
+            <p class="alert fade alert-danger show mt-1 mb-0" role="alert"
+              *ngIf="userInfo.email && !inValidateCheck.email && !userInfo._id">
+              Please enter valid email.
+            </p>
+            <p class="alert alert-danger mt-1 mb-0" role="alert" *ngIf="!inValidateCheck.emailExits">
+              This Email Already Exists, please try another one.
+            </p>
+          </div>
+
+          <div class="mb-3">
+            <label for="role" class="form-label">User Role</label>
+            <select id="role" class="form-select" name="role" [(ngModel)]="userInfo.role">
+              <option *ngFor="let role of userRoles; let i=index" [value]="role">
+                {{role === 'admin' ? 'Admin' : 'User'}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <app-alert></app-alert>
+      <div class="modal-footer border-top-0  justify-content-start">
+        <button type="submit" class="btn btn-primary" (click)="addUser()">{{userInfo._id ? 'Update' : 'Add'}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #deleteUserModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true" [config]="{backdrop: 'static', keyboard: false, animated: true}">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><i class="fa fa-trash"></i> Delete User</h4>
+        <button type="button" class="close" (click)="closeModel()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Are you sure want to delete this User?</h4>
+        <p>
+          <b>User Name :</b> {{userInfo.userName}} <br />
+        </p>
+      </div>
+      <div class="modal-footer border-top-0 d-flex  justify-content-start">
+        <button type="button" class="btn btn-default me-1" (click)="closeModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

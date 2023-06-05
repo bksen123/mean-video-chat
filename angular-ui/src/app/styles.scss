@@ -1,0 +1,423 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";
+
+/* Importing Datepicker SCSS file. */
+@import "~ngx-bootstrap/datepicker/bs-datepicker";
+@import "./scss/_variables";
+@import url("./assets/fonts/nexa/font.css");
+@import url("./scss/util.css");
+
+/***** login-signup form *****/
+body {
+  font-size: 14px;
+  // background-color: $clrwhite;
+  background-color: #e4e5e6;
+}
+
+.main {
+  padding-top: 15px;
+}
+
+.custom-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+a {
+  transition: all 0.4s ease 0s;
+}
+
+button:focus {
+  outline: none;
+}
+
+.theme-dark {
+  background-color: $themeDark !important;
+}
+
+.theme-primary {
+  background-color: $primaryClr !important;
+}
+
+.theme-secondary {
+  background-color: $secondaryClr !important;
+}
+
+.theme-dark,
+.dark-theme {
+  background-color: $themeDark !important;
+}
+
+.theme-primary,
+.theme-bg {
+  background-color: $primaryClr !important;
+}
+
+.box-shadow {
+  box-shadow: 0px 0px 4px 1px #cfcfcf;
+}
+
+.border-radius {
+  border-radius: 5px;
+}
+
+.m-lr-0 {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.bg-black,
+.black-bg {
+  background-color: $clrblack !important;
+}
+
+.bg-gray,
+.gray-bg {
+  background-color: #f5f5f5 !important;
+}
+
+.white-bg,
+.bg-white {
+  background-color: $clrwhite !important;
+}
+
+.bg-primary,
+.primary-bg {
+  background-color: $primaryClr !important;
+}
+
+.bg-secondary,
+.secondary-bg {
+  background-color: $secondaryClr !important;
+}
+
+.clr-white,
+.white-clr {
+  color: $clrwhite !important;
+}
+
+.clr-black,
+.black-clr {
+  color: $clrblack !important;
+}
+
+.clr-primary,
+.primary-clr {
+  color: $primaryClr !important;
+}
+
+.clr-secondary,
+.secondary-clr {
+  color: $secondaryClr !important;
+}
+
+.btn {
+  transition: all 0.4s ease 0s;
+}
+
+.btn.btn-primary,
+.btn.btn-warning,
+.btn.btn-secondary,
+.btn.btn-default,
+.btn-danger {
+  @include btnDefaultProperty;
+}
+
+.btn-default {
+  background-color: $bgGray;
+}
+
+.btn.btn-primary:not(:disabled):not(.disabled),
+.btn.btn-primary:not(:disabled):not(.disabled),
+.btn.btn-primary:not(:disabled):not(.disabled),
+.btn.btn-primary:not(:disabled):not(.disabled) {
+  @include btnPrimary;
+}
+
+.btn-transparent {
+  @include btnTransparent;
+}
+
+.btn.btn-primary:not(:disabled):not(.disabled):hover,
+.btn.btn-primary:not(:disabled):not(.disabled):focus,
+.btn.btn-primary:not(:disabled):not(.disabled):active {
+  @include btnPrimaryHover;
+}
+
+.btn-primary:disabled {
+  @include btnPrimaryDisabled;
+}
+
+.sidebar .nav-dropdown .nav-dropdown-items app-sidebar-nav-link a {
+  padding-left: 30px;
+  // background-color: #f5f5f5 ;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+input[type="radio"]:after {
+  width: 16px;
+  height: 16px;
+  border-radius: 15px;
+  top: -1px;
+  left: -2px;
+  position: relative;
+  background-color: #d1d3d1;
+  content: "";
+  display: inline-block;
+  visibility: visible;
+  border: 2px solid $primaryBtnClr;
+}
+
+input[type="radio"]:checked:after {
+  width: 16px;
+  height: 16px;
+  border-radius: 15px;
+  top: -1px;
+  left: -2px;
+  position: relative;
+  background-color: $primaryBtnClr;
+  content: "";
+  display: inline-block;
+  visibility: visible;
+  border: 2px solid $primaryBtnClr;
+}
+
+.form-check-input:checked {
+  background-color: $primaryBtnClr;
+  border-color: $primaryBtnClr;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.form-check-input:focus {
+  border-color: $primaryBtnClr;
+  outline: 0;
+  box-shadow: none;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.toast-container .ngx-toastr {
+  width: 350px !important;
+}
+
+.toast-success {
+  background-color: $themecolor !important;
+}
+
+.alert {
+  padding: .5rem 1rem;
+}
+
+.edit {
+  background-color: $primaryBtnClr;
+  color: $clrwhite;
+}
+
+.delete {
+  background-color: $secondaryBtnClr;
+  color: $clrwhite;
+}
+
+.switch-medium small {
+  width: 25px !important;
+  height: 25px !important;
+}
+
+.switch .on {
+  top: 14% !important;
+  left: 15% !important;
+}
+
+.switch-medium.switch-labeled.checked small {
+  left: 50px !important;
+}
+
+.switch .off {
+  top: 14% !important;
+  right: 8% !important;
+}
+
+.switch-medium.switch-labeled {
+  width: 78px !important;
+}
+
+.switch-medium {
+  width: 50px !important;
+  height: 27px !important;
+  border-radius: 30px;
+}
+
+.switch-medium.switch-labeled.checked small {
+  left: 54px !important;
+}
+
+.modal {
+  .close {
+    background: none;
+    border-style: none;
+    outline: 0;
+    color: $clrwhite;
+
+    span {
+      font-size: 22px;
+    }
+  }
+
+  .modal-content {
+    // background-color: $themecolor;
+    border: none;
+
+    .modal-header {
+      background: $themecolor;
+      border: 1px solid $themecolor;
+      color: $clrwhite;
+      border-bottom: 0px;
+    }
+
+    .modal-body,
+    .modal-footer {
+      // background: $clrwhite;
+      border: 1px solid $clrwhite;
+    }
+  }
+}
+
+.alert {
+  margin-bottom: 0rem;
+}
+
+hr {
+  opacity: 0.10 !important;
+}
+
+.table-bordered,
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #e1e6f1 !important;
+}
+
+table.dataTable.no-footer {
+  margin-bottom: -3px;
+  // margin-bottom: 25px;
+}
+
+table.dataTable {
+  border-collapse: separate !important;
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td {
+  padding: 3px 10px;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  padding-bottom: 7px;
+}
+
+.dataDisplaySection {
+  min-height: calc(100vh - 173px);
+  max-height: calc(100vh - 173px);
+  overflow: auto;
+
+  .my-custom-scrollbar {
+    max-height: calc(100vh - 265px);
+    overflow: auto;
+  }
+}
+
+.ngx-slider {
+  margin: 27px 0 15px !important;
+
+  .ngx-slider-pointer {
+    background-color: #27568a !important;
+    width: 20px !important;
+    height: 20px !important;
+    top: -7px !important;
+
+    &:after {
+      top: 6px !important;
+      left: 6px !important;
+    }
+
+    &.ngx-slider-active:after {
+      background-color: #fff !important;
+    }
+
+    &:hover:after {
+      background-color: #fff !important;
+    }
+  }
+
+  .ngx-slider-selection {
+    background-color: #27568a !important;
+    border-radius: 4px !important;
+  }
+
+  .ngx-slider-bar {
+    height: 6px !important;
+    border-radius: 4px !important;
+  }
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border: none !important;
+}
+
+// .ngx-slider .ngx-slider-bar-wrapper {
+//   left: 0;
+//   box-sizing: border-box;
+//   margin-top: -18px;
+//   padding: 8px 0px;
+//   width: 100%;
+//   height: 24px;
+//   z-index: 1;
+//   border: 1px solid red;
+// }
+
+/* .table-header-fixed {
+  position: -webkit-sticky !important; // this is for all Safari (Desktop & iOS), not for Chrome
+  position: sticky !important;
+  top: 0 !important;
+  font-weight: bolder !important;
+  z-index: 10 !important; // any positive value, layer order is global
+  background: #fff !important;
+} */
+
+/* th {
+  background: white;
+  position: sticky;
+  top: 0;
+}
+ */
+
+// .table > :not(:first-child) {
+//   /* border-top: 2px solid currentColor; */
+// }
+
+.table {
+  width: 100% !important;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+  margin-bottom: 16px;
+}
+
+.dataTables_scrollHeadInner {
+  // width: 98.70% !important;
+  width: calc(100% - 17px) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  color: $clrwhite !important;
+  border: 1px solid #979797;
+  background: $themecolor;
+}

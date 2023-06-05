@@ -1,0 +1,52 @@
+// Variable overrides
+$customActiveMenu:#d53a46;
+$themecolor: #27568a;
+$secondaryClr:#d53a46;
+$secondaryBtnClr:#d53a46;
+$primaryClr:#4285F4;
+$primaryBtnClr:#4285F4;
+$clrwhite: #fff;
+$clrblack:#19151d;
+$noramalAnimation: all 0.4s ease 0s;
+$bgTransparent:transparent;
+$themeDark:#19151d;
+$bgGray:#dbd9d9;
+$danger:red;
+
+@mixin btnTransparent {
+  background: transparent;
+  border: 0;
+}
+
+@mixin btnPrimary {
+  display: inline-block;
+  background-color: $primaryBtnClr;
+  border: none;
+  color: $clrwhite;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: none;
+}
+
+@mixin btnDefaultProperty {
+  // min-width: 140px;
+  font-size: 14px;
+  padding: 10px 17px;
+  border: 0;
+}
+
+@mixin btnPrimaryHover {
+  background-color: $secondaryClr;
+}
+
+@mixin btnPrimaryDisabled {
+  background-color: #4285f4c2;
+}
+
+@function HoverOver($color, $opacity) {
+  @return rgba($color, $opacity);
+}
+
+.text-secondary {
+  color: $secondaryClr !important;
+}

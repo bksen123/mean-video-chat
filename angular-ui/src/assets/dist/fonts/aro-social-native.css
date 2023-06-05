@@ -1,0 +1,109 @@
+@font-face {
+  font-family: 'aro-social-native';
+  src:  url('https://s3.amazonaws.com/icomoon.io/36131/AroSocialIconsNative/aro-social-native.eot?yelej9');
+  src:  url('https://s3.amazonaws.com/icomoon.io/36131/AroSocialIconsNative/aro-social-native.eot?yelej9#iefix') format('embedded-opentype'),
+    url('https://s3.amazonaws.com/icomoon.io/36131/AroSocialIconsNative/aro-social-native.woff2?yelej9') format('woff2'),
+    url('https://s3.amazonaws.com/icomoon.io/36131/AroSocialIconsNative/aro-social-native.ttf?yelej9') format('truetype'),
+    url('https://s3.amazonaws.com/icomoon.io/36131/AroSocialIconsNative/aro-social-native.woff?yelej9') format('woff'),
+    url('https://s3.amazonaws.com/icomoon.io/36131/AroSocialIconsNative/aro-social-native.svg?yelej9#aro-social-native') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-social-"], [class*=" icon-social-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'aro-social-native' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-social-website:before {
+  content: "\e900";
+}
+.icon-social-native-website:before {
+  content: "\e900";
+}
+.icon-social-facebook:before {
+  content: "\f09a";
+}
+.icon-social-native-facebook:before {
+  content: "\f09a";
+}
+.icon-social-twitter:before {
+  content: "\f099";
+}
+.icon-social-native-twitter:before {
+  content: "\f099";
+}
+.icon-social-linkedin:before {
+  content: "\f0e1";
+}
+.icon-social-native-linkedin:before {
+  content: "\f0e1";
+}
+.icon-social-linkedincompany:before {
+  content: "\f0e1";
+}
+.icon-social-linkedinpersonal:before {
+  content: "\f0e1";
+}
+.icon-social-youtube:before {
+  content: "\f16a";
+}
+.icon-social-native-youtube:before {
+  content: "\f16a";
+}
+.icon-social-googleplus:before {
+  content: "\f0d5";
+}
+.icon-social-native-googleplus:before {
+  content: "\f0d5";
+}
+.icon-social-instagram:before {
+  content: "\f16d";
+}
+.icon-social-native-instagram:before {
+  content: "\f16d";
+}
+.icon-social-skype:before {
+  content: "\f17e";
+}
+.icon-social-native-skype:before {
+  content: "\f17e";
+}
+.icon-social-vimeo:before {
+  content: "\e600";
+}
+.icon-social-native-vimeo:before {
+  content: "\e600";
+}
+.icon-social-flickr:before {
+  content: "\e601";
+}
+.icon-social-native-flickr:before {
+  content: "\e601";
+}
+.icon-social-pinterest:before {
+  content: "\e602";
+}
+.icon-social-native-pinterest:before {
+  content: "\e602";
+}
