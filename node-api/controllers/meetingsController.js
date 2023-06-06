@@ -14,14 +14,14 @@ exports.saveMeetings = async (req, res) => {
   var meetingPost = postData;
   meetingPost.totalUsers = postData.userIds.length;
   meetingPost.uuZoomId = uuidv4();
-  console.log("meetingPost=====", meetingPost)
+  // console.log("meetingPost=====", meetingPost)
   try {
     var userResp = await Meetings.create(meetingPost);
-    console.log("userResp====", userResp)
+    // console.log("userResp====", userResp)
     if (userResp) {
       await Promise.all(postData.userIds.map(async (ele) => {
         let userDetails = await User.findOne({ _id: ele._id });
-        console.log("userDetails======", userDetails);
+        // console.log("userDetails======", userDetails);
         let postMeetingUser = {
           userid: ele._id,
           meetingId: userResp._id,
