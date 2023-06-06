@@ -95,15 +95,15 @@ app.use(
 app.use(express.static("socket-assets"));
 app.use(express.static("views"));
 
-app.get("/", (req, res) => {
-  res.redirect(`/${uuidv4()}`);
-});
+// app.get("/", (req, res) => {
+//   res.redirect(`/${uuidv4()}`);
+// });
 
 app.use("/peerjs", ExpressPeerServer(server, opinions));
 app.get("/:room", (req, res) => {
   console.log("req.params", req.params);
   let room = req.params.room;
-  var meetingDetails = room.split("zoom");
+  var meetingDetails = room.split("amw-zoom");
   // console.log("meetingDetails=======", meetingDetails);
   if (meetingDetails.length > 0) {
     res.render("room", { roomId: req.params.room });
