@@ -29,7 +29,7 @@ const user = "test name";
 var peer = new Peer({
   // host: '127.0.0.1',
   host: "/",
-  port: 3000, //it will be used for local
+  // port: 3000, //it will be used for local
   path: "/peerjs",
   config: {
     iceServers: [
@@ -167,9 +167,8 @@ socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
-        <b><i class="far fa-user-circle"></i> <span> ${
-          userName === user ? "me" : userName
-        }</span> </b>
+        <b><i class="far fa-user-circle"></i> <span> ${userName === user ? "me" : userName
+    }</span> </b>
         <span>${message}</span>
     </div>`;
 });
