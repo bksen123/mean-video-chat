@@ -21,7 +21,7 @@ exports.saveMeetings = async (req, res) => {
     if (userResp) {
       await Promise.all(postData.userIds.map(async (ele) => {
         let userDetails = await User.findOne({ _id: ele._id });
-        console.log("userDetails======", userDetails);
+        // console.log("userDetails======", userDetails);
         let postMeetingUser = {
           userid: ele._id,
           meetingId: userResp._id,
@@ -35,6 +35,7 @@ exports.saveMeetings = async (req, res) => {
             markerData: {
               meeting_title: globalService.capitalize(userResp.title),
               name: globalService.capitalize(ele.userName),
+              AMW_LOGO: 'https://amw-zoom.onrender.com/assets/img/brand/AMW_Logo-2.png',
               websiteUrl: process.env.WEBSITE_URL,
               acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement',
               amw_zoom_meeting: process.env.WEBSITE_URL + 'login/' + userResp.uuZoomId + 'amw-zoom' + ele._id,
@@ -45,7 +46,7 @@ exports.saveMeetings = async (req, res) => {
             html: "",
             templateName: "amw-zoom-invitation", // NEW
           };
-          console.log("prepareEmailConfig", prepareEmailConfig);
+          // console.log("prepareEmailConfig", prepareEmailConfig);
           globalService.prepareEmailData(prepareEmailConfig);
         }
       }));
