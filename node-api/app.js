@@ -21,7 +21,7 @@ var bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 var cookieParser = require("cookie-parser");
 const logger = require('morgan');
-const globalService = require("./core/globalService");
+// const globalService = require("./core/globalService");
 mongoose.Promise = global.Promise;
 
 // connect to db
@@ -36,6 +36,7 @@ DBConnection.then(
   }
 );
 var userRouter = require("./routes/users");
+var meetingRouter = require("./routes/meetings");
 
 if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
 
@@ -130,5 +131,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use("/users", userRouter);
+app.use("/meetings", meetingRouter);
 
 server.listen(process.env.PORT || 3000);
