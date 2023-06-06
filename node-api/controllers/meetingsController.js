@@ -21,7 +21,7 @@ exports.saveMeetings = async (req, res) => {
     if (userResp) {
       await Promise.all(postData.userIds.map(async (ele) => {
         let userDetails = await User.findOne({ _id: ele._id });
-        // console.log("userDetails======", userDetails);
+        console.log("userDetails======", userDetails);
         let postMeetingUser = {
           userid: ele._id,
           meetingId: userResp._id,
@@ -40,11 +40,12 @@ exports.saveMeetings = async (req, res) => {
               amw_zoom_meeting: process.env.WEBSITE_URL + 'login/' + userResp.uuZoomId + 'amw-zoom' + ele._id,
               userName: globalService.capitalize(ele.userName),
             },
-            templatePath: "public/assets/emailtemplates/amw-zoom-invitation.html",
+            templatePath: "node-api/public/assets/emailtemplates/amw-zoom-invitation.html",
             subject: "AMW ZOOM MEETING FOR " + userResp.title.toUpperCase(),
             html: "",
             templateName: "amw-zoom-invitation", // NEW
           };
+          console.log("prepareEmailConfig", prepareEmailConfig);
           globalService.prepareEmailData(prepareEmailConfig);
         }
       }));

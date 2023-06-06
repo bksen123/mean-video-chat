@@ -94,6 +94,7 @@ exports.replaceMarker = (markerData, messages, callBack) => {
 };
 
 exports.emailSend = async (emailData, mainCb) => {
+  console.log("emailData", emailData);
   /* 	sgMail.setApiKey(process.env.SEND_GRID_API);
       const msg = {
         from: process.env.SEND_GRID_FROM_EMAIL,
