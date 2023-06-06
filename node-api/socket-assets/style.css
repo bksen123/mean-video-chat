@@ -117,6 +117,10 @@ video {
 
   overflow: scroll;
   height: 0px;
+
+  /* overflow: auto; */
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .main__chat_window::-webkit-scrollbar {
