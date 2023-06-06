@@ -44,9 +44,12 @@
   flex-grow: 1;
   display: flex;
   height: 350px;
+  overflow: hidden;
   overflow: scroll;
-  justify-content: center;
-  align-items: center;
+
+
+  /* justify-content: center; */
+  /* align-items: center; */
   /* padding: 1rem; */
   padding: 5rem 6rem 1rem 6rem;
   background-color: var(--main-dark);
@@ -106,6 +109,9 @@ video {
 .main__chat_window {
   flex-grow: 1;
   overflow-y: scroll;
+
+  overflow: scroll;
+  height: 0px;
 }
 
 .main__chat_window::-webkit-scrollbar {
