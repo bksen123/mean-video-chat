@@ -11,6 +11,9 @@ var Meetings = new Schema({
   meetingDate: {
     type: Date,
   },
+  uuZoomId: {
+    type: String,
+  },
   from: {
     type: String,
   },
@@ -35,6 +38,9 @@ var MeetingUsers = new Schema({
   },
   meetingId: {
     type: mongoose.Schema.Types.ObjectId, required: true, ref: 'meetings'
+  },
+  uuZoomId: {
+    type: String,
   },
   userAck: {
     type: Boolean,

@@ -1,43 +1,54 @@
 const { Meetings, MeetingUsers } = require("../models/meetingsModel.js");
+const User = require("../models/usersModel.js");
+
 const globalService = require("../core/globalService");
 var jwt = require('jsonwebtoken');
 require("dotenv").config();
 const asyncHandle = require("async");
+const { v4: uuidv4 } = require("uuid");
+
 
 
 exports.saveMeetings = async (req, res) => {
   const postData = req.body;
   var meetingPost = postData;
   meetingPost.totalUsers = postData.userIds.length;
-  console.log("postData")
+  meetingPost.uuZoomId = uuidv4();
+  // console.log("meetingPost=====", meetingPost)
   try {
     var userResp = await Meetings.create(meetingPost);
+    // console.log("userResp====", userResp)
     if (userResp) {
       await Promise.all(postData.userIds.map(async (ele) => {
+        let userDetails = await User.findOne({ _id: ele._id });
+        console.log("userDetails======", userDetails);
         let postMeetingUser = {
           userid: ele._id,
-          meetingId: userResp._id
+          meetingId: userResp._id,
+          uuZoomId: userResp.uuZoomId
         }
         var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
         if (MeetinUserRes) {
           var prepareEmailConfig = {
-            email: user.email,
-            firstName: globalService.capitalize(ele.userName),
+            email: userDetails.email,
+            userName: globalService.capitalize(ele.userName),
             markerData: {
+              meeting_title: globalService.capitalize(userResp.title),
               name: globalService.capitalize(ele.userName),
               websiteUrl: process.env.WEBSITE_URL,
-              recoverPasswordLink: linkParam,
-              userName: ele.userName,
+              acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement',
+              amw_zoom_meeting: process.env.WEBSITE_URL + 'login/' + userResp.uuZoomId + 'amw-zoom' + ele._id,
+              userName: globalService.capitalize(ele.userName),
             },
-            templatePath: "public/assets/emailtemplates/amw-zoom-invitation.html",
-            subject: "AMW Zoom meeting for " + userResp.title,
+            templatePath: "node-api/public/assets/emailtemplates/amw-zoom-invitation.html",
+            subject: "AMW ZOOM MEETING FOR " + userResp.title.toUpperCase(),
             html: "",
             templateName: "amw-zoom-invitation", // NEW
           };
-          await globalService.prepareEmailData(prepareEmailConfig, (err, resp) => { });
+          console.log("prepareEmailConfig", prepareEmailConfig);
+          globalService.prepareEmailData(prepareEmailConfig);
         }
       }));
-      console.log('final Res====');
       return res.json({
         message: "Meeting Created Successfuly.",
         status: 200,
