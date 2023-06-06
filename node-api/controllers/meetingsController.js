@@ -1,28 +1,76 @@
-const Meeting = require("../models/meetingsModel.js");
+const { Meetings, MeetingUsers } = require("../models/meetingsModel.js");
 const globalService = require("../core/globalService");
 var jwt = require('jsonwebtoken');
-
 require("dotenv").config();
+const asyncHandle = require("async");
+
 
 exports.saveMeetings = async (req, res) => {
   const postData = req.body;
   var meetingPost = postData;
   meetingPost.totalUsers = postData.userIds.length;
-  console.log("meetingPost", meetingPost);
-  return;
+  console.log("postData")
   try {
-    var userResp = await Meeting.create();
+    var userResp = await Meetings.create(meetingPost);
     if (userResp) {
+      await Promise.all(postData.userIds.map(async (ele) => {
+        let postMeetingUser = {
+          userid: ele._id,
+          meetingId: userResp._id
+        }
+        var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
+        if (MeetinUserRes) {
+          var prepareEmailConfig = {
+            email: user.email,
+            firstName: globalService.capitalize(ele.userName),
+            markerData: {
+              name: globalService.capitalize(ele.userName),
+              websiteUrl: process.env.WEBSITE_URL,
+              recoverPasswordLink: linkParam,
+              userName: ele.userName,
+            },
+            templatePath: "public/assets/emailtemplates/amw-zoom-invitation.html",
+            subject: "AMW Zoom meeting for " + userResp.title,
+            html: "",
+            templateName: "amw-zoom-invitation", // NEW
+          };
+          await globalService.prepareEmailData(prepareEmailConfig, (err, resp) => { });
+        }
+      }));
+      console.log('final Res====');
       return res.json({
         message: "Meeting Created Successfuly.",
         status: 200,
         data: userResp,
       });
+      /*  asyncHandle.forEachSeries(postData.userIds, async (ele, cb) => {
+         console.log("ele=======", ele);
+         let postMeetingUser = {
+           userid: ele._id,
+           meetingId: userResp._id
+         }
+         console.log("postMeetingUser", postMeetingUser);
+         var MeetinUserRes = MeetingUsers.create(postMeetingUser);
+         if (MeetinUserRes) {
+           console.log("MeetinUserRes======", MeetinUserRes);
+           cb()
+         } else {
+           cb()
+         }
+         // cb()
+       }, () => {
+         console.log('final Res====');
+         return res.json({
+           message: "Meeting Created Successfuly.",
+           status: 200,
+           data: userResp,
+         });
+       }) */
     } else {
       return res.json({
-        message: "Failed to create account.",
+        message: "Failed to create an user account.",
         status: 500,
-        error: "Getting issue while creating user account.",
+        error: 'There are some error while creating meetin...',
       });
     }
   } catch (error) {

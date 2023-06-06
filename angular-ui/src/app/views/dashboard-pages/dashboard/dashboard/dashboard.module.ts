@@ -3,6 +3,7 @@ import { SharedUiModule } from '../../../../shared-ui';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
   imports: [
     SharedUiModule,
     NgMultiSelectDropDownModule.forRoot(),
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    BsDatepickerModule.forRoot(),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -3,8 +3,8 @@
     <h4>AMW Meetings
 
       <button class="btn btn-sm btn-primary ms-3 pull-right" (click)="showAddEditModal()"><i
-          class="fas fa-plus me-2"></i>Create
-        New Group Meeting</button>
+          class="fas fa-plus me-2"></i>Schedule
+        New Meeting</button>
     </h4>
     <hr />
   </div>
@@ -56,7 +56,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">
-          Create Meeting</h6> <button type="button" class="close" aria-label="Close" (click)="closeModel()">
+          Schedule Meeting</h6> <button type="button" class="close" aria-label="Close" (click)="closeModel()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -66,8 +66,8 @@
             <label for="title" class="form-label">Meeting Title
               <sup [ngClass]="checkvalidation('title')"><i class="fas fa-star fa-xs"></i></sup>
             </label>
-            <input type="text" class="form-control" id="title" maxlength="15" placeholder="Enter meeting title"
-              name="title" [(ngModel)]="userInfo.title">
+            <input type="text" class="form-control" id="title" placeholder="Enter meeting title" name="title"
+              [(ngModel)]="userInfo.title">
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">Meeting Title
@@ -77,12 +77,50 @@
               [placeholder]="'Select AMW Users'" [settings]="usersDropdownSettings" [disabled]="disabled">
             </ng-multiselect-dropdown>
           </div>
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="title" class="form-label">Date (Options)
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text" (click)="dp.toggle()"
+                    [ngClass]="{'text-danger' : !userInfo.meetingDate, 'text-success':userInfo.meetingDate}">
+                    <i class="icon-calendar"></i>
+                  </span>
+                  <input type="text" class="form-control" #dp="bsDatepicker" name="daterange" autocomplete="off"
+                    bsDatepicker
+                    [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD', showWeekNumbers: false }"
+                    placeholder="D.O.B" [(bsValue)]="userInfo.meetingDate">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="title" class="form-label">From Time (Options)
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="icon-calendar"></i>
+                  </span>
+                  <input type="time" class="form-control" name="daterange" autocomplete="off" placeholder="From time"
+                    [(ngModel)]="userInfo.from"> </div>
+              </div>
+              <div class="col-md-4">
+                <label for="title" class="form-label">To Time (Options)
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="icon-calendar"></i>
+                  </span>
+                  <input type="time" class="form-control" name="to" placeholder="To time" [(ngModel)]="userInfo.to">
+                </div>
+              </div>
+            </div>
+          </div>
           <pre [innerHtml]="userInfo | json"> </pre>
         </div>
       </div>
       <app-alert></app-alert>
       <div class="modal-footer border-top-0  justify-content-start">
-        <button type="submit" class="btn btn-primary" (click)="addMeeting()">Save
+        <button type="submit" class="btn btn-primary" (click)="addMeeting()">Schedule
         </button>
       </div>
     </div>

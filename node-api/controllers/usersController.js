@@ -396,7 +396,7 @@ exports.deleteUser = async (req, res) => {
     return res.json({
       status: 400,
       message: 'There are some error while Deleting User.',
-      data: err
+      data: resp
     });
   }
 };
