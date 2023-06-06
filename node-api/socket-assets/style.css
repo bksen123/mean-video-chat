@@ -174,16 +174,28 @@ video {
   display: none;
 }
 
-.header__back {
+/* .header__back {
   display: none;
   position: absolute;
   font-size: 1.3rem;
   top: 17px;
   left: 28px;
-  color: #fff;
+  color: rgb(0, 0, 0);
+} */
+
+@media(min-width: 700px) {
+  .header__back {
+    display: none;
+    position: absolute;
+    font-size: 1.3rem;
+    top: 17px;
+    left: 28px;
+    color: rgb(0, 0, 0);
+  }
 }
 
 @media (max-width: 700px) {
+
   .main__right {
     display: none;
   }
