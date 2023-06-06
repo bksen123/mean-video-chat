@@ -24,13 +24,14 @@ export class isFalseAuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     this.currentUser = this.jwtService.getCurrentUser();
+    // console.log("this.currentUser", this.currentUser);
     if (this.currentUser && this.currentUser.role) {
-      if (this.currentUser.role) {
+      if (this.currentUser.role === environment.role.adminRole) {
         this.router.navigate(['/dashboard']);
         return true;
       } else {
-        this.router.navigate(['/login']);
-        return true;
+        this.jwtService.destroyToken();
+        return false;
       }
     }
     return true;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { currentUser, GlobalService, JwtService, UsersService } from '../../../shared-ui';
@@ -8,6 +8,7 @@ import {
   GoogleLoginProvider,
   SocialUser,
 } from 'angularx-social-login';
+import { environment } from 'src/environments/environment';
 
 class loginUser {
   email: string = '';
@@ -22,7 +23,7 @@ class loginUser {
 export class LoginComponent implements OnInit {
   login: currentUser = new currentUser();
   loadingLoader: boolean = false;
-
+  amwZoomId: string = '';
   constructor(
     private router: Router,
     private jwtService: JwtService,
@@ -30,10 +31,18 @@ export class LoginComponent implements OnInit {
     private usersService: UsersService,
     private globalService: GlobalService,
     private toastr: ToastrService,
-    private socialAuthService: SocialAuthService
+    private socialAuthService: SocialAuthService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe((res: any) => {
+      this.amwZoomId = res.amwZoomId;
+      console.log("this.amwZoomId", this.amwZoomId);
+      if (this.amwZoomId) {
+
+      }
+    });
   }
 
   // HERE WE are doing login with api
@@ -54,10 +63,18 @@ export class LoginComponent implements OnInit {
             this.jwtService.getCurrentUser();
             // this.jwtService.saveConfig(JSON.stringify(configDetails));
             // this.jwtService.getConfig();
-            this.globalService.sendActionChildToParent('Loggin');
-            setTimeout(() => {
-              this.router.navigate(['/dashboard']);
-            }, 3000);
+            // this.globalService.sendActionChildToParent('Loggin');
+            if (this.amwZoomId && userDetails.role === environment.role.userRole) {
+              window.location.replace(environment.cloudS + this.amwZoomId);
+            } else {
+              if (userDetails.role === environment.role.userRole) {
+                this.router.navigate(['/test']);
+              } else {
+                setTimeout(() => {
+                  this.router.navigate(['/dashboard']);
+                }, 3000);
+              }
+            }
           } else {
             this.toastr.error(dataResp.message, 'Error');
             this.loadingLoader = false;

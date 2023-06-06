@@ -10,6 +10,7 @@ export const environment: any = {
   jwtTokenKey: 'amw_mean_zoom_JwtTken',
   currentUserKey: 'amw_mean_zoom_currentUser',
   emaildomain: '@amwebtech.com',
+  cloudS: 'https://amw-zoom.onrender.com/',
   role: {
     adminRole: 'admin', // 1=manager
     userRole: 'user', // 2=user

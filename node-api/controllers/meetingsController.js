@@ -37,7 +37,7 @@ exports.saveMeetings = async (req, res) => {
               name: globalService.capitalize(ele.userName),
               AMW_LOGO: 'https://amw-zoom.onrender.com/assets/img/brand/AMW_Logo-2.png',
               websiteUrl: process.env.WEBSITE_URL,
-              acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement',
+              acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement/' + MeetinUserRes._id + '/' + userDetails._id,
               amw_zoom_meeting: process.env.WEBSITE_URL + 'login/' + userResp.uuZoomId + 'amw-zoom' + ele._id,
               userName: globalService.capitalize(ele.userName),
             },
@@ -46,7 +46,8 @@ exports.saveMeetings = async (req, res) => {
             html: "",
             templateName: "amw-zoom-invitation", // NEW
           };
-          // console.log("prepareEmailConfig", prepareEmailConfig);
+          console.log("prepareEmailConfig", prepareEmailConfig);
+          return;
           globalService.prepareEmailData(prepareEmailConfig);
         }
       }));
