@@ -38,14 +38,13 @@ exports.saveMeetings = async (req, res) => {
               websiteUrl: process.env.WEBSITE_URL,
               acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement',
               amw_zoom_meeting: process.env.WEBSITE_URL + 'login/' + userResp.uuZoomId + 'amw-zoom' + ele._id,
-              userName: ele.userName,
+              userName: globalService.capitalize(ele.userName),
             },
             templatePath: "public/assets/emailtemplates/amw-zoom-invitation.html",
             subject: "AMW ZOOM MEETING FOR " + userResp.title.toUpperCase(),
             html: "",
             templateName: "amw-zoom-invitation", // NEW
           };
-          console.log("prepareEmailConfig======", prepareEmailConfig);
           globalService.prepareEmailData(prepareEmailConfig);
         }
       }));
