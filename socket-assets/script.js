@@ -167,8 +167,53 @@ socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
-        <b><i class="far fa-user-circle"></i> <span> ${userName === user ? "me" : userName
-    }</span> </b>
+        <b><i class="far fa-user-circle"></i> <span> ${
+          userName === user ? "me" : userName
+        }</span> </b>
         <span>${message}</span>
     </div>`;
 });
+
+// let scroller = document.querySelector("#scroller");
+// let anchor = document.querySelector("#anchor");
+
+// function randomMessage() {
+//   return messages[(Math.random() * messages.length) | 0];
+// }
+
+// function appendChild() {
+//   let msg = document.createElement("div");
+//   msg.className = "message";
+//   msg.innerText = randomMessage();
+//   scroller.insertBefore(msg, anchor);
+// }
+// setInterval(appendChild, 1000);
+
+// const targetNode = document.getElementById("scroller");
+
+// const config = { childList: true };
+
+// const callback = function (mutationsList, observer) {
+//   for (let mutation of mutationsList) {
+//     if (mutation.type === "childList") {
+//       window.scrollTo(0, document.body.scrollHeight);
+//     }
+//   }
+// };
+
+// const observer = new MutationObserver(callback);
+// observer.observe(targetNode, config);
+
+// function getMessages() {
+//   shouldScroll =
+//     messages.scrollTop + messages.clientHeight === messages.scrollHeight;
+//   if (!shouldScroll) {
+//     scrollToBottom();
+//   }
+// }
+
+// function scrollToBottom() {
+//   messages.scrollTop = messages.scrollHeight;
+// }
+
+// scrollToBottom();
