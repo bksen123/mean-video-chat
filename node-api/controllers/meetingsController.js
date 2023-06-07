@@ -166,7 +166,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
-    var userResp = await MeetingUsers.findOne(whereObj);
+    var userResp = await MeetingUsers.findOne(whereObj).populate('userId');
     if (userResp && userResp.userAck) {
       return next(null, {
         status: 200,

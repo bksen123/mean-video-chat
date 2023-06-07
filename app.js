@@ -110,10 +110,12 @@ app.get("/:room", (req, res) => {
       uuZoomId: meetingDetails[0],
       userId: meetingDetails[1]
     }, (error, resp) => {
+      console.log("req.session.currentUser====", req.session.currentUser);
+      console.log("resp====", resp);
       if (error || !req.session.currentUser) {
         res.redirect('/#/login/' + room);
       } else {
-        res.render("room", { roomId: meetingDetails[0], userDetails: resp });
+        res.render("room", { roomId: meetingDetails[0], userDetails: resp.data.resp });
       }
     })
   } else {
