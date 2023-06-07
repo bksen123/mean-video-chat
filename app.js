@@ -117,7 +117,6 @@ app.get("/:room", (req, res) => {
         if (error) {
           res.send(' You need to acknowledgement via email before join meeting.');
         } else {
-          // console.log("resp====", resp.data.userId);
           var userDetails = resp.data.userId
           userDetails.roomId = meetingDetails[0]
           res.render("room", { userDetails: userDetails });
