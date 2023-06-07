@@ -11,6 +11,9 @@ var Users = new Schema({
   email: {
     type: String
   },
+  profileImage: {
+    type: String
+  },
   role: {
     type: String
   },

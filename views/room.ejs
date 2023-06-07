@@ -15,8 +15,9 @@
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
   <script>
-    const ROOM_ID = "<%= roomId %>";
-    console.log("ROOM_ID==================", JSON.stringify("<%- userDetails %>"));
+    const ROOM_ID = "<%= userDetails.roomId %>";
+    const userName = '<%= userDetails.userName  %>';
+    const profileImage = '<%= userDetails.profileImage  %>';
   </script>
 </head>
 
@@ -27,6 +28,7 @@
         <div class="logo">
           <div class="text-left">
             <img src="assets/img/brand/AMW_Logo-2.png">
+            <img src="<%= userDetails.profileImage  %>" class="profile-img cursor-pointer">
           </div>
         </div>
       </div>

@@ -24,7 +24,8 @@ showChat.addEventListener("click", () => {
   // document.querySelector(".header__back").style.display = "block";
 });
 
-const user = "test name";
+const user = userName;
+console.log("userName", user);
 // const user = prompt("Enter your name");
 var peer = new Peer({
   // host: '127.0.0.1',
@@ -163,11 +164,10 @@ inviteButton.addEventListener("click", (e) => {
 });
 
 socket.on("createMessage", (message, userName) => {
-  console.log("message======", message);
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
-        <b><i class="far fa-user-circle"></i> <span> ${userName === user ? "me" : userName
+        <b><img src="${profileImage}" class="profile-img cursor-pointer"> <span> ${userName === user ? "me" : userName
     }</span> </b>
         <span>${message}</span>
     </div>`;

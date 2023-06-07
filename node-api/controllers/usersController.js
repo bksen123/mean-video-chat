@@ -70,7 +70,7 @@ exports.saveUserInfo = async (req, res) => {
 
 exports.doSignIn = async (req, res) => {
   const postData = req.body;
-  // console.log("postData=======", postData);
+  console.log("postData=======", postData);
   postData.email = postData.email.toLowerCase();
   process.env.HOST_NAME = "http://" + req.headers.host + "/";
   process.env.WEBSITE_URL = "http://" + req.headers.host + "/#/";
@@ -80,6 +80,7 @@ exports.doSignIn = async (req, res) => {
     let userDetails = null
     try {
       userDetails = await User.findOne({ email: postData.email });
+      await User.updateOne({ email: postData.email }, { profileImage: postData.profileImage });
       if (userDetails) {
         // console.log("userDetails00000000", userDetails);
 
