@@ -98,6 +98,7 @@ app.use(express.static("views"));
 // app.get("/", (req, res) => {
 //   res.redirect(`/${uuidv4()}`);
 // });
+const MeetingCtl = require("./node-api/controllers/meetingsController");
 
 app.use("/peerjs", ExpressPeerServer(server, opinions));
 app.get("/:room", (req, res) => {
@@ -105,7 +106,16 @@ app.get("/:room", (req, res) => {
   let room = req.params.room;
   var meetingDetails = room.split("amw-zoom");
   if (meetingDetails.length > 1) {
-    res.render("room", { roomId: req.params.room });
+    MeetingCtl.getUsersByMeeting({
+      uuZoomId: meetingDetails[0],
+      userId: meetingDetails[1]
+    }, (error, resp) => {
+      if (error || !req.session.currentUser) {
+        res.redirect('/#/login/' + room);
+      } else {
+        res.render("room", { roomId: meetingDetails[0], userDetails: resp });
+      }
+    })
   } else {
     return res.send({
       status: 401,
@@ -116,6 +126,7 @@ app.get("/:room", (req, res) => {
 
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
+    console.log("roomId=========", roomId);
     socket.join(roomId);
     // setTimeout(() => {
     socket.to(roomId).broadcast.emit("user-connected", userId);

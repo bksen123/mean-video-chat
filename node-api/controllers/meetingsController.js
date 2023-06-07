@@ -67,29 +67,6 @@ exports.saveMeetings = async (req, res) => {
         status: 200,
         data: userResp,
       });
-      /*  asyncHandle.forEachSeries(postData.userIds, async (ele, cb) => {
-         console.log("ele=======", ele);
-         let postMeetingUser = {
-           userid: ele._id,
-           meetingId: userResp._id
-         }
-         console.log("postMeetingUser", postMeetingUser);
-         var MeetinUserRes = MeetingUsers.create(postMeetingUser);
-         if (MeetinUserRes) {
-           console.log("MeetinUserRes======", MeetinUserRes);
-           cb()
-         } else {
-           cb()
-         }
-         // cb()
-       }, () => {
-         console.log('final Res====');
-         return res.json({
-           message: "Meeting Created Successfuly.",
-           status: 200,
-           data: userResp,
-         });
-       }) */
     } else {
       return res.json({
         message: "Failed to create an user account.",
@@ -108,34 +85,29 @@ exports.saveMeetings = async (req, res) => {
 
 exports.acknowledgement = async (req, res) => {
   var postData = req.body;
-  console.log("postData========", postData);
-  console.log("where========", {
-    uuZoomId: postData.uuZoomId,
-    userId: postData.userId,
-  });
   try {
-    var userResp = await Meetings.findOneAndUpdate(
+    var userResp = await MeetingUsers.updateOne(
       { uuZoomId: postData.uuZoomId, userId: postData.userId },
       postData
     );
-    console.log("userResp========", userResp);
     if (userResp) {
       return res.json({
         status: 200,
-        message: "Meeting acknowledgement has been Successfully.",
+        message:
+          "Meeting acknowledgement has been Successfully. Please login to join meeting",
         data: userResp,
       });
     } else {
       return res.json({
         status: 500,
-        message: "There are some ",
+        message: "There are some while acknowledgement.",
         data: emailExitResp,
       });
     }
   } catch (error) {
     return res.json({
       status: 500,
-      message: "There are some ",
+      message: "There are some while acknowledgement.",
       data: error,
     });
   }
@@ -236,6 +208,29 @@ exports.getMeetingUsersList = async (req, res) => {
       status: 500,
       message: "Some error occrred.",
       data: error,
+    });
+  }
+};
+
+exports.getUsersByMeeting = async (whereObj, next) => {
+  try {
+    var userResp = await MeetingUsers.findOne(whereObj);
+    if (userResp && userResp.userAck) {
+      return next(null, {
+        status: 200,
+        message: "Meeting verify has been Successfully.",
+        data: userResp,
+      });
+    } else {
+      return next(true, {
+        status: 500,
+        message: "There are some while meeting verify...",
+      });
+    }
+  } catch (error) {
+    return next(error, {
+      status: 500,
+      message: "There are some while meeting verify...",
     });
   }
 };

@@ -151,6 +151,7 @@ exports.doSignIn = async (req, res) => {
 };
 
 exports.getUsersList = async (req, res) => {
+  var postData = req.body;
   try {
     const data = await User.find();
     return res.json({

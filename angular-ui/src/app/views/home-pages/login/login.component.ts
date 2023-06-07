@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
             // this.jwtService.getConfig();
             // this.globalService.sendActionChildToParent('Loggin');
             if (this.amwZoomId) {
-              window.location.replace(environment.cloudS + this.amwZoomId);
+              window.location.replace(environment.baseUrl + this.amwZoomId);
             } else {
               if (userDetails.role === environment.role.userRole) {
                 this.router.navigate(['/you-are-unauthorized']);
