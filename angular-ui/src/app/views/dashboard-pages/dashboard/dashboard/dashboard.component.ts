@@ -50,6 +50,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getMeetings();
+    this.getMeetingEmp();
     this.usersDropdownSettings = {
       singleSelection: false,
       idField: '_id',
@@ -191,4 +193,40 @@ export class DashboardComponent implements OnInit {
       this.toastr.error(error.message, 'Error!');
     });
   }
+
+  getMeetings() {
+    this._meetingsService.getMeetingsList().subscribe(
+      {
+        next: (dataRes: any) => {
+          if (dataRes.status === 200) {
+            this.spinner.hide();
+            console.log('Get All meeting data into component---', dataRes);
+          }
+        },
+        error: (error: any) => {
+          this.spinner.hide()
+          this.toastr.error(error.message, 'Error!');
+        }
+      }
+    )
+  }
+
+  getMeetingEmp() {
+    this._meetingsService.getMeetingsList().subscribe(
+      {
+        next: (dataRes: any) => {
+          if (dataRes.status === 200) {
+            this.spinner.hide();
+            console.log('Get All meeting data into component', dataRes.data[0]._id);
+          }
+        },
+        error: (error: any) => {
+          this.spinner.hide()
+          this.toastr.error(error.message, 'Error!');
+        }
+      }
+    )
+  }
+
 }
+

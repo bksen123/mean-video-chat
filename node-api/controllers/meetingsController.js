@@ -1,13 +1,10 @@
 const { Meetings, MeetingUsers } = require("../models/meetingsModel.js");
 const User = require("../models/usersModel.js");
-
 const globalService = require("../core/globalService");
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 require("dotenv").config();
 const asyncHandle = require("async");
 const { v4: uuidv4 } = require("uuid");
-
-
 
 exports.saveMeetings = async (req, res) => {
   const postData = req.body;
@@ -19,38 +16,52 @@ exports.saveMeetings = async (req, res) => {
     var userResp = await Meetings.create(meetingPost);
     // console.log("userResp====", userResp)
     if (userResp) {
-      await Promise.all(postData.userIds.map(async (ele) => {
-        let userDetails = await User.findOne({ _id: ele._id });
-        // console.log("userDetails======", userDetails);
-        let postMeetingUser = {
-          userId: ele._id,
-          meetingId: userResp._id,
-          uuZoomId: userResp.uuZoomId
-        }
-        var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
-        if (MeetinUserRes) {
-          var prepareEmailConfig = {
-            email: userDetails.email,
-            userName: globalService.capitalize(ele.userName),
-            markerData: {
-              meeting_title: globalService.capitalize(userResp.title),
-              name: globalService.capitalize(ele.userName),
-              AMW_LOGO: 'https://amw-zoom.onrender.com/assets/img/brand/AMW_Logo-2.png',
-              websiteUrl: process.env.WEBSITE_URL,
-              acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement/' + MeetinUserRes.uuZoomId + '/' + userDetails._id,
-              amw_zoom_meeting: process.env.WEBSITE_URL + 'login/' + userResp.uuZoomId + 'amw-zoom' + ele._id,
-              userName: globalService.capitalize(ele.userName),
-            },
-            templatePath: "node-api/public/assets/emailtemplates/amw-zoom-invitation.html",
-            subject: "AMW ZOOM MEETING FOR " + userResp.title.toUpperCase(),
-            html: "",
-            templateName: "amw-zoom-invitation", // NEW
+      await Promise.all(
+        postData.userIds.map(async (ele) => {
+          let userDetails = await User.findOne({ _id: ele._id });
+          // console.log("userDetails======", userDetails);
+          let postMeetingUser = {
+            userId: ele._id,
+            meetingId: userResp._id,
+            uuZoomId: userResp.uuZoomId,
           };
-          console.log("prepareEmailConfig", prepareEmailConfig);
-          return;
-          globalService.prepareEmailData(prepareEmailConfig);
-        }
-      }));
+          var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
+          if (MeetinUserRes) {
+            var prepareEmailConfig = {
+              email: userDetails.email,
+              userName: globalService.capitalize(ele.userName),
+              markerData: {
+                meeting_title: globalService.capitalize(userResp.title),
+                name: globalService.capitalize(ele.userName),
+                AMW_LOGO:
+                  "https://amw-zoom.onrender.com/assets/img/brand/AMW_Logo-2.png",
+                websiteUrl: process.env.WEBSITE_URL,
+                acknowledgement_link:
+                  process.env.WEBSITE_URL +
+                  "acknowledgement/" +
+                  MeetinUserRes.uuZoomId +
+                  "/" +
+                  userDetails._id,
+                amw_zoom_meeting:
+                  process.env.WEBSITE_URL +
+                  "login/" +
+                  userResp.uuZoomId +
+                  "amw-zoom" +
+                  ele._id,
+                userName: globalService.capitalize(ele.userName),
+              },
+              templatePath:
+                "node-api/public/assets/emailtemplates/amw-zoom-invitation.html",
+              subject: "AMW ZOOM MEETING FOR " + userResp.title.toUpperCase(),
+              html: "",
+              templateName: "amw-zoom-invitation", // NEW
+            };
+            console.log("prepareEmailConfig", prepareEmailConfig);
+            return;
+            globalService.prepareEmailData(prepareEmailConfig);
+          }
+        })
+      );
       return res.json({
         message: "Meeting Created Successfully.",
         status: 200,
@@ -83,7 +94,7 @@ exports.saveMeetings = async (req, res) => {
       return res.json({
         message: "Failed to create an user account.",
         status: 500,
-        error: 'There are some error while creating meetin...',
+        error: "There are some error while creating meetin...",
       });
     }
   } catch (error) {
@@ -98,9 +109,15 @@ exports.saveMeetings = async (req, res) => {
 exports.acknowledgement = async (req, res) => {
   var postData = req.body;
   console.log("postData========", postData);
-  console.log("where========", { uuZoomId: postData.uuZoomId, userId: postData.userId });
+  console.log("where========", {
+    uuZoomId: postData.uuZoomId,
+    userId: postData.userId,
+  });
   try {
-    var userResp = await Meetings.findOneAndUpdate({ uuZoomId: postData.uuZoomId, userId: postData.userId }, postData);
+    var userResp = await Meetings.findOneAndUpdate(
+      { uuZoomId: postData.uuZoomId, userId: postData.userId },
+      postData
+    );
     console.log("userResp========", userResp);
     if (userResp) {
       return res.json({
@@ -123,8 +140,6 @@ exports.acknowledgement = async (req, res) => {
     });
   }
 };
-
-
 
 exports.getUsersList = async (req, res) => {
   try {
@@ -171,21 +186,56 @@ exports.emailAlreadyExists = async (req, res) => {
   }
 };
 
-
 exports.deleteUser = async (req, res) => {
   var postData = req.body;
   let resp = await User.findOneAndDelete({ _id: postData._id });
   if (resp) {
     return res.json({
       status: 200,
-      message: 'User Deleted successfully.',
-      data: resp
+      message: "User Deleted successfully.",
+      data: resp,
     });
   } else {
     return res.json({
       status: 400,
-      message: 'There are some error while Deleting User.',
-      data: err
+      message: "There are some error while Deleting User.",
+      data: err,
+    });
+  }
+};
+
+exports.getMeetingsList = async (req, res) => {
+  try {
+    const data = await Meetings.find();
+    console.log("Meeting list Data into controller", data);
+    return res.json({
+      status: 200,
+      message: "Get the Meeting list Successfully.",
+      data: data,
+    });
+  } catch (error) {
+    return res.json({
+      status: 500,
+      message: "Some error occrred.",
+      data: error,
+    });
+  }
+};
+
+exports.getMeetingUsersList = async (req, res) => {
+  try {
+    const data = await MeetingUsers.find();
+    console.log("MeetingUser list Data into controller", data);
+    return res.json({
+      status: 200,
+      message: "Get the MeetingUser list Successfully.",
+      data: data,
+    });
+  } catch (error) {
+    return res.json({
+      status: 500,
+      message: "Some error occrred.",
+      data: error,
     });
   }
 };
