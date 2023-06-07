@@ -11,7 +11,7 @@
 </div>
 <div class="container-fluid app-user bg-white py-3 dataDisplaySection">
   <!-- list -->
-  <table [dtOptions]="dtOptions" datatable [dtTrigger]="dtTrigger"
+  <!-- <table [dtOptions]="dtOptions" datatable [dtTrigger]="dtTrigger"
     class="table table-bordered table-hover table-striped">
     <thead>
       <tr class="text-nowrap">
@@ -46,7 +46,60 @@
         </td>
       </tr>
     </tbody>
+  </table> -->
+
+
+  <table class="table">
+
+    <thead>
+      <tr>
+        <th scope="col">Sn.No</th>
+        <th scope="col">Meeting Title</th>
+        <th scope="col">Total User</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let meeting of meetingsList; let i=index">
+        <th scope="row">{{i+1}}</th>
+        <td>{{meeting.title}}</td>
+        <td>{{meeting.totalUsers}}</td>
+      </tr>
+    </tbody>
+
   </table>
+
+  <br>
+  <br>
+
+
+
+  <div class="accordion accordion-flush" id="accordionFlushExample" *ngFor="let meeting of meetingsList; let i=index">
+
+    <div class="accordion-item">
+
+      <h2 class="accordion-header" id="flush-headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+          {{meeting.title}}
+        </button>
+      </h2>
+      <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the
+          <code>.accordion-flush</code> class. This is the first item's accordion body.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
 </div>
 <!-- <pre [innerHtml]="usersList | json"> </pre> -->
 
@@ -101,7 +154,8 @@
                     <i class="icon-calendar"></i>
                   </span>
                   <input type="time" class="form-control" name="daterange" autocomplete="off" placeholder="From time"
-                    [(ngModel)]="userInfo.from"> </div>
+                    [(ngModel)]="userInfo.from">
+                </div>
               </div>
               <div class="col-md-4">
                 <label for="title" class="form-label">To Time (Options)

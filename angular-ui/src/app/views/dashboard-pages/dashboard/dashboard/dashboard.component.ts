@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit {
   userInfo: meeting = new meeting();
   userRoles: any = environment.role;
   usersList: any[] = [];
+  meetingsList: any[] = [];
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
   dtOptions: DataTables.Settings = {};
@@ -29,7 +30,6 @@ export class DashboardComponent implements OnInit {
   @ViewChild('deleteUserModal', { static: false })
   public deleteUserModal: any = ModalDirective;
   requiredValidation: validationFields = new validationFields();
-
   inValidateCheck: any = {
     email: false,
     emailExits: true,
@@ -200,7 +200,8 @@ export class DashboardComponent implements OnInit {
         next: (dataRes: any) => {
           if (dataRes.status === 200) {
             this.spinner.hide();
-            console.log('Get All meeting data into component---', dataRes);
+            this.meetingsList = dataRes.data;
+            console.log('Get All meeting data into component---', this.meetingsList);
           }
         },
         error: (error: any) => {
