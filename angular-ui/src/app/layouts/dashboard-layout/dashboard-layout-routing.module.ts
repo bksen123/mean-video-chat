@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '', // JUST LOAD HERE DASHBOARD LAYOUT COMPONENT FOR HEADER AND FOOTER AND MIDDLE COMPONENT NO NEED TO LOAD ANY PATH URL BECAUSE WE ARE USING SIMPLE URL. IT WILL LOADS JUST DASHBOARD CHILD  MODULES.
     component: DashboardLayoutComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'dashboard',

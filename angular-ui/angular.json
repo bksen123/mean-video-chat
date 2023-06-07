@@ -37,8 +37,7 @@
               "src/scss/animate.min.css",
               "src/styles.scss",
               "src/scss/style.scss",
-              "node_modules/ngx-toastr/toastr.css",
-              "src/assets/dist/style.css"
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

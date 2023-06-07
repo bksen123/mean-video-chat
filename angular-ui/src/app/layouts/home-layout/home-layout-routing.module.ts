@@ -16,6 +16,14 @@ const routes: Routes = [
             (mod) => mod.LoginModule
           ),
       },
+      {
+        path: 'acknowledgement/:uuZoomId/:userId',
+        // canActivate: [isFalseAuthGuard],
+        loadChildren: () =>
+          import('../../views/home-pages/acknowledgement/acknowledgement.module').then(
+            (mod) => mod.AcknowledgementModule
+          ),
+      },
       { path: '**', redirectTo: 'error-404', pathMatch: 'full' },
     ],
   },

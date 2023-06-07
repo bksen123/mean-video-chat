@@ -33,7 +33,7 @@ var Meetings = new Schema({
 });
 
 var MeetingUsers = new Schema({
-  userid: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId, required: true, ref: 'users'
   },
   meetingId: {

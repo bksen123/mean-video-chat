@@ -21,6 +21,13 @@ export class MeetingsService {
     );
   }
 
+  public acknowledgement(param: object): Observable<any> {
+    return this.apiService.post(`${this.meetings}/acknowledgement`, param).pipe(
+      map((data) => {
+        return data;
+      })
+    );
+  }
 
 
   public emailAlreadyExists(param: any): any {

@@ -38,10 +38,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((res: any) => {
       this.amwZoomId = res.amwZoomId;
-      console.log("this.amwZoomId", this.amwZoomId);
-      if (this.amwZoomId) {
-
-      }
+      // console.log("this.amwZoomId", this.amwZoomId);
     });
   }
 
@@ -64,11 +61,11 @@ export class LoginComponent implements OnInit {
             // this.jwtService.saveConfig(JSON.stringify(configDetails));
             // this.jwtService.getConfig();
             // this.globalService.sendActionChildToParent('Loggin');
-            if (this.amwZoomId && userDetails.role === environment.role.userRole) {
+            if (this.amwZoomId) {
               window.location.replace(environment.cloudS + this.amwZoomId);
             } else {
               if (userDetails.role === environment.role.userRole) {
-                this.router.navigate(['/test']);
+                this.router.navigate(['/you-are-unauthorized']);
               } else {
                 setTimeout(() => {
                   this.router.navigate(['/dashboard']);

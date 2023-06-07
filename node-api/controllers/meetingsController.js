@@ -23,7 +23,7 @@ exports.saveMeetings = async (req, res) => {
         let userDetails = await User.findOne({ _id: ele._id });
         // console.log("userDetails======", userDetails);
         let postMeetingUser = {
-          userid: ele._id,
+          userId: ele._id,
           meetingId: userResp._id,
           uuZoomId: userResp.uuZoomId
         }
@@ -37,7 +37,7 @@ exports.saveMeetings = async (req, res) => {
               name: globalService.capitalize(ele.userName),
               AMW_LOGO: 'https://amw-zoom.onrender.com/assets/img/brand/AMW_Logo-2.png',
               websiteUrl: process.env.WEBSITE_URL,
-              acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement/' + MeetinUserRes._id + '/' + userDetails._id,
+              acknowledgement_link: process.env.WEBSITE_URL + 'acknowledgement/' + MeetinUserRes.uuZoomId + '/' + userDetails._id,
               amw_zoom_meeting: process.env.WEBSITE_URL + 'login/' + userResp.uuZoomId + 'amw-zoom' + ele._id,
               userName: globalService.capitalize(ele.userName),
             },
@@ -52,7 +52,7 @@ exports.saveMeetings = async (req, res) => {
         }
       }));
       return res.json({
-        message: "Meeting Created Successfuly.",
+        message: "Meeting Created Successfully.",
         status: 200,
         data: userResp,
       });
@@ -94,6 +94,36 @@ exports.saveMeetings = async (req, res) => {
     });
   }
 };
+
+exports.acknowledgement = async (req, res) => {
+  var postData = req.body;
+  console.log("postData========", postData);
+  console.log("where========", { uuZoomId: postData.uuZoomId, userId: postData.userId });
+  try {
+    var userResp = await Meetings.findOneAndUpdate({ uuZoomId: postData.uuZoomId, userId: postData.userId }, postData);
+    console.log("userResp========", userResp);
+    if (userResp) {
+      return res.json({
+        status: 200,
+        message: "Meeting acknowledgement has been Successfully.",
+        data: userResp,
+      });
+    } else {
+      return res.json({
+        status: 500,
+        message: "There are some ",
+        data: emailExitResp,
+      });
+    }
+  } catch (error) {
+    return res.json({
+      status: 500,
+      message: "There are some ",
+      data: error,
+    });
+  }
+};
+
 
 
 exports.getUsersList = async (req, res) => {
