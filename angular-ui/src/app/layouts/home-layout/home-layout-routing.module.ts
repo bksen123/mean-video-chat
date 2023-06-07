@@ -10,7 +10,7 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        canActivate: [isFalseAuthGuard],
+        // canActivate: [isFalseAuthGuard],
         loadChildren: () =>
           import('../../views/home-pages/login/login.module').then(
             (mod) => mod.LoginModule
