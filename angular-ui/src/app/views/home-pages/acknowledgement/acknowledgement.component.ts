@@ -45,7 +45,8 @@ export class AcknowledgementComponent implements OnInit {
         next: (dataResp: any) => {
           // this.spinner.hide();
           if (dataResp.status === 200) {
-
+            this.toastr.success(dataResp.message, 'Success');
+            this.router.navigate(['/login/' + this.acknowledConfi.uuZoomId + 'amw-zoom' + this.acknowledConfi.userId]);
           } else {
             this.toastr.error(dataResp.message, 'Error');
           }
