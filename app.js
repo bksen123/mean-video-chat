@@ -110,12 +110,12 @@ app.get("/:room", (req, res) => {
       uuZoomId: meetingDetails[0],
       userId: meetingDetails[1]
     }, (error, resp) => {
-      // console.log("req.session.currentUser====", req.session.currentUser);
+      console.log("req.session.currentUser====", req.session.currentUser);
       if (!req.session.currentUser) {
         res.redirect('/#/login/' + room);
       } else {
         if (error) {
-          res.send(' You need to acknowledgement via email before join meeting.');
+          res.send('You need to acknowledgement via email before join meeting So firstly do acknowledgement.');
         } else {
           var userDetails = resp.data.userId
           userDetails.roomId = meetingDetails[0]
@@ -132,14 +132,14 @@ app.get("/:room", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, userName) => {
+  socket.on("join-room", (roomId, userId, userName, profile) => {
     console.log("roomId=========", roomId);
     socket.join(roomId);
-    // setTimeout(() => {
-    socket.to(roomId).broadcast.emit("user-connected", userId);
-    // }, 1000)
+    setTimeout(() => {
+      socket.to(roomId).broadcast.emit("user-connected", userId);
+    }, 1000)
     socket.on("message", (message) => {
-      io.to(roomId).emit("createMessage", message, userName);
+      io.to(roomId).emit("createMessage", message, userName, profile);
     });
   });
 });
