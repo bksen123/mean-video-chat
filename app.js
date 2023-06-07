@@ -115,7 +115,7 @@ app.get("/:room", (req, res) => {
         res.redirect('/#/login/' + room);
       } else {
         if (error) {
-          res.send(' You need to acknowledgement via email before join meeting.');
+          res.send('You need to acknowledgement via email before join meeting So firstly do acknowledgement.');
         } else {
           // console.log("resp====", resp.data.userId);
           var userDetails = resp.data.userId
@@ -133,14 +133,14 @@ app.get("/:room", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, userName) => {
+  socket.on("join-room", (roomId, userId, userName, profile) => {
     console.log("roomId=========", roomId);
     socket.join(roomId);
-    // setTimeout(() => {
-    socket.to(roomId).broadcast.emit("user-connected", userId);
-    // }, 1000)
+    setTimeout(() => {
+      socket.to(roomId).broadcast.emit("user-connected", userId);
+    }, 1000)
     socket.on("message", (message) => {
-      io.to(roomId).emit("createMessage", message, userName);
+      io.to(roomId).emit("createMessage", message, userName, profile);
     });
   });
 });

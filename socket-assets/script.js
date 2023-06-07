@@ -94,7 +94,7 @@ const connectToNewUser = (userId, stream) => {
 
 peer.on("open", (id) => {
   console.log("my id is" + id);
-  socket.emit("join-room", ROOM_ID, id, user);
+  socket.emit("join-room", ROOM_ID, id, user, profile);
 });
 
 const addVideoStream = (video, stream) => {
@@ -163,11 +163,12 @@ inviteButton.addEventListener("click", (e) => {
   );
 });
 
-socket.on("createMessage", (message, userName) => {
+socket.on("createMessage", (message, userName, profile) => {
+  console.log('test========', message, userName, profile)
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
-        <b><img src="${profileImage}" class="profile-img cursor-pointer"> <span> ${userName === user ? "me" : userName
+        <b><img src="${profile}" class="profile-img cursor-pointer"> <span> ${userName === user ? "me" : userName
     }</span> </b>
         <span>${message}</span>
     </div>`;
