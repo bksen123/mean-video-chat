@@ -87,13 +87,13 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle(): void {
-    console.log('ernter in function');
+    // console.log('ernter in function');
     this.socialAuthService
       .signIn(GoogleLoginProvider.PROVIDER_ID)
       .then((resp: any) => {
-        console.log('resp in function', resp);
+        // console.log('resp in function', resp);
         this.spinner.show();
-        console.log(resp.email, 'response === ', resp);
+        // console.log(resp.email, 'response === ', resp);
         if (resp.authToken) {
           this.login.email = resp.email;
           this.login.userName = resp.firstName + ' ' + resp.lastName;

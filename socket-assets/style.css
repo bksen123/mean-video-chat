@@ -13,6 +13,13 @@
   padding: 0;
 }
 
+.profile-img {
+  border-radius: 50px !important;
+  width: 30px !important;
+  float: right !important;
+  margin: 5px !important;
+}
+
 .header {
   display: flex;
   justify-content: center;
