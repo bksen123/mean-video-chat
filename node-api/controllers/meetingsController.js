@@ -57,7 +57,7 @@ exports.saveMeetings = async (req, res) => {
               templateName: "amw-zoom-invitation", // NEW
             };
             console.log("prepareEmailConfig", prepareEmailConfig);
-            // return;
+            return;
             globalService.prepareEmailData(prepareEmailConfig);
           }
         })
@@ -215,6 +215,7 @@ exports.getMeetingUsersList = async (req, res) => {
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
     var userResp = await MeetingUsers.findOne(whereObj).populate('userId');
+    console.log("userResp", userResp)
     if (userResp && userResp.userAck) {
       return next(null, {
         status: 200,

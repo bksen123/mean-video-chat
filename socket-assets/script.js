@@ -6,6 +6,7 @@ const backBtn = document.querySelector(".header__back");
 const screenShare = document.querySelector("#screenShare");
 myVideo.muted = true;
 
+// navigator.mediaDevices.getUserMedia({ video: true, audio: true })
 screenShare.addEventListener("click", () => {
   alert("Screen Share feature coming soon!");
 });
@@ -66,6 +67,7 @@ navigator.mediaDevices
     video: true,
   })
   .then((stream) => {
+    console.log("stream===========", stream);
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
 

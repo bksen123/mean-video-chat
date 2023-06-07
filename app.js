@@ -111,6 +111,7 @@ app.get("/:room", (req, res) => {
       userId: meetingDetails[1]
     }, (error, resp) => {
       console.log("req.session.currentUser====", req.session.currentUser);
+      console.log("resp====", resp);
       if (!req.session.currentUser) {
         res.redirect('/#/login/' + room);
       } else {
