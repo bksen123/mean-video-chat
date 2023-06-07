@@ -110,14 +110,14 @@ app.get("/:room", (req, res) => {
       uuZoomId: meetingDetails[0],
       userId: meetingDetails[1]
     }, (error, resp) => {
-      console.log("req.session.currentUser====", req.session.currentUser);
+      // console.log("req.session.currentUser====", req.session.currentUser);
       if (!req.session.currentUser) {
         res.redirect('/#/login/' + room);
       } else {
         if (error) {
           res.send(' You need to acknowledgement via email before join meeting.');
         } else {
-          console.log("resp====", resp.data.userId);
+          // console.log("resp====", resp.data.userId);
           var userDetails = resp.data.userId
           userDetails.roomId = meetingDetails[0]
           res.render("room", { userDetails: userDetails });
