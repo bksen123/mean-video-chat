@@ -163,3 +163,26 @@ exports.deleteUser = async (req, res) => {
     });
   }
 };
+
+exports.getUsersByMeeting = async (whereObj, next) => {
+  try {
+    var userResp = await MeetingUsers.findOne(whereObj);
+    if (userResp && userResp.userAck) {
+      return next(null, {
+        status: 200,
+        message: "Meeting verify has been Successfully.",
+        data: userResp,
+      });
+    } else {
+      return next(true, {
+        status: 500,
+        message: "There are some while meeting verify...",
+      });
+    }
+  } catch (error) {
+    return next(error, {
+      status: 500,
+      message: "There are some while meeting verify...",
+    });
+  }
+};

@@ -6,6 +6,7 @@ router.post("/doSignup", Users.saveUserInfo);
 router.post("/emailAlreadyExists", Users.emailAlreadyExists);
 router.post("/doSignIn", Users.doSignIn);
 router.get("/getUsersList", Users.getUsersList);
+router.get("/getUsersList", Users.getUsersList);
 router.post('/authentication', Users.authentication);
 router.get('/logout', Users.logout);
 router.post('/searchUserData', Users.searchUserData);
