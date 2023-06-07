@@ -29,7 +29,6 @@ export class MeetingsService {
     );
   }
 
-
   public emailAlreadyExists(param: any): any {
     return this.apiService.post(`${this.meetings}/emailAlreadyExists`, param).pipe(
       map((data) => {
@@ -37,8 +36,6 @@ export class MeetingsService {
       })
     );
   }
-
-
 
   public deleteUser(param: object): Observable<any> {
     return this.apiService.delete(`${this.meetings}/deleteUser`, param).pipe(
@@ -48,8 +45,8 @@ export class MeetingsService {
     );
   }
 
-  public getmeetingsList(): Observable<any> {
-    return this.apiService.get(`${this.meetings}/getmeetingsList`).pipe(
+  public getMeetingsList(): Observable<any> {
+    return this.apiService.get(`${this.meetings}/getMeetingsList`).pipe(
       map((data) => {
         return data;
       })
