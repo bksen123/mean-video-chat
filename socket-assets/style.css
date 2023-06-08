@@ -13,6 +13,10 @@
   padding: 0;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .profile-img {
   border-radius: 50px !important;
   width: 30px !important;
