@@ -62,7 +62,9 @@ export class LoginComponent implements OnInit {
             // this.jwtService.getConfig();
             // this.globalService.sendActionChildToParent('Loggin');
             if (this.amwZoomId) {
-              window.location.replace(environment.baseUrl + this.amwZoomId);
+              setTimeout(() => {
+                window.location.replace(environment.baseUrl + this.amwZoomId);
+              }, 3000);
             } else {
               if (userDetails.role === environment.role.userRole) {
                 this.router.navigate(['/you-are-unauthorized']);

@@ -179,7 +179,7 @@ exports.deleteUser = async (req, res) => {
 exports.getMeetingsList = async (req, res) => {
   try {
     const data = await Meetings.find();
-    console.log("Meeting list Data into controller", data);
+    // console.log("Meeting list Data into controller", data);
     return res.json({
       status: 200,
       message: "Get the Meeting list Successfully.",
@@ -197,7 +197,7 @@ exports.getMeetingsList = async (req, res) => {
 exports.getMeetingUsersList = async (req, res) => {
   try {
     const data = await MeetingUsers.find();
-    console.log("MeetingUser list Data into controller", data);
+    // console.log("MeetingUser list Data into controller", data);
     return res.json({
       status: 200,
       message: "Get the MeetingUser list Successfully.",
@@ -215,7 +215,7 @@ exports.getMeetingUsersList = async (req, res) => {
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
     var userResp = await MeetingUsers.findOne(whereObj).populate('userId');
-    console.log("userResp", userResp)
+    // console.log("userResp", userResp)
     if (userResp && userResp.userAck) {
       return next(null, {
         status: 200,
