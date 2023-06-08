@@ -178,7 +178,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.getMeetingsList = async (req, res) => {
   try {
-    const data = await Meetings.find();
+    const data = await Meetings.find().sort({ 'createdAt': '-1' });
     // console.log("Meeting list Data into controller", data);
     return res.json({
       status: 200,
