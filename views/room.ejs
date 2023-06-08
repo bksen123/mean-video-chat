@@ -30,7 +30,11 @@
         <div class="logo">
           <div class="text-left">
             <img src="assets/img/brand/AMW_Logo-2.png">
-            <img src="<%= userDetails.profileImage  %>" class="profile-img cursor-pointer">
+            <a style="float: right;" class="d-flex"
+              href="/users/ApiLogout/<%= userDetails.roomId %>amw-zoom<%= userDetails._id  %>">
+              <img src="<%= userDetails.profileImage  %>" class="profile-img cursor-pointer">
+              <b class="p-2" title="Logout"> Logout</b>
+            </a>
           </div>
         </div>
       </div>

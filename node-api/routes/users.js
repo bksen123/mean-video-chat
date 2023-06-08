@@ -9,6 +9,12 @@ router.get("/getUsersList", Users.getUsersList);
 router.get("/getUsersList", Users.getUsersList);
 router.post('/authentication', Users.authentication);
 router.get('/logout', Users.logout);
+router.get('/ApiLogout/:uuZoomui', function (req, res, next) {
+  var paramDetails = req.params;
+  // console.log("req.params===", paramDetails.uuZoomui);
+  req.session.destroy();
+  res.redirect('/#/login/' + paramDetails.uuZoomui);
+});
 router.post('/searchUserData', Users.searchUserData);
 router.post('/forgotPassword', Users.forgotPassword);
 router.post('/getUserInfo', Users.getUserInfo);
