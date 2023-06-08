@@ -110,7 +110,8 @@ app.get("/:room", (req, res) => {
       uuZoomId: meetingDetails[0],
       userId: meetingDetails[1]
     }, (error, resp) => {
-      console.log("req.session.currentUser====", req.session.currentUser);
+      // console.log("req.session.currentUser====", req.session.currentUser);
+      // console.log("resp====", resp);
       if (!req.session.currentUser) {
         res.redirect('/#/login/' + room);
       } else {
@@ -133,13 +134,18 @@ app.get("/:room", (req, res) => {
 
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName, profile) => {
-    console.log("roomId=========", roomId);
     socket.join(roomId);
     setTimeout(() => {
+      console.log(roomId, 'user-connected', userId)
       socket.to(roomId).broadcast.emit("user-connected", userId);
-    }, 1000)
+    }, 500)
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName, profile);
+    });
+
+    socket.on('disconnect', () => {
+      console.log(roomId, 'user-disconnect', userId)
+      socket.broadcast.emit('clear-grid', roomId, userId);
     });
   });
 });

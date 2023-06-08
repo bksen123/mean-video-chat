@@ -5,7 +5,9 @@ const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 const screenShare = document.querySelector("#screenShare");
 myVideo.muted = true;
+var MyuserId = ''
 
+// navigator.mediaDevices.getUserMedia({ video: true, audio: true })
 screenShare.addEventListener("click", () => {
   alert("Screen Share feature coming soon!");
 });
@@ -66,15 +68,21 @@ navigator.mediaDevices
     video: true,
   })
   .then((stream) => {
+    // console.log("stream===========0000000000", stream);
     myVideoStream = stream;
+    // setTimeout(() => {
+    myVideo.setAttribute("id", MyuserId);
     addVideoStream(myVideo, stream);
+    // }, 1000);
 
     peer.on("call", (call) => {
-      console.log("someone call me");
       call.answer(stream);
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
-        addVideoStream(video, userVideoStream);
+        if (call.peer) {
+          video.setAttribute("id", call.peer);
+          addVideoStream(video, userVideoStream);
+        }
       });
     });
 
@@ -87,13 +95,14 @@ const connectToNewUser = (userId, stream) => {
   console.log("I call someone" + userId);
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
+  video.setAttribute("id", userId);
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
 };
 
 peer.on("open", (id) => {
-  console.log("my id is" + id);
+  MyuserId = id;
   socket.emit("join-room", ROOM_ID, id, user, profile);
 });
 
@@ -163,8 +172,14 @@ inviteButton.addEventListener("click", (e) => {
   );
 });
 
+socket.on('clear-grid', (roomId, userId) => {
+  var element = document.getElementById(userId);
+  videoGrid.removeChild(element);
+  // videoGrid.removeChild(videoGrid.firstElementChild);
+});
+
 socket.on("createMessage", (message, userName, profile) => {
-  console.log('test========', message, userName, profile)
+  // console.log('test========', message, userName, profile)
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
