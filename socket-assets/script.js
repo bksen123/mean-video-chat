@@ -174,7 +174,9 @@ inviteButton.addEventListener("click", (e) => {
 
 socket.on('clear-grid', (roomId, userId) => {
   var element = document.getElementById(userId);
-  videoGrid.removeChild(element);
+  if (element) {
+    videoGrid.removeChild(element);
+  }
   // videoGrid.removeChild(videoGrid.firstElementChild);
 });
 
