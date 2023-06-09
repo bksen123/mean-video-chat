@@ -36,10 +36,17 @@
             <button (click)="getMeetingUsers(meeting)" class="accordion-button bg-gray collapsed w-100" type="button"
               data-bs-toggle="collapse" attr.data-bs-target="#meeting_{{i}}" aria-expanded="false"
               attr.aria-controls="meeting_{{i}}">
-              <i class="fa fa-meetup pe-2"></i><b>{{meeting.title}}</b>
-              <span class="pull-right fs-6 p-2">
-                <i class="fa fa-users"></i><b class="px-1 text-end">{{meeting.totalUsers}}</b>
-              </span>
+              <div class="row">
+                <div class="col-md-7">
+                  <i class="fa fa-calender pe-2"></i><b>{{meeting.title}}</b>
+                </div>
+                <div class="col-md-4">
+                  <i class="fa fa-meetup pe-2"></i><b>Join Meeting</b>
+                </div>
+                <div class="col-md-1">
+                  <i class="fa fa-users"></i><b class="px-1 text-end">{{meeting.totalUsers}}</b>
+                </div>
+              </div>
             </button>
           </p>
           <div id="meeting_{{i}}" class="accordion-collapse collapse" attr.aria-labelledby="headingTwo_{{i}}"
