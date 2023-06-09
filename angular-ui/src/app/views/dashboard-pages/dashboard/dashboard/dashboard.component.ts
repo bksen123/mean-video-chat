@@ -41,6 +41,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('MMMMMMMMMMMM', this.meetingsList);
+
     this.getMeetings();
     this.usersDropdownSettings = {
       singleSelection: false,
