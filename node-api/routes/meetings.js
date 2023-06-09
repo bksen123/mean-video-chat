@@ -5,4 +5,5 @@ router.post("/saveMeetings", Meetings.saveMeetings);
 router.post("/acknowledgement", Meetings.acknowledgement);
 router.get("/getMeetingsList", Meetings.getMeetingsList);
 router.get("/getMeetingUsersList", Meetings.getMeetingUsersList);
+router.post("/deleteMeeting", Meetings.deleteMeeting);
 module.exports = router;

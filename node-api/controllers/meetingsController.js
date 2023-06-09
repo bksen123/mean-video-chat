@@ -178,7 +178,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.getMeetingsList = async (req, res) => {
   try {
-    const data = await Meetings.find().sort({ 'createdAt': '-1' });
+    const data = await Meetings.find().sort({ createdAt: "-1" });
     // console.log("Meeting list Data into controller", data);
     return res.json({
       status: 200,
@@ -214,7 +214,7 @@ exports.getMeetingUsersList = async (req, res) => {
 
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
-    var userResp = await MeetingUsers.findOne(whereObj).populate('userId');
+    var userResp = await MeetingUsers.findOne(whereObj).populate("userId");
     // console.log("userResp", userResp)
     if (userResp && userResp.userAck) {
       return next(null, {
@@ -232,6 +232,25 @@ exports.getUsersByMeeting = async (whereObj, next) => {
     return next(error, {
       status: 500,
       message: "There are some while meeting verify...",
+    });
+  }
+};
+
+exports.deleteMeeting = async (req, res) => {
+  var postData = req.body;
+  let resp = await Meetings.findOneAndDelete({ _id: postData._id });
+  console.log("resp:::::", resp);
+  if (resp) {
+    return res.json({
+      status: 200,
+      message: "User Deleted successfully.",
+      data: resp,
+    });
+  } else {
+    return res.json({
+      status: 400,
+      message: "There are some error while Deleting User.",
+      data: resp,
     });
   }
 };
