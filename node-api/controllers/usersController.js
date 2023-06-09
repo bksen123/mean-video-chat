@@ -275,7 +275,7 @@ exports.forgotPassword = (req, res) => {
 };
 
 exports.authentication = (req, res) => {
-  if (req.headers && req.headers.authorization) {
+  if (req.session && req.session.currentUser && req.headers && req.headers.authorization) {
     const authorization = req.headers.authorization.split(" ")[1];
     globalService.verifyToken(authorization, (verifyResp) => {
       if (verifyResp.verify) {

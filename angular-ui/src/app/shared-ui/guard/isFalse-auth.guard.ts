@@ -26,7 +26,7 @@ export class isFalseAuthGuard implements CanActivate {
     this.currentUser = this.jwtService.getCurrentUser();
     // console.log("this.currentUser", this.currentUser);
     if (this.currentUser && this.currentUser.role) {
-      if (this.currentUser.role === environment.role.adminRole) {
+      if (this.currentUser.role) {
         this.router.navigate(['/dashboard']);
         return true;
       } else {
