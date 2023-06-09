@@ -177,8 +177,9 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getMeetingsList = async (req, res) => {
+  var currentUser = req.session.currentUser
 
-  console.log("req", req.body)
+
   var postData = req.body;
   let whereObj = {};
 
@@ -187,10 +188,6 @@ exports.getMeetingsList = async (req, res) => {
   let month = todayDate.getMonth();
   let year = todayDate.getFullYear();
 
-  // console.log('test==========', {
-  //   $gte: new Date(year, month, date),
-  //   $lt: new Date(year, month, date + 1),
-  // })
 
   if (postData.tab === 'coming') {
     whereObj = {
@@ -206,9 +203,21 @@ exports.getMeetingsList = async (req, res) => {
       }
     };
   }
+  let UserMeetings = [];
+  if (currentUser && currentUser.role !== 'admin') {
+    let userMeeting = await MeetingUsers.find({ userId: currentUser._id }).select('meetingId -_id');
+    if (userMeeting.length) {
+      UserMeetings = userMeeting.map(ele => ele.meetingId);
+      if (UserMeetings.length) {
+        whereObj._id = {
+          $in: UserMeetings
+        }
+      }
+
+    }
+  }
   try {
     const data = await Meetings.find(whereObj).sort({ createdAt: "-1" });
-    // console.log("Meeting list Data into controller", data);
     return res.json({
       status: 200,
       message: "Get the Meeting list Successfully.",
