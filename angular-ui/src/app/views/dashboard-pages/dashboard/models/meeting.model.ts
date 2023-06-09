@@ -3,7 +3,7 @@ import { environment } from "src/environments/environment";
 export class meeting {
   _id?: string;
   title: string = '';
-  meetingDate?: Date;
+  meetingDate: Date = new Date();
   from: string = '';
   to: string = '';
   status: number = 1;
