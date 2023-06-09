@@ -16,6 +16,7 @@ import { meeting, validationFields } from '../models/meeting.model';
 })
 export class DashboardComponent implements OnInit {
 
+  meetingTab: string = 'all'
   userInfo: meeting = new meeting();
   userRoles: any = environment.role;
   usersList: any[] = [];
