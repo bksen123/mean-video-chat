@@ -40,6 +40,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('MMMMMMMMMMMM', this.meetingsList);
+
     this.getMeetings();
     this.usersDropdownSettings = {
       singleSelection: false,
@@ -142,6 +144,30 @@ export class DashboardComponent implements OnInit {
           this.spinner.hide();
           this.getUsersList();
           this.toastr.success('User deleted successfully.', 'Success');
+        }
+      },
+      (error) => {
+        console.log("error", error)
+        this.closeModel();
+        this.spinner.hide();
+        this.toastr.error(
+          'There are some server error. Please check connection.',
+          'Error'
+        );
+      }
+    );
+  }
+
+  deleteMeeting() {
+    this.spinner.show();
+    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
+      (dataRes) => {
+        console.log("error", dataRes)
+        if (dataRes.status === 200) {
+          this.closeModel();
+          this.spinner.hide();
+          // this.getUsersList();
+          this.toastr.success('Meeting deleted successfully.', 'Success');
         }
       },
       (error) => {

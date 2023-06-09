@@ -269,13 +269,11 @@ exports.getUsersByMeeting = async (whereObj, next) => {
 
 exports.deleteMeeting = async (req, res) => {
   var postData = req.body;
-  console.log("redponce:::::", postData);
   let redponceMeeting = await Meetings.findOneAndDelete({ _id: postData._id });
   let redponceMeetingUsers = await MeetingUsers.deleteMany({
     meetingId: postData._id,
   });
   let redponce = { redponceMeeting, redponceMeetingUsers };
-  console.log("redponce:::::", redponce);
   if (redponce) {
     return res.json({
       status: 200,

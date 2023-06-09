@@ -34,14 +34,21 @@
               type="button" data-bs-toggle="collapse" attr.data-bs-target="#meeting_{{i}}" aria-expanded="false"
               attr.aria-controls="meeting_{{i}}">
               <div class="row w-100">
-                <div class="col-md-9">
+                <div class="col-md-7">
                   <i class="icon-calendar pe-2"></i><b>{{meeting.title}}</b>
                 </div>
                 <div class="col-md-2">
-                  <i class="fa fa-solid fa-link pe-2"></i><b>Join Meeting</b>
+                  <i class="fa fa-calendar-o pe-1" aria-hidden="true"></i><b>{{meetingsList[0].meetingDate |
+                    date:'dd-MM-yyyy'}} </b>
                 </div>
                 <div class="col-md-1">
-                  <i class="fa fa-users"></i><b class="px-1 text-end">{{meeting.totalUsers}}</b>
+                  <i class="fa fa-solid fa-link pe-2"></i><b>Join</b>
+                </div>
+                <div class="col-md-1">
+                  <i class="fa fa-users"></i><b class="px-1">{{meeting.totalUsers}}</b>
+                </div>
+                <div class="col-md-1 ps-5">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
                 </div>
               </div>
             </button>
