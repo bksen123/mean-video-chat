@@ -45,8 +45,8 @@ export class MeetingsService {
     );
   }
 
-  public getMeetingsList(): Observable<any> {
-    return this.apiService.post(`${this.meetings}/getMeetingsList`).pipe(
+  public getMeetingsList(param: object): Observable<any> {
+    return this.apiService.post(`${this.meetings}/getMeetingsList`, param).pipe(
       map((data) => {
         return data;
       })
