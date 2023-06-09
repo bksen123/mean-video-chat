@@ -21,20 +21,10 @@ export class DashboardComponent implements OnInit {
   userRoles: any = environment.role;
   usersList: any[] = [];
   meetingsList: any[] = [];
-  @ViewChild(DataTableDirective, { static: false })
-  datatableElement: any = DataTableDirective;
-  dtOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject();
-  newUserAlready = false;
   @ViewChild('showAddEditUserModal', { static: false, })
   public showAddEditUserModal: any = ModalDirective;
   @ViewChild('deleteUserModal', { static: false })
   public deleteUserModal: any = ModalDirective;
-  requiredValidation: validationFields = new validationFields();
-  inValidateCheck: any = {
-    email: false,
-    emailExits: true,
-  };
 
   disabled = false;
   usersDropdownSettings: any = {};
@@ -63,9 +53,6 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  ngAfterViewInit(): void {
-    this.dtTrigger.next("");
-  }
 
   getUsersList() {
     this.usersService.getUsersList().subscribe({
@@ -96,9 +83,7 @@ export class DashboardComponent implements OnInit {
 
   showAddEditModal(meetingInfoValue?: any) {
     this.alertService.clear();
-    this.inValidateCheck.emailExits = true;
     if (meetingInfoValue && meetingInfoValue._id) {
-      this.inValidateCheck.email = true;
       this.meetingInfo = Object.assign({}, meetingInfoValue);
     } else {
       this.meetingInfo = new meeting();
