@@ -177,8 +177,7 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getMeetingsList = async (req, res) => {
-
-  console.log("req", req.body)
+  console.log("req", req.body);
   var postData = req.body;
   let whereObj = {};
 
@@ -192,18 +191,18 @@ exports.getMeetingsList = async (req, res) => {
   //   $lt: new Date(year, month, date + 1),
   // })
 
-  if (postData.tab === 'coming') {
+  if (postData.tab === "coming") {
     whereObj = {
       meetingDate: {
         $gte: new Date(year, month, date),
         // $lt: new Date(year, month, date + 1),
-      }
+      },
     };
-  } else if (postData.tab === 'previous') {
+  } else if (postData.tab === "previous") {
     whereObj = {
       meetingDate: {
         $lt: new Date(year, month, date),
-      }
+      },
     };
   }
   try {
@@ -269,6 +268,7 @@ exports.getUsersByMeeting = async (whereObj, next) => {
 
 exports.deleteMeeting = async (req, res) => {
   var postData = req.body;
+  console.log("MD::Controller", postData);
   let redponceMeeting = await Meetings.findOneAndDelete({ _id: postData._id });
   let redponceMeetingUsers = await MeetingUsers.deleteMany({
     meetingId: postData._id,

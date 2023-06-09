@@ -48,7 +48,11 @@
                   <i class="fa fa-users"></i><b class="px-1">{{meeting.totalUsers}}</b>
                 </div>
                 <div class="col-md-1 ps-5">
-                  <i class="fa fa-trash" aria-hidden="true"></i>
+                  <button class="border-0">
+                    <i class="fa fa-trash text-danger" aria-hidden="true" data-bs-toggle="modal"
+                      data-bs-target="#deleteMeetingModal">
+                    </i>
+                  </button>
                 </div>
               </div>
             </button>
@@ -183,6 +187,37 @@
       <div class="modal-footer border-top-0 d-flex  justify-content-start">
         <button type="button" class="btn btn-default me-1" (click)="closeModel()">Close</button>
         <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Delete Meeting Modal -->
+<div class="modal fade" id="deleteMeetingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Meeting</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" *ngFor="let meeting of meetingsList;">
+          <div class="col">
+            <div class="row">
+              <div class="col">Meeting:</div>
+              <div class="col">{{meeting.title}}</div>
+            </div>
+            <div class="row">
+              <div class="col"></div>
+              <div class="col"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="deleteMeeting()">Delete</button>
       </div>
     </div>
   </div>

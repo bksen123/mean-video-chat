@@ -25,7 +25,6 @@ export class DashboardComponent implements OnInit {
   public showAddEditUserModal: any = ModalDirective;
   @ViewChild('deleteUserModal', { static: false })
   public deleteUserModal: any = ModalDirective;
-
   disabled = false;
   usersDropdownSettings: any = {};
   constructor(
@@ -40,8 +39,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('MMMMMMMMMMMM', this.meetingsList);
-
     this.getMeetings();
     this.usersDropdownSettings = {
       singleSelection: false,
@@ -160,7 +157,8 @@ export class DashboardComponent implements OnInit {
 
   deleteMeeting() {
     this.spinner.show();
-    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
+    console.log('DDDDDDDDDDDD', this.meetingsList[0]._id);
+    this._meetingsService.deleteMeeting(this.meetingsList[0]._id).subscribe(
       (dataRes) => {
         console.log("error", dataRes)
         if (dataRes.status === 200) {
@@ -181,8 +179,6 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-
-
 
   getMeetings(tab?: string) {
     if (tab) {

@@ -45,9 +45,11 @@ export class MeetingsService {
     );
   }
 
-  public deleteMeeting(param: object): Observable<any> {
+  public deleteMeeting(param: any): Observable<any> {
+    console.log('SSSSSSSDDDDDD', param);
     return this.apiService.delete(`${this.meetings}/deleteMeeting`, param).pipe(
       map((data) => {
+        console.log('datadatadatadataSSSSSSSS', data);
         return data;
       })
     );
