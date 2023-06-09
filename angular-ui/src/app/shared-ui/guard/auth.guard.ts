@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
       const user = this.jwtService.loggedUserInfo;
       console.log('user', user);
       if (user && user.role === environment.role.adminRole) {
-        // this.globalService.authentication();
+        this.globalService.authentication();
         return true;
       } else {
         this.router.navigate(['/login']);
