@@ -194,9 +194,11 @@ exports.getMeetingsList = async (req, res) => {
   }
 };
 
-exports.getMeetingUsersList = async (req, res) => {
+exports.getMeetingsUser = async (req, res) => {
   try {
-    const data = await MeetingUsers.find();
+    const data = await MeetingUsers.find({
+      meetingId: req.body.meetingId,
+    }).populate("userId");
     // console.log("MeetingUser list Data into controller", data);
     return res.json({
       status: 200,
@@ -238,19 +240,24 @@ exports.getUsersByMeeting = async (whereObj, next) => {
 
 exports.deleteMeeting = async (req, res) => {
   var postData = req.body;
-  let resp = await Meetings.findOneAndDelete({ _id: postData._id });
-  console.log("resp:::::", resp);
-  if (resp) {
+  console.log("redponce:::::", postData);
+  let redponceMeeting = await Meetings.findOneAndDelete({ _id: postData._id });
+  let redponceMeetingUsers = await MeetingUsers.deleteMany({
+    meetingId: postData._id,
+  });
+  let redponce = { redponceMeeting, redponceMeetingUsers };
+  console.log("redponce:::::", redponce);
+  if (redponce) {
     return res.json({
       status: 200,
-      message: "User Deleted successfully.",
-      data: resp,
+      message: "Meeting Deleted successfully.",
+      data: redponce,
     });
   } else {
     return res.json({
       status: 400,
-      message: "There are some error while Deleting User.",
-      data: resp,
+      message: "There are some error while Deleting Meeting.",
+      data: redponce,
     });
   }
 };

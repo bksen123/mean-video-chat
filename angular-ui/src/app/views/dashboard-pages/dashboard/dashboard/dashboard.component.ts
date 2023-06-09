@@ -192,13 +192,14 @@ export class DashboardComponent implements OnInit {
     )
   }
 
+  meetingUsersList: any[] = [];
   getMeetingUsers(meeting: any) {
     this._meetingsService.getMeetingsUser({ meetingId: meeting._id }).subscribe(
       {
         next: (dataRes: any) => {
           if (dataRes.status === 200) {
             this.spinner.hide();
-            console.log('Get All meeting data into component', dataRes.data[0]._id);
+            this.meetingUsersList = dataRes.data;
           }
         },
         error: (error: any) => {

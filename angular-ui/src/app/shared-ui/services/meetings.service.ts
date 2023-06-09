@@ -46,14 +46,14 @@ export class MeetingsService {
   }
 
   public getMeetingsList(): Observable<any> {
-    return this.apiService.get(`${this.meetings}/getMeetingsList`).pipe(
+    return this.apiService.post(`${this.meetings}/getMeetingsList`).pipe(
       map((data) => {
         return data;
       })
     );
   }
   public getMeetingsUser(param: object): Observable<any> {
-    return this.apiService.post(`${this.meetings}/getMeetingsList`, param).pipe(
+    return this.apiService.post(`${this.meetings}/getMeetingsUser`, param).pipe(
       map((data) => {
         return data;
       })
