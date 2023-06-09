@@ -52,4 +52,11 @@ export class MeetingsService {
       })
     );
   }
+  public getMeetingsUser(param: object): Observable<any> {
+    return this.apiService.post(`${this.meetings}/getMeetingsList`, param).pipe(
+      map((data) => {
+        return data;
+      })
+    );
+  }
 }
