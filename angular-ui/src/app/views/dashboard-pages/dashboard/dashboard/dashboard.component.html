@@ -12,17 +12,17 @@
 <div class="container card p-3">
   <ul class="nav nav-pills pb-2">
     <li class="nav-item">
-      <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
-        (click)="getMeetings('all')">All
-        Meetings</a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
         (click)="getMeetings('coming')">Coming Meetings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
         (click)="getMeetings('previous')">Previous Meetings</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
+        (click)="getMeetings('all')">All
+        Meetings</a>
     </li>
   </ul>
   <div class="tab-content pt-0">
