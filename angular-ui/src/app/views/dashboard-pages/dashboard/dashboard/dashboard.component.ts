@@ -28,7 +28,6 @@ export class DashboardComponent implements OnInit {
 
   disabled = false;
   usersDropdownSettings: any = {};
-
   constructor(
     private globalService: GlobalService,
     private usersService: UsersService,
@@ -185,8 +184,11 @@ export class DashboardComponent implements OnInit {
 
 
 
-  getMeetings() {
-    this._meetingsService.getMeetingsList().subscribe(
+  getMeetings(tab?: string) {
+    if (tab) {
+      this.meetingTab = tab
+    }
+    this._meetingsService.getMeetingsList({ tab: this.meetingTab }).subscribe(
       {
         next: (dataRes: any) => {
           if (dataRes.status === 200) {

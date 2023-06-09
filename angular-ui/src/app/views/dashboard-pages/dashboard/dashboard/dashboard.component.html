@@ -13,16 +13,16 @@
   <ul class="nav nav-pills pb-2">
     <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
-        (click)="meetingTab = 'all'">All
+        (click)="getMeetings('all')">All
         Meetings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
-        (click)="meetingTab = 'coming'">Coming Meetings</a>
+        (click)="getMeetings('coming')">Coming Meetings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
-        (click)="meetingTab = 'previous'">Previous Meetings</a>
+        (click)="getMeetings('previous')">Previous Meetings</a>
     </li>
   </ul>
   <div class="tab-content pt-0">

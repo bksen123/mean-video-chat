@@ -177,8 +177,37 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getMeetingsList = async (req, res) => {
+
+  console.log("req", req.body)
+  var postData = req.body;
+  let whereObj = {};
+
+  let todayDate = new Date();
+  let date = todayDate.getDate();
+  let month = todayDate.getMonth();
+  let year = todayDate.getFullYear();
+
+  // console.log('test==========', {
+  //   $gte: new Date(year, month, date),
+  //   $lt: new Date(year, month, date + 1),
+  // })
+
+  if (postData.tab === 'coming') {
+    whereObj = {
+      meetingDate: {
+        $gte: new Date(year, month, date),
+        // $lt: new Date(year, month, date + 1),
+      }
+    };
+  } else if (postData.tab === 'previous') {
+    whereObj = {
+      meetingDate: {
+        $lt: new Date(year, month, date),
+      }
+    };
+  }
   try {
-    const data = await Meetings.find().sort({ createdAt: "-1" });
+    const data = await Meetings.find(whereObj).sort({ createdAt: "-1" });
     // console.log("Meeting list Data into controller", data);
     return res.json({
       status: 200,
