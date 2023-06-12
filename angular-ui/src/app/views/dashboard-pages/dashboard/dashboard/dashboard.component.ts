@@ -16,28 +16,18 @@ import { meeting, validationFields } from '../models/meeting.model';
 })
 export class DashboardComponent implements OnInit {
 
-  userInfo: meeting = new meeting();
+  meetingTab: string = 'all'
+  meetingInfo: meeting = new meeting();
   userRoles: any = environment.role;
   usersList: any[] = [];
   meetingsList: any[] = [];
-  @ViewChild(DataTableDirective, { static: false })
-  datatableElement: any = DataTableDirective;
-  dtOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject();
-  newUserAlready = false;
   @ViewChild('showAddEditUserModal', { static: false, })
   public showAddEditUserModal: any = ModalDirective;
   @ViewChild('deleteUserModal', { static: false })
   public deleteUserModal: any = ModalDirective;
-  requiredValidation: validationFields = new validationFields();
-  inValidateCheck: any = {
-    email: false,
-    emailExits: true,
-  };
 
   disabled = false;
   usersDropdownSettings: any = {};
-
   constructor(
     private globalService: GlobalService,
     private usersService: UsersService,
@@ -50,8 +40,9 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('MMMMMMMMMMMM', this.meetingsList);
+
     this.getMeetings();
-    this.getMeetingEmp();
     this.usersDropdownSettings = {
       singleSelection: false,
       idField: '_id',
@@ -63,9 +54,6 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  ngAfterViewInit(): void {
-    this.dtTrigger.next("");
-  }
 
   getUsersList() {
     this.usersService.getUsersList().subscribe({
@@ -86,7 +74,7 @@ export class DashboardComponent implements OnInit {
   }
 
   checkvalidation(key: any) {
-    let Validate: any = { ...this.userInfo };
+    let Validate: any = { ...this.meetingInfo };
     if (Validate[key]) {
       return 'text-primary';
     } else {
@@ -94,14 +82,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  showAddEditModal(userInfoValue?: any) {
+  showAddEditModal(meetingInfoValue?: any) {
     this.alertService.clear();
-    this.inValidateCheck.emailExits = true;
-    if (userInfoValue && userInfoValue._id) {
-      this.inValidateCheck.email = true;
-      this.userInfo = Object.assign({}, userInfoValue);
+    if (meetingInfoValue && meetingInfoValue._id) {
+      this.meetingInfo = Object.assign({}, meetingInfoValue);
     } else {
-      this.userInfo = new meeting();
+      this.meetingInfo = new meeting();
     }
     this.showAddEditUserModal.show();
   }
@@ -112,22 +98,22 @@ export class DashboardComponent implements OnInit {
   }
 
   showUserDeleteModal(user: any) {
-    this.userInfo = user;
+    this.meetingInfo = user;
     this.deleteUserModal.show();
   }
 
   addMeeting() {
     const self = this;
     this.spinner.show();
-    if (!this.userInfo.title ||
-      !this.userInfo.userIds.length
+    if (!this.meetingInfo.title ||
+      !this.meetingInfo.userIds.length
     ) {
       this.alertService.clear();
       this.alertService.error("*Please Fill All Fields are mandatory.");
       this.spinner.hide();
       return false
     }
-    let userPostData = JSON.parse(JSON.stringify(this.userInfo)); //IT BROKES TWO WAY DATABINDING
+    let userPostData = JSON.parse(JSON.stringify(this.meetingInfo)); //IT BROKES TWO WAY DATABINDING
     // HERE WE CAN CALL API FOR SAVING DATA
     this._meetingsService.saveMeetings(userPostData).subscribe(
       {
@@ -150,7 +136,7 @@ export class DashboardComponent implements OnInit {
 
   deleteUser() {
     this.spinner.show();
-    this.usersService.deleteUser(this.userInfo).subscribe(
+    this.usersService.deleteUser(this.meetingInfo).subscribe(
       (dataRes) => {
         console.log("error", dataRes)
         if (dataRes.status === 200) {
@@ -172,30 +158,37 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  changeUserStatus(user: any) {
-    let postData = {
-      _id: user._id,
-      status: user.status ? 0 : 1
-    }
-    // HERE WE CAN CALL API FOR SAVING DATA
-    this.usersService.saveUserInfo(postData).subscribe((dataRes: any) => {
-      if (dataRes.status === 200) {
-        dataRes = dataRes.data;
-        this.spinner.hide();
-        this.toastr.success('User status has been changed successfully.', 'Success!');
-        let index = this.usersList.findIndex(x => x._id === dataRes._id);
-        if (index) {
-          this.usersList[index].status = dataRes.status;
+  deleteMeeting() {
+    this.spinner.show();
+    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
+      (dataRes) => {
+        console.log("error", dataRes)
+        if (dataRes.status === 200) {
+          this.closeModel();
+          this.spinner.hide();
+          // this.getUsersList();
+          this.toastr.success('Meeting deleted successfully.', 'Success');
         }
+      },
+      (error) => {
+        console.log("error", error)
+        this.closeModel();
+        this.spinner.hide();
+        this.toastr.error(
+          'There are some server error. Please check connection.',
+          'Error'
+        );
       }
-    }, (error: any) => {
-      this.spinner.hide()
-      this.toastr.error(error.message, 'Error!');
-    });
+    );
   }
 
-  getMeetings() {
-    this._meetingsService.getMeetingsList().subscribe(
+
+
+  getMeetings(tab?: string) {
+    if (tab) {
+      this.meetingTab = tab
+    }
+    this._meetingsService.getMeetingsList({ tab: this.meetingTab }).subscribe(
       {
         next: (dataRes: any) => {
           if (dataRes.status === 200) {
@@ -212,13 +205,14 @@ export class DashboardComponent implements OnInit {
     )
   }
 
-  getMeetingEmp() {
-    this._meetingsService.getMeetingsList().subscribe(
+  meetingUsersList: any[] = [];
+  getMeetingUsers(meeting: any) {
+    this._meetingsService.getMeetingsUser({ meetingId: meeting._id }).subscribe(
       {
         next: (dataRes: any) => {
           if (dataRes.status === 200) {
             this.spinner.hide();
-            console.log('Get All meeting data into component', dataRes.data[0]._id);
+            this.meetingUsersList = dataRes.data;
           }
         },
         error: (error: any) => {

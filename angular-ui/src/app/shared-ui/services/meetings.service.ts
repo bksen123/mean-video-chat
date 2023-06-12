@@ -45,8 +45,23 @@ export class MeetingsService {
     );
   }
 
-  public getMeetingsList(): Observable<any> {
-    return this.apiService.get(`${this.meetings}/getMeetingsList`).pipe(
+  public deleteMeeting(param: object): Observable<any> {
+    return this.apiService.delete(`${this.meetings}/deleteMeeting`, param).pipe(
+      map((data) => {
+        return data;
+      })
+    );
+  }
+
+  public getMeetingsList(param: object): Observable<any> {
+    return this.apiService.post(`${this.meetings}/getMeetingsList`, param).pipe(
+      map((data) => {
+        return data;
+      })
+    );
+  }
+  public getMeetingsUser(param: object): Observable<any> {
+    return this.apiService.post(`${this.meetings}/getMeetingsUser`, param).pipe(
       map((data) => {
         return data;
       })

@@ -66,13 +66,16 @@ export class LoginComponent implements OnInit {
                 window.location.replace(environment.baseUrl + this.amwZoomId);
               }, 3000);
             } else {
-              if (userDetails.role === environment.role.userRole) {
-                this.router.navigate(['/you-are-unauthorized']);
-              } else {
-                setTimeout(() => {
-                  this.router.navigate(['/dashboard']);
-                }, 3000);
-              }
+              // if (userDetails.role === environment.role.userRole) {
+              //   this.router.navigate(['/you-are-unauthorized']);
+              // } else {
+              //   setTimeout(() => {
+              //     this.router.navigate(['/dashboard']);
+              //   }, 3000);
+              // }
+              setTimeout(() => {
+                this.router.navigate(['/dashboard']);
+              }, 3000);
             }
           } else {
             this.toastr.error(dataResp.message, 'Error');

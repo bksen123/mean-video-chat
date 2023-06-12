@@ -93,6 +93,7 @@ exports.doSignIn = async (req, res) => {
         userDetails = JSON.parse(JSON.stringify(userDetails));
         userDetails.authorization = token;
         req.session.currentUser = userDetails;
+        // console.log("userDetails========", userDetails);
         return res.json({
           message: "You have signin successfully!",
           status: 200,
@@ -275,7 +276,7 @@ exports.forgotPassword = (req, res) => {
 };
 
 exports.authentication = (req, res) => {
-  if (req.headers && req.headers.authorization) {
+  if (req.session && req.session.currentUser && req.headers && req.headers.authorization) {
     const authorization = req.headers.authorization.split(" ")[1];
     globalService.verifyToken(authorization, (verifyResp) => {
       if (verifyResp.verify) {

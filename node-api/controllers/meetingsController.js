@@ -24,9 +24,10 @@ exports.saveMeetings = async (req, res) => {
             userId: ele._id,
             meetingId: userResp._id,
             uuZoomId: userResp.uuZoomId,
+            userAck: userDetails.role === 'user' ? false : true
           };
           var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
-          if (MeetinUserRes) {
+          if (MeetinUserRes && userDetails.role === 'user') {
             var prepareEmailConfig = {
               email: userDetails.email,
               userName: globalService.capitalize(ele.userName),
@@ -60,6 +61,7 @@ exports.saveMeetings = async (req, res) => {
             // return;
             globalService.prepareEmailData(prepareEmailConfig);
           }
+          // console.log('userDetails========', userDetails);
         })
       );
       return res.json({
@@ -177,9 +179,47 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getMeetingsList = async (req, res) => {
+  var currentUser = req.session.currentUser
+
+
+  var postData = req.body;
+  let whereObj = {};
+
+  let todayDate = new Date();
+  let date = todayDate.getDate();
+  let month = todayDate.getMonth();
+  let year = todayDate.getFullYear();
+
+
+  if (postData.tab === 'coming') {
+    whereObj = {
+      meetingDate: {
+        $gte: new Date(year, month, date),
+        // $lt: new Date(year, month, date + 1),
+      }
+    };
+  } else if (postData.tab === 'previous') {
+    whereObj = {
+      meetingDate: {
+        $lt: new Date(year, month, date),
+      }
+    };
+  }
+  let UserMeetings = [];
+  if (currentUser && currentUser.role !== 'admin') {
+    let userMeeting = await MeetingUsers.find({ userId: currentUser._id }).select('meetingId -_id');
+    if (userMeeting.length) {
+      UserMeetings = userMeeting.map(ele => ele.meetingId);
+      if (UserMeetings.length) {
+        whereObj._id = {
+          $in: UserMeetings
+        }
+      }
+
+    }
+  }
   try {
-    const data = await Meetings.find();
-    // console.log("Meeting list Data into controller", data);
+    const data = await Meetings.find(whereObj).sort({ createdAt: "-1" });
     return res.json({
       status: 200,
       message: "Get the Meeting list Successfully.",
@@ -194,9 +234,11 @@ exports.getMeetingsList = async (req, res) => {
   }
 };
 
-exports.getMeetingUsersList = async (req, res) => {
+exports.getMeetingsUser = async (req, res) => {
   try {
-    const data = await MeetingUsers.find();
+    const data = await MeetingUsers.find({
+      meetingId: req.body.meetingId,
+    }).populate("userId");
     // console.log("MeetingUser list Data into controller", data);
     return res.json({
       status: 200,
@@ -214,7 +256,7 @@ exports.getMeetingUsersList = async (req, res) => {
 
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
-    var userResp = await MeetingUsers.findOne(whereObj).populate('userId');
+    var userResp = await MeetingUsers.findOne(whereObj).populate("userId");
     // console.log("userResp", userResp)
     if (userResp && userResp.userAck) {
       return next(null, {
@@ -232,6 +274,28 @@ exports.getUsersByMeeting = async (whereObj, next) => {
     return next(error, {
       status: 500,
       message: "There are some while meeting verify...",
+    });
+  }
+};
+
+exports.deleteMeeting = async (req, res) => {
+  var postData = req.body;
+  let redponceMeeting = await Meetings.findOneAndDelete({ _id: postData._id });
+  let redponceMeetingUsers = await MeetingUsers.deleteMany({
+    meetingId: postData._id,
+  });
+  let redponce = { redponceMeeting, redponceMeetingUsers };
+  if (redponce) {
+    return res.json({
+      status: 200,
+      message: "Meeting Deleted successfully.",
+      data: redponce,
+    });
+  } else {
+    return res.json({
+      status: 400,
+      message: "There are some error while Deleting Meeting.",
+      data: redponce,
     });
   }
 };
