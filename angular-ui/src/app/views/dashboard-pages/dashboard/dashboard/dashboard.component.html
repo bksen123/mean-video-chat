@@ -10,7 +10,7 @@
 </div>
 
 <div class="container card p-3">
-  <ul class="nav nav-pills pb-2">
+  <ul class="nav nav-pills pb-3">
     <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
         (click)="getMeetings('coming')">Coming Meetings</a>
@@ -35,22 +35,21 @@
               attr.aria-controls="meeting_{{i}}">
               <div class="row w-100">
                 <div class="col-md-7">
-                  <i class="icon-calendar pe-2"></i><b>{{meeting.title}}</b>
+                  <i class="icon-calendar pe-2"></i>{{meeting.title}}
                 </div>
                 <div class="col-md-2">
-                  <i class="fa fa-calendar-o pe-1" aria-hidden="true"></i><b>{{meetingsList[0].meetingDate |
-                    date:'dd-MM-yyyy'}} </b>
+                  <i class="fa fa-calendar-o pe-1" aria-hidden="true"></i>{{meetingsList[0].meetingDate |
+                  date:'dd-MM-yyyy'}}
                 </div>
                 <div class="col-md-1">
-                  <i class="fa fa-solid fa-link pe-2"></i><b>Join</b>
+                  <i class="fa fa-solid fa-link pe-2"></i>Join
                 </div>
                 <div class="col-md-1">
-                  <i class="fa fa-users"></i><b class="px-1">{{meeting.totalUsers}}</b>
+                  <i class="fa fa-users"></i> &nbsp;{{meeting.totalUsers}}
                 </div>
-                <div class="col-md-1 ps-5">
+                <div class="col-md-1 ps-4">
                   <button class="border-0">
-                    <i class="fa fa-trash text-danger" aria-hidden="true" data-bs-toggle="modal"
-                      data-bs-target="#deleteMeetingModal">
+                    <i class="fa fa-trash text-danger" aria-hidden="true" (click)="showMeetingDeleteModal(meeting)">
                     </i>
                   </button>
                 </div>
@@ -194,30 +193,32 @@
 
 
 <!-- Delete Meeting Modal -->
-<div class="modal fade" id="deleteMeetingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div bsModal #deleteMeetingModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static', keyboard: false, animated: true}">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Meeting</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title"><i class="fa fa-trash"></i> Delete Meeting</h4>
+        <button type="button" class="close" (click)="closeModel()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <div class="row" *ngFor="let meeting of meetingsList;">
-          <div class="col">
-            <div class="row">
-              <div class="col">Meeting:</div>
-              <div class="col">{{meeting.title}}</div>
-            </div>
-            <div class="row">
-              <div class="col"></div>
-              <div class="col"></div>
-            </div>
-          </div>
-        </div>
+        <h4>Are you sure want to delete this Meeting?</h4>
+        <br>
+        <p>
+          <b>Meeting Name :</b> {{meetingInfo.title}} <br />
+        </p>
+        <p>
+          <b>Meeting Date & Time :</b> {{meetingInfo.meetingDate | date:'dd-MM-yyyy HH:MM:SS'}} <br />
+        </p>
+        <!-- <p>
+          <b>Meeting Users :</b> {{meetingInfo.userIds.userName}} <br />
+        </p> -->
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="deleteMeeting()">Delete</button>
+      <div class="modal-footer border-top-0 d-flex  justify-content-start">
+        <button type="button" class="btn btn-default me-1" (click)="closeModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete</button>
       </div>
     </div>
   </div>
