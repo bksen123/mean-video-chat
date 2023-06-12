@@ -9,7 +9,7 @@
   </div>
 </div>
 
-<div class="container card p-3">
+<div class="container card p-3" style="height: 450px;">
   <ul class="nav nav-pills pb-3">
     <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
@@ -38,19 +38,22 @@
                   <i class="icon-calendar pe-2"></i>{{meeting.title}}
                 </div>
                 <div class="col-md-2">
-                  <i class="fa fa-calendar-o pe-1" aria-hidden="true"></i>{{meetingsList[0].meetingDate |
+                  <i class="fa fa-calendar-o pe-1" aria-hidden="true"></i>{{meeting.meetingDate |
                   date:'dd-MM-yyyy'}}
                 </div>
                 <div class="col-md-1">
-                  <i class="fa fa-solid fa-link pe-2"></i>Join
+                  <button class="border-0">
+                    <a href="{{meeting.uuZoomId}}amw-zoom{{currentUser._id}}" target="_blank">
+                      <i class="fa fa-solid fa-link pe-2 text-dark">&nbsp;Join</i>
+                    </a>
+                  </button>
                 </div>
                 <div class="col-md-1">
                   <i class="fa fa-users"></i> &nbsp;{{meeting.totalUsers}}
                 </div>
                 <div class="col-md-1 ps-4">
                   <button class="border-0">
-                    <i class="fa fa-trash text-danger" aria-hidden="true" (click)="showMeetingDeleteModal(meeting)">
-                    </i>
+                    <i class="fa fa-trash text-danger" aria-hidden="true" (click)="showMeetingDeleteModal(meeting)"></i>
                   </button>
                 </div>
               </div>
@@ -84,9 +87,6 @@
     </div>
   </div>
 </div>
-
-
-
 
 <pre [innerHtml]="meetingUsersList | json"> </pre>
 

@@ -60,7 +60,7 @@ export class UsersComponent implements OnInit {
       },],
     };
     this.userRoles = Object.values(this.userRoles) //convert object to array
-    console.log("this.userRoles======", this.userRoles);
+    // console.log("this.userRoles======", this.userRoles);
   }
 
   ngAfterViewInit(): void {
@@ -193,7 +193,7 @@ export class UsersComponent implements OnInit {
     this.spinner.show();
     this.usersService.deleteUser(this.userInfo).subscribe(
       (dataRes) => {
-        console.log("error", dataRes)
+        // console.log("error", dataRes)
         if (dataRes.status === 200) {
           this.closeModel();
           this.spinner.hide();
@@ -202,7 +202,7 @@ export class UsersComponent implements OnInit {
         }
       },
       (error) => {
-        console.log("error", error)
+        // console.log("error", error)
         this.closeModel();
         this.spinner.hide();
         this.toastr.error(

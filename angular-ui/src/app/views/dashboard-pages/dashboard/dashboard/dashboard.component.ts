@@ -4,7 +4,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
-import { AlertService, GlobalService, UsersService } from 'src/app/shared-ui';
+import { AlertService, AuthGuard, GlobalService, JwtService, UsersService } from 'src/app/shared-ui';
 import { MeetingsService } from 'src/app/shared-ui/services/meetings.service';
 import { environment } from 'src/environments/environment';
 import { meeting, validationFields } from '../models/meeting.model';
@@ -25,8 +25,12 @@ export class DashboardComponent implements OnInit {
   meetingUsersList: any[] = [];
   @ViewChild('showAddEditUserModal', { static: false, })
   public showAddEditUserModal: any = ModalDirective;
+
   @ViewChild('deleteMeetingModal', { static: false })
   public deleteMeetingModal: any = ModalDirective;
+
+  currentUser: any
+  myCurrentUser: string = '';
   disabled = false;
   usersDropdownSettings: any = {};
 
@@ -37,11 +41,13 @@ export class DashboardComponent implements OnInit {
     private toastr: ToastrService,
     private alertService: AlertService,
     private _meetingsService: MeetingsService,
+    private jwtService: JwtService,
   ) {
     this.getUsersList();
   }
 
   ngOnInit(): void {
+    this.currentUser = this.jwtService.getCurrentUser();
     this.getMeetings();
     this.usersDropdownSettings = {
       singleSelection: false,
@@ -64,7 +70,6 @@ export class DashboardComponent implements OnInit {
           // console.log("userList",this.usersList);
         }
       },
-
       error: (error: any) => {
         this.spinner.hide()
         this.toastr.error(error.message, 'Error!');
@@ -121,6 +126,7 @@ export class DashboardComponent implements OnInit {
             this.toastr.success(dataRes.message, 'Success!');
             dataRes = dataRes.data;
             this.closeModel();
+            this.getMeetings();
           }
         },
         error: (error: any) => {
@@ -135,30 +141,6 @@ export class DashboardComponent implements OnInit {
   showMeetingDeleteModal(meeting: any) {
     this.meetingInfo = meeting;
     this.deleteMeetingModal.show();
-  }
-
-  deleteMeeting() {
-    this.spinner.show();
-    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
-      (dataRes) => {
-        console.log("error", dataRes)
-        if (dataRes.status === 200) {
-          this.closeModel();
-          this.spinner.hide();
-          this.getUsersList();
-          this.toastr.success('Meeting deleted successfully.', 'Success');
-        }
-      },
-      (error) => {
-        console.log("error", error)
-        this.closeModel();
-        this.spinner.hide();
-        this.toastr.error(
-          'There are some server error. Please check connection.',
-          'Error'
-        );
-      }
-    );
   }
 
   getMeetings(tab?: string) {
@@ -197,6 +179,30 @@ export class DashboardComponent implements OnInit {
         }
       }
     )
+  }
+
+  deleteMeeting() {
+    this.spinner.show();
+    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
+      (dataRes) => {
+        // console.log("error", dataRes)
+        if (dataRes.status === 200) {
+          this.closeModel();
+          this.spinner.hide();
+          this.getMeetings();
+          this.toastr.success('Meeting deleted successfully.', 'Success');
+        }
+      },
+      (error) => {
+        // console.log("error", error)
+        this.closeModel();
+        this.spinner.hide();
+        this.toastr.error(
+          'There are some server error. Please check connection.',
+          'Error'
+        );
+      }
+    );
   }
 
 }
