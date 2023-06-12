@@ -26,7 +26,7 @@ exports.saveMeetings = async (req, res) => {
             uuZoomId: userResp.uuZoomId,
           };
           var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
-          if (MeetinUserRes) {
+          if (MeetinUserRes && userDetails.role === 'user') {
             var prepareEmailConfig = {
               email: userDetails.email,
               userName: globalService.capitalize(ele.userName),

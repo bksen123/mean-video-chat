@@ -105,7 +105,10 @@ app.get("/:room", (req, res) => {
   console.log("req.params", req.params);
   let room = req.params.room;
   var meetingDetails = room.split("amw-zoom");
-  if (meetingDetails.length > 1) {
+  console.log("meetingDetails", meetingDetails);
+  if (meetingDetails[1] === '-public') {
+    res.render("room", { userDetails: {} });
+  } else if (meetingDetails.length > 1) {
     MeetingCtl.getUsersByMeeting({
       uuZoomId: meetingDetails[0],
       userId: meetingDetails[1]
@@ -116,7 +119,7 @@ app.get("/:room", (req, res) => {
         res.redirect('/#/login/' + room);
       } else {
         if (error) {
-          res.send('You need to acknowledgement via email before join meeting So firstly do acknowledgement.');
+          res.send('You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting.');
         } else {
           // console.log("resp====", resp.data.userId);
           var userDetails = resp.data.userId

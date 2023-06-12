@@ -26,9 +26,14 @@ showChat.addEventListener("click", () => {
   // document.querySelector(".header__back").style.display = "block";
 });
 
-const user = userName;
-console.log("userName", user);
-// const user = prompt("Enter your name");
+let user
+if (userName) {
+  user = userName;
+  console.log("userName", user);
+} else {
+  user = prompt("Enter your name");
+  profile = 'assets/img/brand/avatar.png'
+}
 var peer = new Peer({
   // host: '127.0.0.1',
   host: "/",
