@@ -62,7 +62,7 @@
                     <th>S.No</th>
                     <th>Username</th>
                     <th>Email I'd</th>
-                    <th>Knowledgement</th>
+                    <th>Acknowledgement</th>
                   </tr>
                 </thead>
                 <tbody class="text-wrap">
@@ -70,7 +70,7 @@
                     <th scope="row">{{i+1}}</th>
                     <td>{{user.userId.userName}}</td>
                     <td>{{user.userId.email}}</td>
-                    <td>{{user.role === 'admin' ? 'Yes' : 'NO'}}</td>
+                    <td>{{user.userAck ? 'Yes' : 'No'}}</td>
                   </tr>
                 </tbody>
               </table>

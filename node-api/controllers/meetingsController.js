@@ -24,6 +24,7 @@ exports.saveMeetings = async (req, res) => {
             userId: ele._id,
             meetingId: userResp._id,
             uuZoomId: userResp.uuZoomId,
+            userAck: userDetails.role === 'user' ? false : true
           };
           var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
           if (MeetinUserRes && userDetails.role === 'user') {
