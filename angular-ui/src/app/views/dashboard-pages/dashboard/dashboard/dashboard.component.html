@@ -12,10 +12,6 @@
 <div class="container card p-3">
   <ul class="nav nav-pills pb-3">
     <li class="nav-item">
-      <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
-        (click)="getMeetings('coming')">Coming Meetings</a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
         (click)="getMeetings('previous')">Previous Meetings</a>
     </li>
@@ -23,6 +19,10 @@
       <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
         (click)="getMeetings('all')">All
         Meetings</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
+        (click)="getMeetings('coming')">Coming Meetings</a>
     </li>
   </ul>
   <div class="tab-content pt-0">
@@ -65,7 +65,7 @@
                     <th>S.No</th>
                     <th>Username</th>
                     <th>Email I'd</th>
-                    <th>Knowledgement</th>
+                    <th>Acknowledgement</th>
                   </tr>
                 </thead>
                 <tbody class="text-wrap">
@@ -73,7 +73,7 @@
                     <th scope="row">{{i+1}}</th>
                     <td>{{user.userId.userName}}</td>
                     <td>{{user.userId.email}}</td>
-                    <td>{{user.role === 'admin' ? 'Yes' : 'NO'}}</td>
+                    <td>{{user.userAck ? 'Yes' : 'No'}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -167,31 +167,6 @@
   </div>
 </div>
 
-<div bsModal #deleteUserModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true" [config]="{backdrop: 'static', keyboard: false, animated: true}">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title"><i class="fa fa-trash"></i> Delete User</h4>
-        <button type="button" class="close" (click)="closeModel()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <h4>Are you sure want to delete this Meeting?</h4>
-        <p>
-          <b>User Name :</b> {{meetingInfo.title}} <br />
-        </p>
-      </div>
-      <div class="modal-footer border-top-0 d-flex  justify-content-start">
-        <button type="button" class="btn btn-default me-1" (click)="closeModel()">Close</button>
-        <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 <!-- Delete Meeting Modal -->
 <div bsModal #deleteMeetingModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static', keyboard: false, animated: true}">
@@ -210,15 +185,12 @@
           <b>Meeting Name :</b> {{meetingInfo.title}} <br />
         </p>
         <p>
-          <b>Meeting Date & Time :</b> {{meetingInfo.meetingDate | date:'dd-MM-yyyy HH:MM:SS'}} <br />
+          <b>Meeting Date & Time :</b> {{meetingInfo.meetingDate | date:'dd-MM-YYYY HH:MM:SS'}} <br />
         </p>
-        <!-- <p>
-          <b>Meeting Users :</b> {{meetingInfo.userIds.userName}} <br />
-        </p> -->
       </div>
       <div class="modal-footer border-top-0 d-flex  justify-content-start">
         <button type="button" class="btn btn-default me-1" (click)="closeModel()">Close</button>
-        <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete</button>
+        <button type="button" class="btn btn-danger" (click)="deleteMeeting()">Delete</button>
       </div>
     </div>
   </div>

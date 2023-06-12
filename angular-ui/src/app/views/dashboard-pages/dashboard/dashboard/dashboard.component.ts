@@ -14,24 +14,22 @@ import { meeting, validationFields } from '../models/meeting.model';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
+
 export class DashboardComponent implements OnInit {
 
-  meetingTab: string = 'coming'
+  meetingTab: string = 'all'
   meetingInfo: meeting = new meeting();
   userRoles: any = environment.role;
   usersList: any[] = [];
   meetingsList: any[] = [];
+  meetingUsersList: any[] = [];
   @ViewChild('showAddEditUserModal', { static: false, })
   public showAddEditUserModal: any = ModalDirective;
-  @ViewChild('deleteUserModal', { static: false })
-  public deleteUserModal: any = ModalDirective;
-
-
   @ViewChild('deleteMeetingModal', { static: false })
   public deleteMeetingModal: any = ModalDirective;
-
   disabled = false;
   usersDropdownSettings: any = {};
+
   constructor(
     private globalService: GlobalService,
     private usersService: UsersService,
@@ -44,8 +42,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('meetingInfo::::', this.meetingInfo);
-
     this.getMeetings();
     this.usersDropdownSettings = {
       singleSelection: false,
@@ -57,7 +53,6 @@ export class DashboardComponent implements OnInit {
       allowSearchFilter: true
     };
   }
-
 
   getUsersList() {
     this.usersService.getUsersList().subscribe({
@@ -99,12 +94,10 @@ export class DashboardComponent implements OnInit {
   closeModel() {
     this.showAddEditUserModal.hide();
     this.deleteMeetingModal.hide();
-    this.deleteUserModal.hide();
   }
 
   showUserDeleteModal(user: any) {
     this.meetingInfo = user;
-    this.deleteUserModal.show();
   }
 
   addMeeting() {
@@ -139,30 +132,6 @@ export class DashboardComponent implements OnInit {
     return
   }
 
-  deleteUser() {
-    this.spinner.show();
-    this.usersService.deleteUser(this.meetingInfo).subscribe(
-      (dataRes) => {
-        console.log("error", dataRes)
-        if (dataRes.status === 200) {
-          this.closeModel();
-          this.spinner.hide();
-          this.getUsersList();
-          this.toastr.success('User deleted successfully.', 'Success');
-        }
-      },
-      (error) => {
-        console.log("error", error)
-        this.closeModel();
-        this.spinner.hide();
-        this.toastr.error(
-          'There are some server error. Please check connection.',
-          'Error'
-        );
-      }
-    );
-  }
-
   showMeetingDeleteModal(meeting: any) {
     this.meetingInfo = meeting;
     this.deleteMeetingModal.show();
@@ -170,14 +139,13 @@ export class DashboardComponent implements OnInit {
 
   deleteMeeting() {
     this.spinner.show();
-    console.log('DDDDDDDDDDDD', this.meetingsList[0]._id);
-    this._meetingsService.deleteMeeting(this.meetingsList[0]._id).subscribe(
+    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
       (dataRes) => {
         console.log("error", dataRes)
         if (dataRes.status === 200) {
           this.closeModel();
           this.spinner.hide();
-          // this.getUsersList();
+          this.getUsersList();
           this.toastr.success('Meeting deleted successfully.', 'Success');
         }
       },
@@ -214,7 +182,6 @@ export class DashboardComponent implements OnInit {
     )
   }
 
-  meetingUsersList: any[] = [];
   getMeetingUsers(meeting: any) {
     this._meetingsService.getMeetingsUser({ meetingId: meeting._id }).subscribe(
       {

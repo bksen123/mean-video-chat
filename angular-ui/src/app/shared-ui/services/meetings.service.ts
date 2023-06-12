@@ -45,11 +45,9 @@ export class MeetingsService {
     );
   }
 
-  public deleteMeeting(param: any): Observable<any> {
-    console.log('SSSSSSSDDDDDD', param);
+  public deleteMeeting(param: object): Observable<any> {
     return this.apiService.post(`${this.meetings}/deleteMeeting`, param).pipe(
       map((data) => {
-        console.log('datadatadatadataSSSSSSSS', data);
         return data;
       })
     );
@@ -70,4 +68,5 @@ export class MeetingsService {
       })
     );
   }
+
 }

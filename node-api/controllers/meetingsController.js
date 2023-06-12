@@ -24,9 +24,10 @@ exports.saveMeetings = async (req, res) => {
             userId: ele._id,
             meetingId: userResp._id,
             uuZoomId: userResp.uuZoomId,
+            userAck: userDetails.role === "user" ? false : true,
           };
           var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
-          if (MeetinUserRes) {
+          if (MeetinUserRes && userDetails.role === "user") {
             var prepareEmailConfig = {
               email: userDetails.email,
               userName: globalService.capitalize(ele.userName),
@@ -60,6 +61,7 @@ exports.saveMeetings = async (req, res) => {
             return;
             globalService.prepareEmailData(prepareEmailConfig);
           }
+          // console.log('userDetails========', userDetails);
         })
       );
       return res.json({
