@@ -60,6 +60,7 @@ exports.saveMeetings = async (req, res) => {
             return;
             globalService.prepareEmailData(prepareEmailConfig);
           }
+          // console.log('userDetails========', userDetails);
         })
       );
       return res.json({

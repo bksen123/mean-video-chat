@@ -100,7 +100,7 @@ export class LoginComponent implements OnInit {
         this.spinner.show();
         // console.log(resp.email, 'response === ', resp);
         if (resp.authToken) {
-          this.login.email = 'resp.email';
+          this.login.email = resp.email;
           this.login.userName = resp.firstName + ' ' + resp.lastName;
           this.login.profileImage = resp.photoUrl;
           this.spinner.hide();

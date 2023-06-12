@@ -93,6 +93,7 @@ exports.doSignIn = async (req, res) => {
         userDetails = JSON.parse(JSON.stringify(userDetails));
         userDetails.authorization = token;
         req.session.currentUser = userDetails;
+        // console.log("userDetails========", userDetails);
         return res.json({
           message: "You have signin successfully!",
           status: 200,
