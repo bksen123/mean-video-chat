@@ -4,6 +4,7 @@ import { currentUser, GlobalService, JwtService } from '../../shared-ui';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 declare var $: any;
 
 @Component({
@@ -37,6 +38,12 @@ export class DashboardLayoutComponent implements OnInit {
           this.currentUser = this.jwtService.getCurrentUser();
         }
       });
+
+    if (this.currentUser.role === environment.role.adminRole) {
+      this.navItems = JSON.parse(JSON.stringify(navItems));
+    } else {
+      this.navItems = JSON.parse(JSON.stringify([navItems[0]]));
+    }
   }
   toggleClass() {
     if (window.innerWidth > 992) {
