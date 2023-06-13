@@ -96,7 +96,7 @@ exports.acknowledgement = async (req, res) => {
       return res.json({
         status: 200,
         message:
-          "Meeting acknowledgement has been Successfully. Please login to join meeting",
+          "Meeting Acknowledge has been Successfully. Please login to join meeting",
         data: userResp,
       });
     } else {
