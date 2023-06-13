@@ -254,18 +254,26 @@ exports.getMeetingsUser = async (req, res) => {
 
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
-    var userResp = await MeetingUsers.findOne(whereObj).populate("userId");
-    // console.log("userResp", userResp)
-    if (userResp && userResp.userAck) {
+    var userResp = await MeetingUsers.findOne(whereObj).populate("userId").populate('meetingId');
+    var meetSchRes = globalService.compareDate(userResp);
+    if (userResp && userResp.userAck && meetSchRes) {
       return next(null, {
         status: 200,
         message: "Meeting verify has been Successfully.",
         data: userResp,
       });
     } else {
+      let msg = '';
+      if (userResp && !userResp.userAck) {
+        msg = 'You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting.'
+      } else if (userResp && userResp.userAck && !meetSchRes) {
+        msg = 'This meeting is out of date.';
+      } else {
+        msg = 'There are some while meeting verify with user...';
+      }
       return next(true, {
         status: 500,
-        message: "There are some while meeting verify...",
+        message: msg,
       });
     }
   } catch (error) {
