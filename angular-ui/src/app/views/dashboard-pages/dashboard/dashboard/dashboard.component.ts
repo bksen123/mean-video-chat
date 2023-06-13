@@ -1,46 +1,53 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataTableDirective } from 'angular-datatables';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Subject } from 'rxjs';
-import { AlertService, GlobalService, UsersService } from 'src/app/shared-ui';
+import { AlertService, JwtService, UsersService } from 'src/app/shared-ui';
 import { MeetingsService } from 'src/app/shared-ui/services/meetings.service';
 import { environment } from 'src/environments/environment';
-import { meeting, validationFields } from '../models/meeting.model';
+import { meeting } from '../models/meeting.model';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
+
 export class DashboardComponent implements OnInit {
+
+  deleteCrtUser: any;
 
   meetingTab: string = 'all'
   meetingInfo: meeting = new meeting();
   userRoles: any = environment.role;
   usersList: any[] = [];
   meetingsList: any[] = [];
-  @ViewChild('showAddEditUserModal', { static: false, })
-  public showAddEditUserModal: any = ModalDirective;
-  @ViewChild('deleteUserModal', { static: false })
-  public deleteUserModal: any = ModalDirective;
-
+  meetingUsersList: any[] = [];
+  currentUser: any;
   disabled = false;
   usersDropdownSettings: any = {};
+  @ViewChild('showAddEditUserModal', { static: false, })
+  public showAddEditUserModal: any = ModalDirective;
+  @ViewChild('deleteMeetingModal', { static: false })
+  public deleteMeetingModal: any = ModalDirective;
+
   constructor(
-    private globalService: GlobalService,
     private usersService: UsersService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private alertService: AlertService,
     private _meetingsService: MeetingsService,
+    private jwtService: JwtService,
   ) {
     this.getUsersList();
   }
 
   ngOnInit(): void {
-    console.log('MMMMMMMMMMMM', this.meetingsList);
+    console.log('Meeting Info:::', this.meetingInfo.userIds);
+
+    this.currentUser = this.jwtService.getCurrentUser();
+    console.log('currentUser', this.currentUser);
+    console.log('currentUser-ID', this.currentUser._id);
 
     this.getMeetings();
     this.usersDropdownSettings = {
@@ -54,18 +61,16 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-
   getUsersList() {
     this.usersService.getUsersList().subscribe({
       next: (dataRes: any) => {
         this.spinner.show();
         if (dataRes.status == 200) {
           this.spinner.hide();
+          dataRes.data = dataRes.data.filter((e: any) => e._id !== this.currentUser._id);
           this.usersList = dataRes.data;
-          // console.log("userList",this.usersList);
         }
       },
-
       error: (error: any) => {
         this.spinner.hide()
         this.toastr.error(error.message, 'Error!');
@@ -94,12 +99,11 @@ export class DashboardComponent implements OnInit {
 
   closeModel() {
     this.showAddEditUserModal.hide();
-    this.deleteUserModal.hide();
+    this.deleteMeetingModal.hide();
   }
 
   showUserDeleteModal(user: any) {
     this.meetingInfo = user;
-    this.deleteUserModal.show();
   }
 
   addMeeting() {
@@ -123,6 +127,7 @@ export class DashboardComponent implements OnInit {
             this.toastr.success(dataRes.message, 'Success!');
             dataRes = dataRes.data;
             this.closeModel();
+            this.getMeetings();
           }
         },
         error: (error: any) => {
@@ -134,55 +139,10 @@ export class DashboardComponent implements OnInit {
     return
   }
 
-  deleteUser() {
-    this.spinner.show();
-    this.usersService.deleteUser(this.meetingInfo).subscribe(
-      (dataRes) => {
-        console.log("error", dataRes)
-        if (dataRes.status === 200) {
-          this.closeModel();
-          this.spinner.hide();
-          this.getUsersList();
-          this.toastr.success('User deleted successfully.', 'Success');
-        }
-      },
-      (error) => {
-        console.log("error", error)
-        this.closeModel();
-        this.spinner.hide();
-        this.toastr.error(
-          'There are some server error. Please check connection.',
-          'Error'
-        );
-      }
-    );
+  showMeetingDeleteModal(meeting: any) {
+    this.meetingInfo = meeting;
+    this.deleteMeetingModal.show();
   }
-
-  deleteMeeting() {
-    this.spinner.show();
-    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
-      (dataRes) => {
-        console.log("error", dataRes)
-        if (dataRes.status === 200) {
-          this.closeModel();
-          this.spinner.hide();
-          // this.getUsersList();
-          this.toastr.success('Meeting deleted successfully.', 'Success');
-        }
-      },
-      (error) => {
-        console.log("error", error)
-        this.closeModel();
-        this.spinner.hide();
-        this.toastr.error(
-          'There are some server error. Please check connection.',
-          'Error'
-        );
-      }
-    );
-  }
-
-
 
   getMeetings(tab?: string) {
     if (tab) {
@@ -205,7 +165,6 @@ export class DashboardComponent implements OnInit {
     )
   }
 
-  meetingUsersList: any[] = [];
   getMeetingUsers(meeting: any) {
     this._meetingsService.getMeetingsUser({ meetingId: meeting._id }).subscribe(
       {
@@ -221,6 +180,30 @@ export class DashboardComponent implements OnInit {
         }
       }
     )
+  }
+
+  deleteMeeting() {
+    this.spinner.show();
+    this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
+      (dataRes) => {
+        // console.log("error", dataRes)
+        if (dataRes.status === 200) {
+          this.closeModel();
+          this.spinner.hide();
+          this.getMeetings();
+          this.toastr.success('Meeting deleted successfully.', 'Success');
+        }
+      },
+      (error) => {
+        // console.log("error", error)
+        this.closeModel();
+        this.spinner.hide();
+        this.toastr.error(
+          'There are some server error. Please check connection.',
+          'Error'
+        );
+      }
+    );
   }
 
 }

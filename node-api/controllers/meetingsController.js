@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 exports.saveMeetings = async (req, res) => {
   const postData = req.body;
   var meetingPost = postData;
+  postData.userIds.push(req.session.currentUser);
   meetingPost.totalUsers = postData.userIds.length;
   meetingPost.uuZoomId = uuidv4();
   // console.log("meetingPost=====", meetingPost)
@@ -19,19 +20,20 @@ exports.saveMeetings = async (req, res) => {
       await Promise.all(
         postData.userIds.map(async (ele) => {
           let userDetails = await User.findOne({ _id: ele._id });
-          // console.log("userDetails======", userDetails);
           let postMeetingUser = {
             userId: ele._id,
             meetingId: userResp._id,
             uuZoomId: userResp.uuZoomId,
-            userAck: userDetails.role === 'user' ? false : true
+            userAck: req.session.currentUser_id === ele._id ? true : false,
           };
           var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
-          if (MeetinUserRes && userDetails.role === 'user') {
+          // console.log("userDetails======", userDetails);
+          if (MeetinUserRes && req.session.currentUser._id !== ele._id) {
             var prepareEmailConfig = {
               email: userDetails.email,
               userName: globalService.capitalize(ele.userName),
               markerData: {
+                website: process.env.WEBSITE_URL + "login",
                 meeting_title: globalService.capitalize(userResp.title),
                 name: globalService.capitalize(ele.userName),
                 AMW_LOGO:
@@ -96,7 +98,7 @@ exports.acknowledgement = async (req, res) => {
       return res.json({
         status: 200,
         message:
-          "Meeting acknowledgement has been Successfully. Please login to join meeting",
+          "Meeting Acknowledge has been Successfully. Please login to join meeting",
         data: userResp,
       });
     } else {
@@ -179,9 +181,7 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getMeetingsList = async (req, res) => {
-  var currentUser = req.session.currentUser
-
-
+  var currentUser = req.session.currentUser;
   var postData = req.body;
   let whereObj = {};
 
@@ -190,32 +190,32 @@ exports.getMeetingsList = async (req, res) => {
   let month = todayDate.getMonth();
   let year = todayDate.getFullYear();
 
-
-  if (postData.tab === 'coming') {
+  if (postData.tab === "coming") {
     whereObj = {
       meetingDate: {
         $gte: new Date(year, month, date),
         // $lt: new Date(year, month, date + 1),
-      }
+      },
     };
-  } else if (postData.tab === 'previous') {
+  } else if (postData.tab === "previous") {
     whereObj = {
       meetingDate: {
         $lt: new Date(year, month, date),
-      }
+      },
     };
   }
   let UserMeetings = [];
-  if (currentUser && currentUser.role !== 'admin') {
-    let userMeeting = await MeetingUsers.find({ userId: currentUser._id }).select('meetingId -_id');
+  if (currentUser && currentUser.role !== "admin") {
+    let userMeeting = await MeetingUsers.find({
+      userId: currentUser._id,
+    }).select("meetingId -_id");
     if (userMeeting.length) {
-      UserMeetings = userMeeting.map(ele => ele.meetingId);
+      UserMeetings = userMeeting.map((ele) => ele.meetingId);
       if (UserMeetings.length) {
         whereObj._id = {
-          $in: UserMeetings
-        }
+          $in: UserMeetings,
+        };
       }
-
     }
   }
   try {
@@ -256,18 +256,26 @@ exports.getMeetingsUser = async (req, res) => {
 
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
-    var userResp = await MeetingUsers.findOne(whereObj).populate("userId");
-    // console.log("userResp", userResp)
-    if (userResp && userResp.userAck) {
+    var userResp = await MeetingUsers.findOne(whereObj).populate("userId").populate('meetingId');
+    var meetSchRes = globalService.compareDate(userResp);
+    if (userResp && userResp.userAck && meetSchRes) {
       return next(null, {
         status: 200,
         message: "Meeting verify has been Successfully.",
         data: userResp,
       });
     } else {
+      let msg = '';
+      if (userResp && !userResp.userAck) {
+        msg = 'You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting.'
+      } else if (userResp && userResp.userAck && !meetSchRes) {
+        msg = 'This meeting is out of date.';
+      } else {
+        msg = 'There are some while meeting verify with user...';
+      }
       return next(true, {
         status: 500,
-        message: "There are some while meeting verify...",
+        message: msg,
       });
     }
   } catch (error) {
@@ -280,6 +288,7 @@ exports.getUsersByMeeting = async (whereObj, next) => {
 
 exports.deleteMeeting = async (req, res) => {
   var postData = req.body;
+  console.log("MD::Controller", postData);
   let redponceMeeting = await Meetings.findOneAndDelete({ _id: postData._id });
   let redponceMeetingUsers = await MeetingUsers.deleteMany({
     meetingId: postData._id,
