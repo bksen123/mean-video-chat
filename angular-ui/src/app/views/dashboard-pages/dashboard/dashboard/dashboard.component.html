@@ -33,8 +33,8 @@
             <button (click)="getMeetingUsers(meeting)" class="accordion-button bg-gray collapsed w-100 h-25 p-2"
               type="button" data-bs-toggle="collapse" attr.data-bs-target="#meeting_{{i}}" aria-expanded="false"
               attr.aria-controls="meeting_{{i}}">
-              <div class="row w-100">
-                <div class="col-md-7">
+              <div class="row w-100" style="color: #0d6efd;">
+                <div class="col-md-6">
                   <i class="icon-calendar pe-2"></i>{{meeting.title}}
                 </div>
                 <div class="col-md-2">
@@ -44,13 +44,24 @@
                 <div class="col-md-1">
                   <button class="border-0">
                     <a href="{{meeting.uuZoomId}}amw-zoom{{currentUser._id}}" target="_blank">
-                      <i class="fa fa-solid fa-link pe-2 text-dark">&nbsp;Join</i>
+                      <i class="fa fa-solid fa-link pe-2">&nbsp;Join</i>
                     </a>
                   </button>
                 </div>
-                <div class="col-md-1">
-                  <i class="fa fa-users"></i> &nbsp;{{meeting.totalUsers}}
+
+                <div class="col-md-2 d-flex justify-content-center">
+                  <div class="row">
+                    <div class="col">
+                      <i class="fa fa-users">&nbsp;&nbsp;</i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="numberCircle" style="width: 200%;">{{meeting.totalUsers}}</div>
+                    </div>
+                  </div>
                 </div>
+
                 <div class="col-md-1 ps-4">
                   <button class="border-0">
                     <i class="fa fa-trash text-danger" aria-hidden="true" (click)="showMeetingDeleteModal(meeting)"></i>
@@ -88,8 +99,9 @@
   </div>
 </div>
 
-<pre [innerHtml]="meetingUsersList | json"> </pre>
+<!-- <pre [innerHtml]="meetingUsersList | json"> </pre> -->
 
+<!-- Create Meeting Modal -->
 <div bsModal #showAddEditUserModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',  keyboard: false, animated: true}">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -100,7 +112,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" style="min-height: 450px;">
+      <div class="modal-body">
         <div class="row row-xs align-items-center">
           <div class="mb-3">
             <label for="title" class="form-label">Meeting Title
