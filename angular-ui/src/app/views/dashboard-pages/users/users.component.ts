@@ -47,7 +47,7 @@ export class UsersComponent implements OnInit {
     this.dtOptions = {
       responsive: true,
       scrollX: true,
-      scrollY: '350px',
+      scrollY: '300px',
       scrollCollapse: true,
       columnDefs: [{
         targets: 5,
