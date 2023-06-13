@@ -15,6 +15,8 @@ import { meeting } from '../models/meeting.model';
 
 export class DashboardComponent implements OnInit {
 
+  deleteCrtUser: any;
+
   meetingTab: string = 'all'
   meetingInfo: meeting = new meeting();
   userRoles: any = environment.role;
@@ -41,7 +43,12 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('Meeting Info:::', this.meetingInfo.userIds);
+
     this.currentUser = this.jwtService.getCurrentUser();
+    console.log('currentUser', this.currentUser);
+    console.log('currentUser-ID', this.currentUser._id);
+
     this.getMeetings();
     this.usersDropdownSettings = {
       singleSelection: false,
@@ -60,8 +67,8 @@ export class DashboardComponent implements OnInit {
         this.spinner.show();
         if (dataRes.status == 200) {
           this.spinner.hide();
+          dataRes.data = dataRes.data.filter((e: any) => e._id !== this.currentUser._id);
           this.usersList = dataRes.data;
-          // console.log("userList",this.usersList);
         }
       },
       error: (error: any) => {
