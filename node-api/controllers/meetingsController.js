@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 exports.saveMeetings = async (req, res) => {
   const postData = req.body;
   var meetingPost = postData;
+  postData.userIds.push(req.session.currentUser);
   meetingPost.totalUsers = postData.userIds.length;
   meetingPost.uuZoomId = uuidv4();
   // console.log("meetingPost=====", meetingPost)
@@ -19,19 +20,20 @@ exports.saveMeetings = async (req, res) => {
       await Promise.all(
         postData.userIds.map(async (ele) => {
           let userDetails = await User.findOne({ _id: ele._id });
-          // console.log("userDetails======", userDetails);
           let postMeetingUser = {
             userId: ele._id,
             meetingId: userResp._id,
             uuZoomId: userResp.uuZoomId,
-            userAck: userDetails.role === "user" ? false : true,
+            userAck: req.session.currentUser_id === ele._id ? true : false,
           };
           var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
-          if (MeetinUserRes && userDetails.role === "user") {
+          // console.log("userDetails======", userDetails);
+          if (MeetinUserRes && req.session.currentUser._id !== ele._id) {
             var prepareEmailConfig = {
               email: userDetails.email,
               userName: globalService.capitalize(ele.userName),
               markerData: {
+                website: process.env.WEBSITE_URL + "login",
                 meeting_title: globalService.capitalize(userResp.title),
                 name: globalService.capitalize(ele.userName),
                 AMW_LOGO:
