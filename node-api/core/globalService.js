@@ -216,3 +216,15 @@ exports.linkExpiryError = () => {
     data: "Forgot Password Link has been expired. Please check link or again you can request for forgot password!.",
   };
 };
+exports.compareDate = (reqDetais) => {
+  var meetingDate = moment(reqDetais.meetingId.meetingDate).format("DD/MM/YYYY")
+  var now = moment().format("DD/MM/YYYY");
+  // console.log("meetingDate============", meetingDate);
+  // console.log("now============", now);
+  if (now > meetingDate) {
+    return false;
+  } else {
+    return true;
+  }
+
+};

@@ -118,12 +118,13 @@ app.get("/:room", (req, res) => {
       if (!req.session.currentUser) {
         res.redirect('/#/login/' + room);
       } else {
+        console.log("error", error);
         if (error) {
-          res.send('You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting.');
+          res.send(resp.message);
         } else {
-          // console.log("resp====", resp.data.userId);
           var userDetails = resp.data.userId
           userDetails.roomId = meetingDetails[0]
+          // console.log("userDetails=========", userDetails);
           res.render("room", { userDetails: userDetails });
         }
       }
