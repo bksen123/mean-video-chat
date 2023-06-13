@@ -1,27 +1,26 @@
 <div class="d-flex flex-row">
   <div class="col-12">
-    <h4>AMW Meetings
-      <button class="btn btn-sm btn-primary ms-3 pull-right" (click)="showAddEditModal()"><i
-          class="fas fa-plus me-2"></i>Schedule
-        New Meeting</button>
-    </h4>
+    <h5 class="text-primary"> <i class="icon-speedometer"></i> AMW Meetings
+      <button class="btn btn-sm btn-primary pt-1 pb-1 pull-right" (click)="showAddEditModal()"><i
+          class="fas fa-plus me-2"></i>Schedule Meeting</button>
+    </h5>
     <hr />
   </div>
 </div>
 
-<div class="container card p-3" style="height: 450px;">
+<div class="container card p-3 w-100" style="height: 450px; min-width: -webkit-fill-available;">
   <ul class="nav nav-pills pb-3">
     <li class="nav-item">
-      <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
+      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
         (click)="getMeetings('previous')">Previous Meetings</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
+      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
         (click)="getMeetings('all')">All
         Meetings</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
+      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
         (click)="getMeetings('coming')">Coming Meetings</a>
     </li>
   </ul>
@@ -87,12 +86,21 @@
                     <th scope="row">{{i+1}}</th>
                     <td>{{user.userId.userName}}</td>
                     <td>{{user.userId.email}}</td>
-                    <td>{{user.userAck ? 'Yes' : 'No'}}</td>
+                    <td [ngClass]="{'text-success': user.userAck, 'text-warning': !user.userAck}">
+                      <b>
+                        {{user.userAck ? 'Yes' : 'No'}}
+                      </b>
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
+        </div>
+        <div style="padding-top: 150px;" *ngIf="!meetingsList.length">
+          <h6 class="text-primary text-center">
+            No data found!
+          </h6>
         </div>
       </div>
     </div>
@@ -195,9 +203,6 @@
         <br>
         <p>
           <b>Meeting Name :</b> {{meetingInfo.title}} <br />
-        </p>
-        <p>
-          <b>Meeting Date & Time :</b> {{meetingInfo.meetingDate | date:'dd-MM-YYYY HH:MM:SS'}} <br />
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex  justify-content-start">

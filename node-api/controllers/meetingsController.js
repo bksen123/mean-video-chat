@@ -24,7 +24,7 @@ exports.saveMeetings = async (req, res) => {
             userId: ele._id,
             meetingId: userResp._id,
             uuZoomId: userResp.uuZoomId,
-            userAck: req.session.currentUser_id === ele._id ? true : false,
+            userAck: req.session.currentUser._id === ele._id ? true : false,
           };
           var MeetinUserRes = await MeetingUsers.create(postMeetingUser);
           // console.log("userDetails======", userDetails);
@@ -256,7 +256,9 @@ exports.getMeetingsUser = async (req, res) => {
 
 exports.getUsersByMeeting = async (whereObj, next) => {
   try {
-    var userResp = await MeetingUsers.findOne(whereObj).populate("userId").populate('meetingId');
+    var userResp = await MeetingUsers.findOne(whereObj)
+      .populate("userId")
+      .populate("meetingId");
     var meetSchRes = globalService.compareDate(userResp);
     if (userResp && userResp.userAck && meetSchRes) {
       return next(null, {
@@ -265,13 +267,14 @@ exports.getUsersByMeeting = async (whereObj, next) => {
         data: userResp,
       });
     } else {
-      let msg = '';
+      let msg = "";
       if (userResp && !userResp.userAck) {
-        msg = 'You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting.'
+        msg =
+          "You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting.";
       } else if (userResp && userResp.userAck && !meetSchRes) {
-        msg = 'This meeting is out of date.';
+        msg = "This meeting is out of date.";
       } else {
-        msg = 'There are some while meeting verify with user...';
+        msg = "There are some while meeting verify with user...";
       }
       return next(true, {
         status: 500,

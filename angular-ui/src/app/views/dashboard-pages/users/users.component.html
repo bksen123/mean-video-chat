@@ -1,16 +1,16 @@
 <div class="d-flex flex-row">
   <div class="col-12">
-    <h4 class="opacity-50">AMW Users</h4>
+    <h5 class="text-primary"> <i class="fa fa-users"></i> AMW Users
+      <button class="btn btn-primary pt-1 pb-1 pull-right" (click)="showAddEditModal()"><i
+          class="fas fa-plus me-2"></i>Add
+        New</button>
+    </h5>
     <hr />
   </div>
 </div>
-<div class="container-fluid app-user bg-white py-3 dataDisplaySection">
-  <div class="d-flex justify-content-end mb-3">
-    <div>
-      <button class="btn btn-sm btn-primary ms-3" (click)="showAddEditModal()"><i class="fas fa-plus me-2"></i>Add
-        New</button>
-    </div>
-  </div>
+
+
+<div class="container-fluid card p-3" style="min-height: 500px;">
   <!-- list -->
   <table [dtOptions]="dtOptions" datatable [dtTrigger]="dtTrigger"
     class="table table-bordered table-hover table-striped">
@@ -19,7 +19,7 @@
         <th>S.No</th>
         <th>Username</th>
         <th>Email I'd</th>
-        <th>Account Type</th>
+        <th>Role</th>
         <th>Created At</th>
         <th>Status</th>
         <th class="text-center">Actions</th>

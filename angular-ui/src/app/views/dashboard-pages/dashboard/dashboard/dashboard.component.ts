@@ -108,7 +108,6 @@ export class DashboardComponent implements OnInit {
 
   addMeeting() {
     const self = this;
-    this.spinner.show();
     if (!this.meetingInfo.title ||
       !this.meetingInfo.userIds.length
     ) {
@@ -117,13 +116,14 @@ export class DashboardComponent implements OnInit {
       this.spinner.hide();
       return false
     }
+    this.spinner.show();
     let userPostData = JSON.parse(JSON.stringify(this.meetingInfo)); //IT BROKES TWO WAY DATABINDING
     // HERE WE CAN CALL API FOR SAVING DATA
     this._meetingsService.saveMeetings(userPostData).subscribe(
       {
         next: (dataRes: any) => {
+          this.spinner.hide();
           if (dataRes.status === 200) {
-            this.spinner.hide();
             this.toastr.success(dataRes.message, 'Success!');
             dataRes = dataRes.data;
             this.closeModel();
@@ -148,13 +148,13 @@ export class DashboardComponent implements OnInit {
     if (tab) {
       this.meetingTab = tab
     }
+    this.spinner.show();
     this._meetingsService.getMeetingsList({ tab: this.meetingTab }).subscribe(
       {
         next: (dataRes: any) => {
+          this.spinner.hide();
           if (dataRes.status === 200) {
-            this.spinner.hide();
             this.meetingsList = dataRes.data;
-            console.log('Get All meeting data into component---', this.meetingsList);
           }
         },
         error: (error: any) => {
@@ -187,9 +187,9 @@ export class DashboardComponent implements OnInit {
     this._meetingsService.deleteMeeting(this.meetingInfo).subscribe(
       (dataRes) => {
         // console.log("error", dataRes)
+        this.spinner.hide();
         if (dataRes.status === 200) {
           this.closeModel();
-          this.spinner.hide();
           this.getMeetings();
           this.toastr.success('Meeting deleted successfully.', 'Success');
         }
