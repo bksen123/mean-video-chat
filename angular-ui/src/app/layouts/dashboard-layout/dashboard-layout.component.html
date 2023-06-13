@@ -15,8 +15,7 @@
             aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
             <img [src]="currentUser.profileImage ? currentUser.profileImage : 'assets/img/brand/avatar.png'"
               class="m-0 img-avatar img-circle" width="35px" />
-            <span class="pt-2 p-1 text-primary"> {{currentUser.userName}}
-              ({{currentUser.role}})</span>
+            <span class="pt-2 p-1 text-primary">{{currentUser.userName}} {{currentUser.role}}</span>
             <i class="fa fa-gear pt-2 text-primary"> </i> &nbsp;&nbsp;
           </a>
           <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
