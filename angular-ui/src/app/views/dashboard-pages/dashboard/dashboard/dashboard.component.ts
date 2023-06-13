@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataTableDirective } from 'angular-datatables';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Subject } from 'rxjs';
-import { AlertService, AuthGuard, GlobalService, JwtService, UsersService } from 'src/app/shared-ui';
+import { AlertService, JwtService, UsersService } from 'src/app/shared-ui';
 import { MeetingsService } from 'src/app/shared-ui/services/meetings.service';
 import { environment } from 'src/environments/environment';
-import { meeting, validationFields } from '../models/meeting.model';
+import { meeting } from '../models/meeting.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,19 +21,15 @@ export class DashboardComponent implements OnInit {
   usersList: any[] = [];
   meetingsList: any[] = [];
   meetingUsersList: any[] = [];
+  currentUser: any;
+  disabled = false;
+  usersDropdownSettings: any = {};
   @ViewChild('showAddEditUserModal', { static: false, })
   public showAddEditUserModal: any = ModalDirective;
-
   @ViewChild('deleteMeetingModal', { static: false })
   public deleteMeetingModal: any = ModalDirective;
 
-  currentUser: any
-  myCurrentUser: string = '';
-  disabled = false;
-  usersDropdownSettings: any = {};
-
   constructor(
-    private globalService: GlobalService,
     private usersService: UsersService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
