@@ -134,8 +134,9 @@
               [(ngModel)]="meetingInfo.title">
           </div>
           <div class="mb-3">
-            <label for="title" class="form-label">Meeting Title
-              <sup [ngClass]="checkvalidation('title')"><i class="fas fa-star fa-xs"></i></sup>
+            <label for="title" class="form-label">Invite Users
+              <sup class="text-primary" [ngClass]="{'text-danger': !meetingInfo.userIds.length}"><i
+                  class="fas fa-star fa-xs"></i></sup>
             </label>
             <ng-multiselect-dropdown class="dropdoen-user-list multiselect-dropdown" name="users"
               [(ngModel)]="meetingInfo.userIds" [data]="usersList" [placeholder]="'Select AMW Users'"
