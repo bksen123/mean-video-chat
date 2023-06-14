@@ -26,8 +26,8 @@ export class DashboardComponent implements OnInit {
   currentUser: any;
   disabled = false;
   usersDropdownSettings: any = {};
-  @ViewChild('showAddEditUserModal', { static: false, })
-  public showAddEditUserModal: any = ModalDirective;
+  @ViewChild('showAddEditMeetingModal', { static: false, })
+  public showAddEditMeetingModal: any = ModalDirective;
   @ViewChild('deleteMeetingModal', { static: false })
   public deleteMeetingModal: any = ModalDirective;
 
@@ -43,12 +43,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Meeting Info:::', this.meetingInfo.userIds);
-
     this.currentUser = this.jwtService.getCurrentUser();
-    console.log('currentUser', this.currentUser);
-    console.log('currentUser-ID', this.currentUser._id);
-
     this.getMeetings();
     this.usersDropdownSettings = {
       singleSelection: false,
@@ -94,16 +89,12 @@ export class DashboardComponent implements OnInit {
     } else {
       this.meetingInfo = new meeting();
     }
-    this.showAddEditUserModal.show();
+    this.showAddEditMeetingModal.show();
   }
 
   closeModel() {
-    this.showAddEditUserModal.hide();
+    this.showAddEditMeetingModal.hide();
     this.deleteMeetingModal.hide();
-  }
-
-  showUserDeleteModal(user: any) {
-    this.meetingInfo = user;
   }
 
   addMeeting() {

@@ -21,16 +21,17 @@
               [ngClass]="{'text-success': currentUser.role, 'text-dark': currentUser.userName}">
               {{currentUser.userName}} {{currentUser.role}}
             </span> -->
-            <span class="pt-2 p-1 text-primary" [ngClass]="{'text-dark': currentUser.userName}">
+            <span class="pt-2 p-1 text-primary d-none d-md-inline" [ngClass]=" {'text-dark': currentUser.userName}">
               {{currentUser.userName}}
             </span>
-            <span class="pt-2 p-1 text-primary" [ngClass]="{'text-success': currentUser.role}">
+            <span class="pt-2 p-1 text-primary d-none d-md-inline" [ngClass]=" {'text-success': currentUser.role}">
               {{currentUser.role}}
             </span>
 
-            <i class="fa fa-gear pt-2 text-primary"> </i> &nbsp;&nbsp;
+            <i class="fa fa-gear pt-2 text-primary d-none d-md-inline"> </i> &nbsp;&nbsp;
           </a>
-          <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+          <div class="dropdown-menu dropdown-menu-right logout-dropdown" *dropdownMenu aria-labelledby="simple-dropdown"
+            style="right: 0 !important; left: auto !important;">
             <!-- <a class="dropdown-item p-2 pl-3" [routerLink]="['/admin-profile']"><i class="fa fa-user p-1"></i>
               Profile Setting</a>
             <hr class="m-0"> -->
@@ -46,6 +47,7 @@
     <main class="main row mr-0">
       <div class="container">
         <!-- <app-loading></app-loading> -->
+        <!-- <p class="pt-4 d-sm-block d-lg-none d-md-none"> </p> -->
         <router-outlet></router-outlet>
       </div>
       <!-- <pre [innerHTML]="navItems | json"></pre> -->
