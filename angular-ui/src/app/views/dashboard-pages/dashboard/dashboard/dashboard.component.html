@@ -10,18 +10,21 @@
 
 <div class="container card p-3 w-100" style="height: 450px; min-width: -webkit-fill-available;">
   <ul class="nav nav-pills pb-3">
-    <li class="nav-item">
-      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
-        (click)="getMeetings('previous')">Previous Meetings</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
-        (click)="getMeetings('all')">All
+    <li class="nav-item p-1">
+      <a class="nav-link pt-1 pb-1 cursor-pointer bg-primary text-white"
+        [ngClass]="{'bg-secondary': meetingTab === 'previous'}" data-toggle="tab"
+        (click)="getMeetings('previous')">Previous
         Meetings</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
-        (click)="getMeetings('coming')">Coming Meetings</a>
+    <li class="nav-item p-1">
+      <a class="nav-link pt-1 pb-1 cursor-pointer bg-primary text-white"
+        [ngClass]="{'bg-secondary': meetingTab === 'all'}" data-toggle="tab" (click)="getMeetings('all')">All
+        Meetings</a>
+    </li>
+    <li class="nav-item p-1">
+      <a class="nav-link pt-1 pb-1 cursor-pointer bg-primary text-white"
+        [ngClass]="{'bg-secondary': meetingTab === 'coming'}" data-toggle="tab" (click)="getMeetings('coming')">Next
+        Meetings</a>
     </li>
   </ul>
   <div class="tab-content pt-0">
@@ -56,7 +59,7 @@
                   </div>
                   <div class="row">
                     <div class="col">
-                      <div class="numberCircle" style="width: 200%;">{{meeting.totalUsers}}</div>
+                      <div class="numberCircle text-danger" style="width: 200%;"><b>{{meeting.totalUsers}}</b></div>
                     </div>
                   </div>
                 </div>
@@ -86,7 +89,7 @@
                     <th scope="row">{{i+1}}</th>
                     <td>{{user.userId.userName}}</td>
                     <td>{{user.userId.email}}</td>
-                    <td [ngClass]="{'text-success': user.userAck, 'text-warning': !user.userAck}">
+                    <td [ngClass]="{'text-primary': user.userAck, 'text-danger': !user.userAck}">
                       <b>
                         {{user.userAck ? 'Yes' : 'No'}}
                       </b>
@@ -114,9 +117,10 @@
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',  keyboard: false, animated: true}">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h6 class="modal-title">
-          Schedule Meeting</h6> <button type="button" class="close" aria-label="Close" (click)="closeModel()">
+      <div class="modal-header pt-1 pb-1">
+        <h5 class="modal-title">
+          <i class="icon-speedometer"></i> Schedule Meeting
+        </h5> <button type="button" class="close" aria-label="Close" (click)="closeModel()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -133,8 +137,9 @@
             <label for="title" class="form-label">Meeting Title
               <sup [ngClass]="checkvalidation('title')"><i class="fas fa-star fa-xs"></i></sup>
             </label>
-            <ng-multiselect-dropdown name="users" [(ngModel)]="meetingInfo.userIds" [data]="usersList"
-              [placeholder]="'Select AMW Users'" [settings]="usersDropdownSettings" [disabled]="disabled">
+            <ng-multiselect-dropdown class="dropdoen-user-list multiselect-dropdown" name="users"
+              [(ngModel)]="meetingInfo.userIds" [data]="usersList" [placeholder]="'Select AMW Users'"
+              [settings]="usersDropdownSettings" [disabled]="disabled">
             </ng-multiselect-dropdown>
           </div>
           <div class="mb-3">
@@ -180,7 +185,7 @@
       </div>
       <app-alert></app-alert>
       <div class="modal-footer border-top-0  justify-content-start">
-        <button type="submit" class="btn btn-primary" (click)="addMeeting()">Schedule
+        <button type="submit" class="btn btn-primary pt-1 pb-1" (click)="addMeeting()">Schedule
         </button>
       </div>
     </div>
@@ -192,22 +197,22 @@
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static', keyboard: false, animated: true}">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title"><i class="fa fa-trash"></i> Delete Meeting</h4>
+      <div class="modal-header pt-1 pb-1">
+        <h5 class="modal-title"><i class="fa fa-trash"></i> Delete Meeting</h5>
         <button type="button" class="close" (click)="closeModel()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <h4>Are you sure want to delete this Meeting?</h4>
+        <h6>Are you sure want to delete this Meeting?</h6>
         <br>
         <p>
           <b>Meeting Name :</b> {{meetingInfo.title}} <br />
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex  justify-content-start">
-        <button type="button" class="btn btn-default me-1" (click)="closeModel()">Close</button>
-        <button type="button" class="btn btn-danger" (click)="deleteMeeting()">Delete</button>
+        <button type="button" class="btn btn-default me-1 pt-1 pb-1" (click)="closeModel()">Close</button>
+        <button type="button" class="btn btn-danger pt-1 pb-1" (click)="deleteMeeting()">Delete</button>
       </div>
     </div>
   </div>

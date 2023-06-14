@@ -65,6 +65,7 @@
   /* padding: 1rem; */
   padding: 5rem 6rem 1rem 6rem;
   background-color: var(--main-dark);
+  /* background-color: #646161; */
 }
 
 /* .videos__group element.style {
@@ -85,9 +86,12 @@ video {
 }
 
 .options {
-  padding: 1rem;
+  padding: 20px;
   display: flex;
-  background-color: var(--main-darklg);
+  /* border-top: solid 0.12em rgb(250, 244, 244); */
+  /* border-right: solid 0.12em rgb(250, 244, 244); */
+  /* background-color: var(--main-darklg); */
+  background-color: gray;
 }
 
 .options__left {
@@ -106,7 +110,7 @@ video {
   height: 50px;
   border-radius: 5px;
   color: var(--main-light);
-  font-size: 1.2rem;
+  font-size: 1rem;
   width: 50px;
   margin: 0 0.5rem;
 }
@@ -119,7 +123,8 @@ video {
   display: flex;
   flex-direction: column;
   flex: 0.3;
-  background-color: #242f41;
+  /* background-color: #242f41; */
+  background-color: gray;
 }
 
 .main__chat_window {
@@ -179,9 +184,15 @@ video {
 
 .message>span {
   background-color: #eeeeee;
-  margin: 1rem 0;
+  /* margin: 1rem 0;
   padding: 1rem;
-  border-radius: 5px;
+  border-radius: 5px; */
+  font-size: 12px !important;
+  background-color: #eeeeee;
+  margin: 10px 0px 20px 12px;
+  padding: 6px;
+  /* color: blue; */
+  border-radius: 15px;
 }
 
 #video-grid {
@@ -246,4 +257,20 @@ video {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #e9e1e1;
+}
+
+/* .main__chat_window .messages .message span {
+  padding: 8px;
+  margin: 0;
+} */
+
+
+.mobScreen {
+  height: 35%;
+}
+
+@media (max-width: 300px) {
+  .mobScreen {
+    height: 30%;
+  }
 }

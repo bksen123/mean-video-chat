@@ -270,9 +270,9 @@ exports.getUsersByMeeting = async (whereObj, next) => {
       let msg = "";
       if (userResp && !userResp.userAck) {
         msg =
-          "You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting.";
+          "You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting. without acknowledgement you can't join this meeting.";
       } else if (userResp && userResp.userAck && !meetSchRes) {
-        msg = "This meeting is out of date.";
+        msg = "This meeting is out of date. now you can't join this meeting";
       } else {
         msg = "There are some while meeting verify with user...";
       }
@@ -284,7 +284,7 @@ exports.getUsersByMeeting = async (whereObj, next) => {
   } catch (error) {
     return next(error, {
       status: 500,
-      message: "There are some while meeting verify...",
+      message: "There are some while meeting verify with meeting url. Please check your meeting url ",
     });
   }
 };
