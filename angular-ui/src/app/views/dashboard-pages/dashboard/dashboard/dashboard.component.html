@@ -119,7 +119,7 @@
 <!-- <pre [innerHtml]="meetingUsersList | json"> </pre> -->
 
 <!-- Create Meeting Modal -->
-<div bsModal #showAddEditUserModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+<div bsModal #showAddEditMeetingModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',  keyboard: false, animated: true}">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -141,8 +141,8 @@
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">Invite Users
-              <sup class="text-primary" [ngClass]="{'text-danger': !meetingInfo.userIds.length}"><i
-                  class="fas fa-star fa-xs"></i></sup>
+              <sup class="text-primary" [ngClass]="{'text-danger': !meetingInfo?.userIds?.length}">
+                <i class="fas fa-star fa-xs"></i></sup>
             </label>
             <ng-multiselect-dropdown class="dropdoen-user-list multiselect-dropdown" name="users"
               [(ngModel)]="meetingInfo.userIds" [data]="usersList" [placeholder]="'Select AMW Users'"
