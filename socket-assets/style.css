@@ -252,3 +252,19 @@ video {
 ::-webkit-scrollbar-thumb:hover {
   background: #e9e1e1;
 }
+
+.main__chat_window .messages .message span {
+  padding: 8px;
+  margin: 0;
+}
+
+
+.mobScreen {
+  height: 35%;
+}
+
+@media (max-width: 300px) {
+  .mobScreen {
+    height: 30%;
+  }
+}
