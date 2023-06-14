@@ -21,10 +21,10 @@
               [ngClass]="{'text-success': currentUser.role, 'text-dark': currentUser.userName}">
               {{currentUser.userName}} {{currentUser.role}}
             </span> -->
-            <span class="pt-2 p-1 text-primary" [ngClass]="{'text-dark': currentUser.userName}">
+            <span class="pt-2 p-1 text-primary d-none d-md-inline" [ngClass]=" {'text-dark': currentUser.userName}">
               {{currentUser.userName}}
             </span>
-            <span class="pt-2 p-1 text-primary" [ngClass]="{'text-success': currentUser.role}">
+            <span class="pt-2 p-1 text-primary d-none d-md-inline" [ngClass]=" {'text-success': currentUser.role}">
               {{currentUser.role}}
             </span>
 
@@ -46,6 +46,7 @@
     <main class="main row mr-0">
       <div class="container">
         <!-- <app-loading></app-loading> -->
+        <!-- <p class="pt-4 d-sm-block d-lg-none d-md-none"> </p> -->
         <router-outlet></router-outlet>
       </div>
       <!-- <pre [innerHTML]="navItems | json"></pre> -->
