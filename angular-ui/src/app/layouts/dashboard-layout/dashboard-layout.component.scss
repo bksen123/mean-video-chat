@@ -92,7 +92,9 @@ app-root {
 .app-dashboard .dropdown-menu {
   position: absolute !important;
   top: 100% !important;
-  left: 0 !important;
+  left: auto !important;
+  right: 0 !important;
+  // left: 0 !important;
   z-index: 1000 !important;
   float: left !important;
   min-width: 10rem !important;
@@ -267,3 +269,8 @@ app-root {
     }
   }
 }
+
+// .logout-dropdown {
+//   right: 0 !important;
+//   left: auto !important;
+// }
