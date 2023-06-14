@@ -83,14 +83,25 @@ navigator.mediaDevices
     // }, 1000);
 
     peer.on("call", (call) => {
+      console.log('someone call me 77777777777777', call)
       call.answer(stream);
-      const video = document.createElement("video");
-      call.on("stream", (userVideoStream) => {
-        if (call.peer) {
-          video.setAttribute("id", call.peer);
-          addVideoStream(video, userVideoStream);
-        }
-      });
+      var element = document.getElementById(call.peer);
+      if (element) {
+        call.on("stream", (userVideoStream) => {
+          if (call.peer) {
+            var video = document.getElementById(call.peer);
+            addVideoStream(video, userVideoStream);
+          }
+        });
+      } else {
+        const video = document.createElement("video");
+        call.on("stream", (userVideoStream) => {
+          if (call.peer) {
+            video.setAttribute("id", call.peer);
+            addVideoStream(video, userVideoStream);
+          }
+        });
+      }
     });
 
     socket.on("user-connected", (userId) => {
@@ -109,16 +120,23 @@ const connectToNewUser = (userId, stream) => {
   });
 };
 
+let captureStream
 screenShare.addEventListener('click', async () => {
   //   alert("Screen Share feature coming soon!");
+  // console.log("peer========", peer._id);
   captureStream = await navigator.mediaDevices.getDisplayMedia({
     audio: true,
     video: { mediaSource: "screen" }
   });
   //Instead of adminId, pass peerId who will taking captureStream in call
-  peer.call('sdfasdf', captureStream);
+  peer.call(user_id, captureStream);
 })
 
+if (captureStream) {
+  captureStream.onended = () => {
+    console.info("ScreenShare has ended2222222222222");
+  };
+}
 
 peer.on("open", (id) => {
   MyuserId = id;
@@ -195,9 +213,12 @@ stopVideo.addEventListener("click", () => {
 
 socket.on('clear-grid', (roomId, userId) => {
   var element = document.getElementById(userId);
-  videoGrid.removeChild(element);
+  if (element) {
+    videoGrid.removeChild(element);
+  }
   // videoGrid.removeChild(videoGrid.firstElementChild);
 });
+
 
 socket.on("createMessage", (message, userName, profile) => {
   // console.log('test========', message, userName, profile)
