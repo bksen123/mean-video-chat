@@ -38,6 +38,9 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((res: any) => {
       this.amwZoomId = res.amwZoomId;
+      if (!this.amwZoomId && this.jwtService.getCurrentUser()) {
+        this.router.navigate(['/dashboard']);
+      }
       // console.log("this.amwZoomId", this.amwZoomId);
     });
   }
