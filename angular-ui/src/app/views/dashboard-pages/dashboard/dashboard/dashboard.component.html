@@ -10,18 +10,21 @@
 
 <div class="container card p-3 w-100" style="height: 450px; min-width: -webkit-fill-available;">
   <ul class="nav nav-pills pb-3">
-    <li class="nav-item">
-      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'previous'}" data-toggle="tab"
-        (click)="getMeetings('previous')">Previous Meetings</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'all'}" data-toggle="tab"
-        (click)="getMeetings('all')">All
+    <li class="nav-item p-1">
+      <a class="nav-link pt-1 pb-1 cursor-pointer bg-primary text-white"
+        [ngClass]="{'bg-secondary': meetingTab === 'previous'}" data-toggle="tab"
+        (click)="getMeetings('previous')">Previous
         Meetings</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link pt-1 pb-1 cursor-pointer" [ngClass]="{'active': meetingTab === 'coming'}" data-toggle="tab"
-        (click)="getMeetings('coming')">Coming Meetings</a>
+    <li class="nav-item p-1">
+      <a class="nav-link pt-1 pb-1 cursor-pointer bg-primary text-white"
+        [ngClass]="{'bg-secondary': meetingTab === 'all'}" data-toggle="tab" (click)="getMeetings('all')">All
+        Meetings</a>
+    </li>
+    <li class="nav-item p-1">
+      <a class="nav-link pt-1 pb-1 cursor-pointer bg-primary text-white"
+        [ngClass]="{'bg-secondary': meetingTab === 'coming'}" data-toggle="tab" (click)="getMeetings('coming')">Next
+        Meetings</a>
     </li>
   </ul>
   <div class="tab-content pt-0">
