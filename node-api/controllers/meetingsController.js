@@ -272,7 +272,7 @@ exports.getUsersByMeeting = async (whereObj, next) => {
         msg =
           "You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting. without acknowledgement you can't join this meeting.";
       } else if (userResp && userResp.userAck && !meetSchRes) {
-        msg = "This meeting is out of date. Now you can't join this meeting";
+        msg = "This meeting is out of date. now you can't join this meeting";
       } else {
         msg = "There are some while meeting verify with user...";
       }
