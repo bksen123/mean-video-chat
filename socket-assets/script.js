@@ -8,9 +8,10 @@ myVideo.muted = true;
 var MyuserId = ''
 
 // navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-screenShare.addEventListener("click", () => {
-  alert("Screen Share feature coming soon!");
-});
+// screenShare.addEventListener("click", () => {
+//   alert("Screen Share feature coming soon!");
+// });
+
 
 backBtn.addEventListener("click", () => {
   document.querySelector(".main__left").style.display = "flex";
@@ -26,6 +27,7 @@ showChat.addEventListener("click", () => {
   // document.querySelector(".header__back").style.display = "block";
 });
 
+let user_id
 let user
 if (userName) {
   user = userName;
@@ -92,6 +94,7 @@ navigator.mediaDevices
     });
 
     socket.on("user-connected", (userId) => {
+      user_id = userId
       connectToNewUser(userId, stream);
     });
   });
@@ -105,6 +108,17 @@ const connectToNewUser = (userId, stream) => {
     addVideoStream(video, userVideoStream);
   });
 };
+
+screenShare.addEventListener('click', async () => {
+  //   alert("Screen Share feature coming soon!");
+  captureStream = await navigator.mediaDevices.getDisplayMedia({
+    audio: true,
+    video: { mediaSource: "screen" }
+  });
+  //Instead of adminId, pass peerId who will taking captureStream in call
+  peer.call('sdfasdf', captureStream);
+})
+
 
 peer.on("open", (id) => {
   MyuserId = id;
@@ -136,6 +150,8 @@ text.addEventListener("keydown", (e) => {
     text.value = "";
   }
 });
+
+
 
 // const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
