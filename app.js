@@ -120,7 +120,8 @@ app.get("/:room", (req, res) => {
       } else {
         console.log("error", error);
         if (error) {
-          res.send(resp.message);
+          // res.send(resp.message);
+          res.render("error", { userDetails: resp });
         } else {
           var userDetails = resp.data.userId
           userDetails.roomId = meetingDetails[0]
