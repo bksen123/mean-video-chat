@@ -116,8 +116,8 @@
     <div class="modal-content">
       <div class="modal-header pt-1 pb-1">
         <h5 class="modal-title">
-          <i class="icon-speedometer"></i> Schedule Meeting</h5> <button type="button" class="close" aria-label="Close"
-          (click)="closeModel()">
+          <i class="icon-speedometer"></i> Schedule Meeting
+        </h5> <button type="button" class="close" aria-label="Close" (click)="closeModel()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -134,8 +134,9 @@
             <label for="title" class="form-label">Meeting Title
               <sup [ngClass]="checkvalidation('title')"><i class="fas fa-star fa-xs"></i></sup>
             </label>
-            <ng-multiselect-dropdown name="users" [(ngModel)]="meetingInfo.userIds" [data]="usersList"
-              [placeholder]="'Select AMW Users'" [settings]="usersDropdownSettings" [disabled]="disabled">
+            <ng-multiselect-dropdown class="dropdoen-user-list multiselect-dropdown" name="users"
+              [(ngModel)]="meetingInfo.userIds" [data]="usersList" [placeholder]="'Select AMW Users'"
+              [settings]="usersDropdownSettings" [disabled]="disabled">
             </ng-multiselect-dropdown>
           </div>
           <div class="mb-3">
