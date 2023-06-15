@@ -19,7 +19,7 @@
 
 .profile-img {
   border-radius: 50px !important;
-  width: 30px !important;
+  width: 40px !important;
   float: right !important;
   margin: 5px !important;
 }
@@ -54,7 +54,7 @@
 .videos__group {
   overflow-x: hidden !important;
   flex-grow: 1;
-  display: flex;
+  /* display: flex; */
   height: 350px;
   overflow: hidden;
   overflow: scroll;
