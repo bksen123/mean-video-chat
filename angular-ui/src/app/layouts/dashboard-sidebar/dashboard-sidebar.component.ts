@@ -96,6 +96,6 @@ export class DashboardSidebarComponent implements OnInit {
         });
       }
     }
-    this.globalService.sendActionChildToParent('false');
+    // this.globalService.sendActionChildToParent('false');
   }
 }

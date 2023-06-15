@@ -19,7 +19,11 @@
       <div class="card-header bg-white p-0">
         <div class="logo">
           <div class="text-left">
-            <img src="assets/img/brand/AMW_Logo-2.png">
+            <img src="assets/img/brand/AMW_Logo-2.png" class="cursor-pointer">
+            <a style="float: right;" class="d-flex" title="Logout"
+              href="/users/ApiLogout/<%= userDetails.roomId %>amw-zoom<%= userDetails._id  %>">
+              <img src="<%= userDetails.profileImage  %>" class="profile-img cursor-pointer">
+            </a>
           </div>
         </div>
       </div>
@@ -31,7 +35,7 @@
         <main class="main d-flex align-items-center">
           <div class="container">
             <div class="row">
-              <div class="col-xl-6 col-lg-6 col-md-8 mx-auto">
+              <div class="col-xl-8 col-lg-8 col-md-8 mx-auto">
                 <div class="card p-4 mb-0 position-relative">
                   <div class="d-flex custom-border">
                     <span class="secondary-bg"></span>

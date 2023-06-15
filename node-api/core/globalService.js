@@ -221,10 +221,25 @@ exports.compareDate = (reqDetais) => {
   var now = moment().format("DD/MM/YYYY");
   // console.log("meetingDate============", meetingDate);
   // console.log("now============", now);
+  // console.log(moment(reqDetais.meetingId.meetingDate).format("Do MMM YYYY"))
   if (now > meetingDate) {
-    return false;
+    // console.log('000000000000000000')
+    return {
+      status: 500,
+      message: "This meeting is out of date. now you can't join this meeting"
+    };
+  } else if (now === meetingDate) {
+    // console.log('111111111111111')
+    return {
+      status: 200,
+      message: "This meeting has been started"
+    };
   } else {
-    return true;
+    // console.log('22222222222222222')
+    return {
+      status: 500,
+      message: "This meeting has not hosted yet. Please check your meeting date."
+    };
   }
 
 };
