@@ -71,7 +71,7 @@ var peer = new Peer({
 let myVideoStream;
 navigator.mediaDevices
   .getUserMedia({
-    audio: true,
+    audio: false,
     video: true,
   })
   .then((stream) => {
@@ -86,7 +86,19 @@ navigator.mediaDevices
       console.log('someone call me 77777777777777', call)
       call.answer(stream);
       var element = document.getElementById(call.peer);
+      console.error("get alreaady element", element)
       if (element) {
+        var nodes = videoGrid.getElementsByTagName("video");
+        console.error('nodes nodesnodesnodesnodes=======', nodes);
+        for (var i = 0; i < nodes.length; i++) {
+          // console.log("nodes[i]========", nodes[i]);
+          const node = nodes[i];
+          // const id = node.id;
+          if (node.id !== call.peer) {
+            nodes[i].style.display = 'none';
+          }
+        }
+        element.style.cssText = 'width:100% !important;height: 100% !important; padding: 1px !important'
         call.on("stream", (userVideoStream) => {
           if (call.peer) {
             var video = document.getElementById(call.peer);
@@ -131,6 +143,18 @@ screenShare.addEventListener('click', async () => {
   //Instead of adminId, pass peerId who will taking captureStream in call
   peer.call(user_id, captureStream);
 })
+
+
+const stopSharingBtn = document.getElementById('stopSharingBtn');
+
+stopSharingBtn.addEventListener('click', stopSharing);
+
+function stopSharing() {
+  console.error('stop sharing option-------')
+  // Your code logic to stop sharing using PeerJS
+  // Call the necessary PeerJS function or perform any required actions
+  // when the "stop sharing" button is clicked
+}
 
 if (captureStream) {
   captureStream.onended = () => {
