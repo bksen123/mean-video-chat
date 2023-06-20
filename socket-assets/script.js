@@ -79,7 +79,7 @@ navigator.mediaDevices
     myVideoStream = stream;
     // setTimeout(() => {
     myVideo.setAttribute("id", MyuserId);
-    myVideo.setAttribute("title", 'video_share###' + MyuserId);
+    myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
 
     addVideoStream(myVideo, stream);
     // }, 1000);
@@ -91,10 +91,10 @@ navigator.mediaDevices
       console.error("get alreaady element", element)
       if (element) {
         var nodes = videoGrid.getElementsByTagName("video");
-        var screen_title = document.getElementById(call.peer).getAttribute('title')
+        var screen_title = document.getElementById(call.peer).getAttribute('amw-zoom')
         screen_title = screen_title.split("###");
         screen_title = screen_title[0]
-        console.log("screen_title ", screen_title);
+        // console.log("screen_title ", screen_title);
 
         for (var i = 0; i < nodes.length; i++) {
           // console.log("nodes[i]========", nodes[i]);
@@ -114,9 +114,9 @@ navigator.mediaDevices
           if (call.peer) {
             var video = document.getElementById(call.peer);
             if (screen_title === 'video_share') {
-              video.setAttribute("title", 'start_screen###' + call.peer);
+              video.setAttribute("amw-zoom", 'start_screen###' + call.peer);
             } else {
-              video.setAttribute("title", 'video_share###' + call.peer);
+              video.setAttribute("amw-zoom", 'video_share###' + call.peer);
             }
             addVideoStream(video, userVideoStream);
           }
@@ -126,7 +126,7 @@ navigator.mediaDevices
         call.on("stream", (userVideoStream) => {
           if (call.peer) {
             video.setAttribute("id", call.peer);
-            video.setAttribute("title", 'video_share###' + call.peer);
+            video.setAttribute("amw-zoom", 'video_share###' + call.peer);
             addVideoStream(video, userVideoStream);
           }
         });
@@ -144,7 +144,7 @@ const connectToNewUser = (userId, stream) => {
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
   video.setAttribute("id", userId);
-  video.setAttribute("title", 'video_share###' + userId);
+  video.setAttribute("amw-zoom", 'video_share###' + userId);
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
