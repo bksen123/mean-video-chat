@@ -80,6 +80,7 @@ navigator.mediaDevices
     // setTimeout(() => {
     myVideo.setAttribute("id", MyuserId);
     myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
+    myVideo.setAttribute("title", user);
 
     addVideoStream(myVideo, stream);
     // }, 1000);
@@ -133,18 +134,19 @@ navigator.mediaDevices
       }
     });
 
-    socket.on("user-connected", (userId) => {
+    socket.on("user-connected", (userId, userName, profile) => {
       user_id = userId
-      connectToNewUser(userId, stream);
+      connectToNewUser(userId, stream, userName, profile);
     });
   });
 
-const connectToNewUser = (userId, stream) => {
+const connectToNewUser = (userId, stream, userName, profile) => {
   console.log("I call someone" + userId);
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
   video.setAttribute("id", userId);
   video.setAttribute("amw-zoom", 'video_share###' + userId);
+  video.setAttribute("title", userName);
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
@@ -167,14 +169,13 @@ screenShare.addEventListener('click', async () => {
 
 function stopSharingFunction() {
   // Call your function or perform necessary actions to handle the "stop sharing" event
-  console.log('Stop sharing event occurred');
   navigator.mediaDevices
     .getUserMedia({
       audio: false,
       video: true,
     })
     .then((stream) => {
-      console.log('scree share stoped by user_id' + user_id)
+      console.log('screen share stoped by user_id' + user_id)
       peer.call(user_id, stream);
     });
 }
@@ -271,6 +272,18 @@ socket.on("createMessage", (message, userName, profile) => {
     }</span> </b>
         <span>${message}</span>
     </div>`;
+});
+
+socket.on("set_profile", (userId, userName, profile) => {
+  console.log('testtesttesttesttest========', userId, userName, profile);
+  // document.getElementById(userId).setAttribute('title', userName)
+  // setTimeout(() => {
+  //   var setTitle = document.getElementById(userId);
+  //   if (setTitle) {
+  //     setTitle.setAttribute("title", userName);
+  //   }
+  // }, 2000);
+
 });
 
 // let scroller = document.querySelector("#scroller");

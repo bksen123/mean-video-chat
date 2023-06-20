@@ -143,11 +143,13 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     setTimeout(() => {
       console.log(roomId, 'user-connected', userId)
-      socket.to(roomId).broadcast.emit("user-connected", userId);
+      socket.to(roomId).broadcast.emit("user-connected", userId, userName, profile);
     }, 500)
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName, profile);
     });
+
+    io.to(roomId).emit("set_profile", userId, userName, profile);
 
     socket.on('disconnect', () => {
       console.log(roomId, 'user-disconnect', userId)
