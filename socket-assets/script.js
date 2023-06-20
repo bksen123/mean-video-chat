@@ -79,29 +79,45 @@ navigator.mediaDevices
     myVideoStream = stream;
     // setTimeout(() => {
     myVideo.setAttribute("id", MyuserId);
+    myVideo.setAttribute("title", 'video_share###' + MyuserId);
+
     addVideoStream(myVideo, stream);
     // }, 1000);
 
     peer.on("call", (call) => {
-      console.log('someone call me 77777777777777', call)
+      console.log('someone call me 77777777777777', call.peer)
       call.answer(stream);
       var element = document.getElementById(call.peer);
       console.error("get alreaady element", element)
       if (element) {
         var nodes = videoGrid.getElementsByTagName("video");
-        console.error('nodes nodesnodesnodesnodes=======', nodes);
+        var screen_title = document.getElementById(call.peer).getAttribute('title')
+        screen_title = screen_title.split("###");
+        screen_title = screen_title[0]
+        console.log("screen_title ", screen_title);
+
         for (var i = 0; i < nodes.length; i++) {
           // console.log("nodes[i]========", nodes[i]);
           const node = nodes[i];
           // const id = node.id;
-          if (node.id !== call.peer) {
-            nodes[i].style.display = 'none';
+          if (screen_title === 'video_share') {
+            if (node.id !== call.peer) {
+              nodes[i].style.cssText = 'display:none';
+            } else {
+              element.style.cssText = 'width:100% !important;height: 100% !important; padding: 1px !important'
+            }
+          } else {
+            nodes[i].style = 'display:block !important'
           }
         }
-        element.style.cssText = 'width:100% !important;height: 100% !important; padding: 1px !important'
         call.on("stream", (userVideoStream) => {
           if (call.peer) {
             var video = document.getElementById(call.peer);
+            if (screen_title === 'video_share') {
+              video.setAttribute("title", 'start_screen###' + call.peer);
+            } else {
+              video.setAttribute("title", 'video_share###' + call.peer);
+            }
             addVideoStream(video, userVideoStream);
           }
         });
@@ -110,6 +126,7 @@ navigator.mediaDevices
         call.on("stream", (userVideoStream) => {
           if (call.peer) {
             video.setAttribute("id", call.peer);
+            video.setAttribute("title", 'video_share###' + call.peer);
             addVideoStream(video, userVideoStream);
           }
         });
@@ -127,6 +144,7 @@ const connectToNewUser = (userId, stream) => {
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
   video.setAttribute("id", userId);
+  video.setAttribute("title", 'video_share###' + userId);
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
@@ -134,33 +152,33 @@ const connectToNewUser = (userId, stream) => {
 
 let captureStream
 screenShare.addEventListener('click', async () => {
-  //   alert("Screen Share feature coming soon!");
-  // console.log("peer========", peer._id);
+  console.log('scree share stated by user_id' + user_id)
   captureStream = await navigator.mediaDevices.getDisplayMedia({
     audio: true,
     video: { mediaSource: "screen" }
   });
   //Instead of adminId, pass peerId who will taking captureStream in call
+  captureStream.getVideoTracks()[0].onended = function () {
+    stopSharingFunction();
+  };
   peer.call(user_id, captureStream);
 })
 
 
-const stopSharingBtn = document.getElementById('stopSharingBtn');
-
-stopSharingBtn.addEventListener('click', stopSharing);
-
-function stopSharing() {
-  console.error('stop sharing option-------')
-  // Your code logic to stop sharing using PeerJS
-  // Call the necessary PeerJS function or perform any required actions
-  // when the "stop sharing" button is clicked
+function stopSharingFunction() {
+  // Call your function or perform necessary actions to handle the "stop sharing" event
+  console.log('Stop sharing event occurred');
+  navigator.mediaDevices
+    .getUserMedia({
+      audio: false,
+      video: true,
+    })
+    .then((stream) => {
+      console.log('scree share stoped by user_id' + user_id)
+      peer.call(user_id, stream);
+    });
 }
 
-if (captureStream) {
-  captureStream.onended = () => {
-    console.info("ScreenShare has ended2222222222222");
-  };
-}
 
 peer.on("open", (id) => {
   MyuserId = id;
