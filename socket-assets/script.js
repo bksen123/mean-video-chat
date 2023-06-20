@@ -80,13 +80,13 @@ navigator.mediaDevices
     // setTimeout(() => {
     myVideo.setAttribute("id", MyuserId);
     myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
-    myVideo.setAttribute("title", user);
+    // myVideo.setAttribute("title", user);
 
     addVideoStream(myVideo, stream);
     // }, 1000);
 
     peer.on("call", (call) => {
-      console.log('someone call me 77777777777777', call.peer)
+      console.log('someone call me 77777777777777', call)
       call.answer(stream);
       var element = document.getElementById(call.peer);
       console.error("get alreaady element", element)
@@ -143,10 +143,11 @@ navigator.mediaDevices
 const connectToNewUser = (userId, stream, userName, profile) => {
   console.log("I call someone" + userId);
   const call = peer.call(userId, stream);
+  console.error("call==============", call);
   const video = document.createElement("video");
   video.setAttribute("id", userId);
   video.setAttribute("amw-zoom", 'video_share###' + userId);
-  video.setAttribute("title", userName);
+  // video.setAttribute("title", userName);
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
@@ -274,16 +275,15 @@ socket.on("createMessage", (message, userName, profile) => {
     </div>`;
 });
 
-socket.on("set_profile", (userId, userName, profile) => {
-  console.log('testtesttesttesttest========', userId, userName, profile);
-  // document.getElementById(userId).setAttribute('title', userName)
-  // setTimeout(() => {
-  //   var setTitle = document.getElementById(userId);
-  //   if (setTitle) {
-  //     setTitle.setAttribute("title", userName);
-  //   }
-  // }, 2000);
-
+socket.on("set_profile", (roomUsers) => {
+  roomUsers = roomUsers[ROOM_ID]
+  for (let index = 0; index < roomUsers.length; index++) {
+    const element = roomUsers[index];
+    var setTitle = document.getElementById(element.userId);
+    if (setTitle) {
+      setTitle.setAttribute("title", element.userName);
+    }
+  }
 });
 
 // let scroller = document.querySelector("#scroller");

@@ -138,6 +138,8 @@ app.get("/:room", (req, res) => {
   }
 });
 
+var rooms = {}
+
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName, profile) => {
     socket.join(roomId);
@@ -149,7 +151,14 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("createMessage", message, userName, profile);
     });
 
-    io.to(roomId).emit("set_profile", userId, userName, profile);
+    setTimeout(() => {
+      if (rooms[roomId]) {
+        rooms[roomId].push({ userId, userName, profile })
+      } else {
+        rooms[roomId] = [{ userId, userName, profile }]
+      }
+      io.to(roomId).emit("set_profile", rooms);
+    }, 1000);
 
     socket.on('disconnect', () => {
       console.log(roomId, 'user-disconnect', userId)
