@@ -159,7 +159,6 @@ peer.on("open", (id) => {
 const connectToNewUser = (userId, stream, userName, profile) => {
   console.log("I call someone" + userId);
   const call = peer.call(userId, stream);
-  console.error("call==============", call);
   const video = document.createElement("video");
   video.setAttribute("id", userId);
   video.setAttribute("amw-zoom", 'video_share###' + userId);
