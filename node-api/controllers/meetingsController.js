@@ -60,7 +60,7 @@ exports.saveMeetings = async (req, res) => {
               templateName: "amw-zoom-invitation", // NEW
             };
             console.log("prepareEmailConfig", prepareEmailConfig);
-            return;
+            // return;
             globalService.prepareEmailData(prepareEmailConfig);
           }
           // console.log('userDetails========', userDetails);
