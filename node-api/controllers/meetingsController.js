@@ -2,6 +2,7 @@ const { Meetings, MeetingUsers } = require("../models/meetingsModel.js");
 const User = require("../models/usersModel.js");
 const globalService = require("../core/globalService");
 var jwt = require("jsonwebtoken");
+var moment = require("moment");
 require("dotenv").config();
 const asyncHandle = require("async");
 const { v4: uuidv4 } = require("uuid");
@@ -33,6 +34,7 @@ exports.saveMeetings = async (req, res) => {
               email: userDetails.email,
               userName: globalService.capitalize(ele.userName),
               markerData: {
+                meeting_date: moment(userResp.meetingDate).format("MMM Do YYYY"),
                 website: process.env.WEBSITE_URL + "login",
                 meeting_title: globalService.capitalize(userResp.title),
                 name: globalService.capitalize(ele.userName),
@@ -254,13 +256,13 @@ exports.getMeetingsUser = async (req, res) => {
   }
 };
 
-exports.getUsersByMeeting = async (whereObj, next) => {
+exports.getUsersByMeeting = async (whereObj, req, next) => {
   try {
     var userResp = await MeetingUsers.findOne(whereObj)
       .populate("userId")
       .populate("meetingId");
     var meetSchRes = globalService.compareDate(userResp);
-    if (userResp && userResp.userAck && meetSchRes) {
+    if (userResp && userResp.userAck && meetSchRes.status === 200) {
       return next(null, {
         status: 200,
         message: "Meeting verify has been Successfully.",
@@ -271,27 +273,30 @@ exports.getUsersByMeeting = async (whereObj, next) => {
       if (userResp && !userResp.userAck) {
         msg =
           "You need to acknowledgement via email before join meeting So firstly do acknowledgement then you can join meeting. without acknowledgement you can't join this meeting.";
-      } else if (userResp && userResp.userAck && !meetSchRes) {
-        msg = "This meeting is out of date. now you can't join this meeting";
+      } else if (userResp && userResp.userAck && meetSchRes.status === 500) {
+        msg = meetSchRes.message;
       } else {
         msg = "There are some while meeting verify with user...";
       }
       return next(true, {
         status: 500,
         message: msg,
+        data: userResp
       });
     }
   } catch (error) {
     return next(error, {
       status: 500,
-      message: "There are some while meeting verify with meeting url. Please check your meeting url ",
+      message: "There are some error while verifying Meeting. Please check your meeting url ",
+      data: {
+        userId: req.session.currentUser
+      }
     });
   }
 };
 
 exports.deleteMeeting = async (req, res) => {
   var postData = req.body;
-  console.log("MD::Controller", postData);
   let redponceMeeting = await Meetings.findOneAndDelete({ _id: postData._id });
   let redponceMeetingUsers = await MeetingUsers.deleteMany({
     meetingId: postData._id,

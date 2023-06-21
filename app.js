@@ -112,19 +112,21 @@ app.get("/:room", (req, res) => {
     MeetingCtl.getUsersByMeeting({
       uuZoomId: meetingDetails[0],
       userId: meetingDetails[1]
-    }, (error, resp) => {
+    }, req, (error, resp) => {
       // console.log("req.session.currentUser====", req.session.currentUser);
       // console.log("resp====", resp);
       if (!req.session.currentUser) {
         res.redirect('/#/login/' + room);
       } else {
-        console.log("error", error);
+        // console.log("error", error);
+        // console.log("resp.data", resp);
+        var userDetails = resp.data.userId
+        userDetails.roomId = meetingDetails[0]
+        userDetails.message = resp.message
         if (error) {
           // res.send(resp.message);
-          res.render("error", { userDetails: resp });
+          res.render("error", { userDetails: userDetails });
         } else {
-          var userDetails = resp.data.userId
-          userDetails.roomId = meetingDetails[0]
           // console.log("userDetails=========", userDetails);
           res.render("room", { userDetails: userDetails });
         }

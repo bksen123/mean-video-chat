@@ -29,11 +29,10 @@
       <div class="card-header bg-white p-0">
         <div class="logo">
           <div class="text-left">
-            <img src="assets/img/brand/AMW_Logo-2.png">
-            <a style="float: right;" class="d-flex"
+            <img src="assets/img/brand/AMW_Logo-2.png" class="cursor-pointer">
+            <a style="float: right;" class="d-flex" title="Logout"
               href="/users/ApiLogout/<%= userDetails.roomId %>amw-zoom<%= userDetails._id  %>">
               <img src="<%= userDetails.profileImage  %>" class="profile-img cursor-pointer">
-              <b class="p-2" title="Logout"> Logout</b>
             </a>
           </div>
         </div>
@@ -81,7 +80,7 @@
             </div>
           </div>
           <div class="main__message_container">
-            <div class="header__back options__button">
+            <div class="header__back options__button cursor-pointer">
               <i class="fas fa-angle-left"></i>
             </div>
             <input id="chat_message" type="text" autocomplete="off" placeholder="Type message here...">
