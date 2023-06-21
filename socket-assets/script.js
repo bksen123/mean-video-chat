@@ -40,7 +40,7 @@ if (userName) {
 var peer = new Peer({
   // host: '127.0.0.1',
   host: "/",
-  // port: 3000, //it will be used for local
+  port: 3000, //it will be used for local
   path: "/peerjs",
   config: {
     iceServers: [
@@ -53,16 +53,16 @@ var peer = new Peer({
       { url: "stun:stun.voipstunt.com" },
       { url: "stun:stun.voxgratia.org" },
       { url: "stun:stun.xten.com" },
-      // {
-      //   url: "turn:192.158.29.39:3478?transport=udp",
-      //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-      //   username: "28224511:1379330808",
-      // },
-      // {
-      //   url: "turn:192.158.29.39:3478?transport=tcp",
-      //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-      //   username: "28224511:1379330808",
-      // },
+      {
+        url: "turn:192.158.29.39:3478?transport=udp",
+        credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+        username: "28224511:1379330808",
+      },
+      {
+        url: "turn:192.158.29.39:3478?transport=tcp",
+        credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+        username: "28224511:1379330808",
+      },
     ],
   },
 
@@ -91,23 +91,33 @@ peer.on("open", (id) => {
       addVideoStream(myVideo, stream);
 
       peer.on("call", (call) => {
-        console.log('someone call me')
+        console.error('someone call me===========', call)
+        console.error('someone call me===========', call.metadata.type)
+        var screen_title = call.metadata.type;
         call.answer(stream);
         var element = document.getElementById(call.peer);
         console.error("get alreaady element", element)
+        // const video = document.createElement("video");
+        // if (!element && screen_title === 'screen_share') {
+        //   element = document.createElement("video");
+        //   element.setAttribute("id", call.peer);
+        //   video.setAttribute("amw-zoom", screen_title + '###' + call.peer);
+        // }
+
         if (element) {
+
           var nodes = videoGrid.getElementsByTagName("video");
-          var screen_title = document.getElementById(call.peer).getAttribute('amw-zoom')
-          screen_title = screen_title.split("###");
-          screen_title = screen_title[0]
+          // var screen_title = document.getElementById(call.peer).getAttribute('amw-zoom')
+          // screen_title = screen_title.split("###");
+          // screen_title = screen_title[0]
           // console.log("screen_title ", screen_title);
 
           for (var i = 0; i < nodes.length; i++) {
-            // console.log("nodes[i]========", nodes[i]);
+            console.log("nodes[i]========", nodes[i]);
             const node = nodes[i];
             // const id = node.id;
             var userLabel = document.getElementById('user-video-img_' + node.id);
-            if (screen_title === 'video_share') {
+            if (screen_title !== 'video_share') {
               if (node.id !== call.peer) {
                 nodes[i].style.cssText = 'display:none';
                 if (userLabel) {
@@ -127,9 +137,9 @@ peer.on("open", (id) => {
             if (call.peer) {
               var video = document.getElementById(call.peer);
               if (screen_title === 'video_share') {
-                video.setAttribute("amw-zoom", 'start_screen###' + call.peer);
+                video.setAttribute("amw-zoom", screen_title + '###' + call.peer);
               } else {
-                video.setAttribute("amw-zoom", 'video_share###' + call.peer);
+                video.setAttribute("amw-zoom", screen_title + '###' + call.peer);
               }
               addVideoStream(video, userVideoStream);
             }
@@ -139,7 +149,7 @@ peer.on("open", (id) => {
           call.on("stream", (userVideoStream) => {
             if (call.peer) {
               video.setAttribute("id", call.peer);
-              video.setAttribute("amw-zoom", 'video_share###' + call.peer);
+              video.setAttribute("amw-zoom", screen_title + '###' + call.peer);
               addVideoStream(video, userVideoStream);
             }
           });
@@ -154,11 +164,17 @@ peer.on("open", (id) => {
 
 });
 
+var customData = {
+  type: 'video_share',
+  userId: MyuserId,
+};
+
 
 
 const connectToNewUser = (userId, stream, userName, profile) => {
   console.log("I call someone" + userId);
-  const call = peer.call(userId, stream);
+  customData.userId = userId;
+  const call = peer.call(userId, stream, { metadata: customData });
   const video = document.createElement("video");
   video.setAttribute("id", userId);
   video.setAttribute("amw-zoom", 'video_share###' + userId);
@@ -180,9 +196,10 @@ screenShare.addEventListener('click', async () => {
     stopSharingFunction();
   };
   if (roomUsers.length) {
+    customData.type = 'screen_share';
     roomUsers.forEach(element => {
       if (MyuserId !== element.userId) {
-        peer.call(element.userId, captureStream);
+        peer.call(element.userId, captureStream, { metadata: customData });
       }
     });
   }
@@ -199,9 +216,10 @@ function stopSharingFunction() {
     .then((stream) => {
       // console.log('screen share stoped by user_id' + user_id)
       if (roomUsers.length) {
+        customData.type = 'video_share';
         roomUsers.forEach(element => {
           if (MyuserId !== element.userId) {
-            peer.call(element.userId, stream);
+            peer.call(element.userId, stream, { metadata: customData });
           }
         });
       }
@@ -282,7 +300,9 @@ socket.on('clear-grid', (roomId, userId) => {
   var alreadyUser = document.getElementById('user-video-img_' + userId);
   if (element) {
     videoGrid.removeChild(element);
-    videoGrid.removeChild(alreadyUser);
+    if (alreadyUser) {
+      videoGrid.removeChild(alreadyUser);
+    }
   }
   // videoGrid.removeChild(videoGrid.firstElementChild);
 });
