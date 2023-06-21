@@ -275,3 +275,11 @@ video {
     height: 30%;
   }
 }
+
+.user-video-img {
+  position: relative;
+  right: 147px;
+  top: 176px;
+  color: white;
+  font-weight: bolder;
+}

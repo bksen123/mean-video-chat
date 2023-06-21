@@ -5,7 +5,9 @@ const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 const screenShare = document.querySelector("#screenShare");
 myVideo.muted = true;
-var MyuserId = ''
+var MyuserId = '';
+var roomUsers = [];
+
 
 // navigator.mediaDevices.getUserMedia({ video: true, audio: true })
 // screenShare.addEventListener("click", () => {
@@ -27,7 +29,6 @@ showChat.addEventListener("click", () => {
   // document.querySelector(".header__back").style.display = "block";
 });
 
-let user_id
 let user
 if (userName) {
   user = userName;
@@ -52,16 +53,16 @@ var peer = new Peer({
       { url: "stun:stun.voipstunt.com" },
       { url: "stun:stun.voxgratia.org" },
       { url: "stun:stun.xten.com" },
-      {
-        url: "turn:192.158.29.39:3478?transport=udp",
-        credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-        username: "28224511:1379330808",
-      },
-      {
-        url: "turn:192.158.29.39:3478?transport=tcp",
-        credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-        username: "28224511:1379330808",
-      },
+      // {
+      //   url: "turn:192.158.29.39:3478?transport=udp",
+      //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+      //   username: "28224511:1379330808",
+      // },
+      // {
+      //   url: "turn:192.158.29.39:3478?transport=tcp",
+      //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+      //   username: "28224511:1379330808",
+      // },
     ],
   },
 
@@ -135,7 +136,6 @@ navigator.mediaDevices
     });
 
     socket.on("user-connected", (userId, userName, profile) => {
-      user_id = userId
       connectToNewUser(userId, stream, userName, profile);
     });
   });
@@ -155,7 +155,7 @@ const connectToNewUser = (userId, stream, userName, profile) => {
 
 let captureStream
 screenShare.addEventListener('click', async () => {
-  console.log('scree share stated by user_id' + user_id)
+  // console.log('scree share stated by user_id' + user_id)
   captureStream = await navigator.mediaDevices.getDisplayMedia({
     audio: true,
     video: { mediaSource: "screen" }
@@ -164,7 +164,13 @@ screenShare.addEventListener('click', async () => {
   captureStream.getVideoTracks()[0].onended = function () {
     stopSharingFunction();
   };
-  peer.call(user_id, captureStream);
+  if (roomUsers.length) {
+    roomUsers.forEach(element => {
+      if (MyuserId !== element.userId) {
+        peer.call(element.userId, captureStream);
+      }
+    });
+  }
 })
 
 
@@ -176,8 +182,14 @@ function stopSharingFunction() {
       video: true,
     })
     .then((stream) => {
-      console.log('screen share stoped by user_id' + user_id)
-      peer.call(user_id, stream);
+      // console.log('screen share stoped by user_id' + user_id)
+      if (roomUsers.length) {
+        roomUsers.forEach(element => {
+          if (MyuserId !== element.userId) {
+            peer.call(element.userId, stream);
+          }
+        });
+      }
     });
 }
 
@@ -275,17 +287,29 @@ socket.on("createMessage", (message, userName, profile) => {
     </div>`;
 });
 
-socket.on("set_profile", (roomUsers) => {
-  roomUsers = roomUsers[ROOM_ID]
+socket.on("set_profile", async (roomsUsers) => {
+  roomUsers = roomsUsers[ROOM_ID]
   for (let index = 0; index < roomUsers.length; index++) {
     const element = roomUsers[index];
-    var setTitle = document.getElementById(element.userId);
-    if (setTitle) {
-      setTitle.setAttribute("title", element.userName);
-    }
+    console.log("element======", element);
+    // const test = await createUseName(element)
   }
 });
 
+function createUseName(element) {
+  var setTitle = document.getElementById(element.userId);
+  if (setTitle) {
+    var alreadyUser = document.getElementById('user-video-img_' + element.userId);
+    if (!alreadyUser) {
+      setTitle.setAttribute("title", element.userName);
+      const spanElement = document.createElement('span');
+      spanElement.setAttribute("id", 'user-video-img_' + element.userId);
+      spanElement.setAttribute("class", 'user-video-img');
+      spanElement.innerHTML = element.userName;
+      setTitle.insertAdjacentElement('afterend', spanElement);
+    }
+  }
+}
 // let scroller = document.querySelector("#scroller");
 // let anchor = document.querySelector("#anchor");
 

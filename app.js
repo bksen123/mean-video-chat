@@ -158,6 +158,7 @@ io.on("connection", (socket) => {
         rooms[roomId] = [{ userId, userName, profile }]
       }
       io.to(roomId).emit("set_profile", rooms);
+      console.log("rooms[roomId]=========", rooms[roomId])
     }, 1000);
 
     socket.on('disconnect', () => {
