@@ -69,76 +69,92 @@ var peer = new Peer({
   debug: 3,
 });
 
+
+
 let myVideoStream;
-navigator.mediaDevices
-  .getUserMedia({
-    audio: false,
-    video: true,
-  })
-  .then((stream) => {
-    // console.log("stream===========0000000000", stream);
-    myVideoStream = stream;
-    // setTimeout(() => {
-    myVideo.setAttribute("id", MyuserId);
-    myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
-    // myVideo.setAttribute("title", user);
+peer.on("open", (id) => {
+  MyuserId = id;
+  socket.emit("join-room", ROOM_ID, id, user, profile);
 
-    addVideoStream(myVideo, stream);
-    // }, 1000);
 
-    peer.on("call", (call) => {
-      console.log('someone call me 77777777777777', call)
-      call.answer(stream);
-      var element = document.getElementById(call.peer);
-      console.error("get alreaady element", element)
-      if (element) {
-        var nodes = videoGrid.getElementsByTagName("video");
-        var screen_title = document.getElementById(call.peer).getAttribute('amw-zoom')
-        screen_title = screen_title.split("###");
-        screen_title = screen_title[0]
-        // console.log("screen_title ", screen_title);
+  navigator.mediaDevices
+    .getUserMedia({
+      audio: false,
+      video: true,
+    })
+    .then((stream) => {
+      // console.log("stream===========0000000000", stream);
+      myVideoStream = stream;
 
-        for (var i = 0; i < nodes.length; i++) {
-          // console.log("nodes[i]========", nodes[i]);
-          const node = nodes[i];
-          // const id = node.id;
-          if (screen_title === 'video_share') {
-            if (node.id !== call.peer) {
-              nodes[i].style.cssText = 'display:none';
-            } else {
-              element.style.cssText = 'width:100% !important;height: 100% !important; padding: 1px !important'
-            }
-          } else {
-            nodes[i].style = 'display:block !important'
-          }
-        }
-        call.on("stream", (userVideoStream) => {
-          if (call.peer) {
-            var video = document.getElementById(call.peer);
+      myVideo.setAttribute("id", MyuserId);
+      myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
+      addVideoStream(myVideo, stream);
+
+      peer.on("call", (call) => {
+        console.log('someone call me')
+        call.answer(stream);
+        var element = document.getElementById(call.peer);
+        console.error("get alreaady element", element)
+        if (element) {
+          var nodes = videoGrid.getElementsByTagName("video");
+          var screen_title = document.getElementById(call.peer).getAttribute('amw-zoom')
+          screen_title = screen_title.split("###");
+          screen_title = screen_title[0]
+          // console.log("screen_title ", screen_title);
+
+          for (var i = 0; i < nodes.length; i++) {
+            // console.log("nodes[i]========", nodes[i]);
+            const node = nodes[i];
+            // const id = node.id;
+            var userLabel = document.getElementById('user-video-img_' + node.id);
             if (screen_title === 'video_share') {
-              video.setAttribute("amw-zoom", 'start_screen###' + call.peer);
+              if (node.id !== call.peer) {
+                nodes[i].style.cssText = 'display:none';
+                if (userLabel) {
+                  userLabel.style.cssText = 'display:none';
+                }
+              } else {
+                element.style.cssText = 'width:100% !important;height: 100% !important; padding: 1px !important'
+              }
             } else {
-              video.setAttribute("amw-zoom", 'video_share###' + call.peer);
+              nodes[i].style = 'display:block !important'
+              if (userLabel) {
+                userLabel.style.cssText = 'display:block !important';
+              }
             }
-            addVideoStream(video, userVideoStream);
           }
-        });
-      } else {
-        const video = document.createElement("video");
-        call.on("stream", (userVideoStream) => {
-          if (call.peer) {
-            video.setAttribute("id", call.peer);
-            video.setAttribute("amw-zoom", 'video_share###' + call.peer);
-            addVideoStream(video, userVideoStream);
-          }
-        });
-      }
+          call.on("stream", (userVideoStream) => {
+            if (call.peer) {
+              var video = document.getElementById(call.peer);
+              if (screen_title === 'video_share') {
+                video.setAttribute("amw-zoom", 'start_screen###' + call.peer);
+              } else {
+                video.setAttribute("amw-zoom", 'video_share###' + call.peer);
+              }
+              addVideoStream(video, userVideoStream);
+            }
+          });
+        } else {
+          const video = document.createElement("video");
+          call.on("stream", (userVideoStream) => {
+            if (call.peer) {
+              video.setAttribute("id", call.peer);
+              video.setAttribute("amw-zoom", 'video_share###' + call.peer);
+              addVideoStream(video, userVideoStream);
+            }
+          });
+        }
+      });
+
+      socket.on("user-connected", (userId, userName, profile) => {
+        connectToNewUser(userId, stream, userName, profile);
+      });
     });
 
-    socket.on("user-connected", (userId, userName, profile) => {
-      connectToNewUser(userId, stream, userName, profile);
-    });
-  });
+
+});
+
+
 
 const connectToNewUser = (userId, stream, userName, profile) => {
   console.log("I call someone" + userId);
@@ -193,11 +209,6 @@ function stopSharingFunction() {
     });
 }
 
-
-peer.on("open", (id) => {
-  MyuserId = id;
-  socket.emit("join-room", ROOM_ID, id, user, profile);
-});
 
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
@@ -269,8 +280,10 @@ stopVideo.addEventListener("click", () => {
 
 socket.on('clear-grid', (roomId, userId) => {
   var element = document.getElementById(userId);
+  var alreadyUser = document.getElementById('user-video-img_' + userId);
   if (element) {
     videoGrid.removeChild(element);
+    videoGrid.removeChild(alreadyUser);
   }
   // videoGrid.removeChild(videoGrid.firstElementChild);
 });
@@ -289,24 +302,31 @@ socket.on("createMessage", (message, userName, profile) => {
 
 socket.on("set_profile", async (roomsUsers) => {
   roomUsers = roomsUsers[ROOM_ID]
-  for (let index = 0; index < roomUsers.length; index++) {
-    const element = roomUsers[index];
-    console.log("element======", element);
-    // const test = await createUseName(element)
-  }
+  // await for (let index = 0; index < roomUsers.length; index++) {
+  // for await (const element of roomUsers) {
+  //   // console.log("element======", element);
+  //   createUseName(element)
+  // }
 });
 
 function createUseName(element) {
   var setTitle = document.getElementById(element.userId);
+  // console.log("setTitle========", setTitle);
+  var alreadyUser = document.getElementById('user-video-img_' + element.userId);
   if (setTitle) {
-    var alreadyUser = document.getElementById('user-video-img_' + element.userId);
+    // console.log("alreadyUser=====", alreadyUser)
     if (!alreadyUser) {
+      // console.log('coming---------')
       setTitle.setAttribute("title", element.userName);
       const spanElement = document.createElement('span');
       spanElement.setAttribute("id", 'user-video-img_' + element.userId);
       spanElement.setAttribute("class", 'user-video-img');
       spanElement.innerHTML = element.userName;
       setTitle.insertAdjacentElement('afterend', spanElement);
+    }
+  } else {
+    if (alreadyUser) {
+      videoGrid.removeChild(alreadyUser);
     }
   }
 }
