@@ -281,10 +281,19 @@ stopVideo.addEventListener("click", () => {
 socket.on('clear-grid', (roomId, userId) => {
   var element = document.getElementById(userId);
   var onlineUser = document.getElementById('online_user_' + userId);
+  var screen_title = element.getAttribute("amw-zoom");
+  screen_title = screen_title.split("###")
+  screen_title = screen_title[0];
+  // console.log(element, "amw-zoom")
   if (element) {
     videoGrid.removeChild(element);
+    // LOGIC FOR REMOVED SHARE USER THEN SO ALL USERS WITH VIDEO
+    if (screen_title === 'screen_share') {
+      showHideBehlfScreenType(element, null, 'video_share')
+    }
   }
   if (onlineUser) {
+    // REMOVED ONLINE USER FROM LIST when unjoin roome
     onlineDiv.removeChild(onlineUser);
   }
 });
