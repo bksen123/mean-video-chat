@@ -7,11 +7,11 @@ export const environment: any = {
   uploadsFolder: {
     profile: 'profile',
   },
-  amw_zoom: 'amw-zoom',
+  amw_zoom: 'amw-meet',
   jwtTokenKey: 'amw_mean_zoom_JwtTken',
   currentUserKey: 'amw_mean_zoom_currentUser',
   emaildomain: '@amwebtech.com',
-  // cloudS: 'https://amw-zoom.onrender.com/',
+  // cloudS: 'https://amw-meet.onrender.com/',
   role: {
     adminRole: 'admin', // 1=manager
     userRole: 'user', // 2=user

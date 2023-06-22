@@ -39,7 +39,7 @@ exports.saveMeetings = async (req, res) => {
                 meeting_title: globalService.capitalize(userResp.title),
                 name: globalService.capitalize(ele.userName),
                 AMW_LOGO:
-                  "https://amw-zoom.onrender.com/assets/img/brand/AMW_Logo-2.png",
+                  "https://amw-meet.onrender.com/assets/img/brand/AMW_Logo-2.png",
                 websiteUrl: process.env.WEBSITE_URL,
                 acknowledgement_link:
                   process.env.WEBSITE_URL +
@@ -51,15 +51,15 @@ exports.saveMeetings = async (req, res) => {
                   process.env.WEBSITE_URL +
                   "login/" +
                   userResp.uuZoomId +
-                  "amw-zoom" +
+                  "amw-meet" +
                   ele._id,
                 userName: globalService.capitalize(ele.userName),
               },
               templatePath:
-                "node-api/public/assets/emailtemplates/amw-zoom-invitation.html",
+                "node-api/public/assets/emailtemplates/amw-meet-invitation.html",
               subject: "AMW ZOOM MEETING FOR " + userResp.title.toUpperCase(),
               html: "",
-              templateName: "amw-zoom-invitation", // NEW
+              templateName: "amw-meet-invitation", // NEW
             };
             console.log("prepareEmailConfig", prepareEmailConfig);
             return;

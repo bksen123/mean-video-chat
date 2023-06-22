@@ -104,7 +104,7 @@ app.use("/peerjs", ExpressPeerServer(server, opinions));
 app.get("/:room", (req, res) => {
   console.log("req.params", req.params);
   let room = req.params.room;
-  var meetingDetails = room.split("amw-zoom");
+  var meetingDetails = room.split("amw-meet");
   console.log("meetingDetails", meetingDetails);
   if (meetingDetails[1] === '-public') {
     res.render("room", { userDetails: {} });
