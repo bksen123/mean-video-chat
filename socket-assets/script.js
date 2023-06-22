@@ -74,16 +74,16 @@ var peer = new Peer({
 let myVideoStream;
 peer.on("open", (id) => {
   MyuserId = id;
-  socket.emit("join-room", ROOM_ID, id, user, profile);
+  socket.emit("join-room", ROOM_ID, id, user, profile); // here is join room with peer user id
 
 
   navigator.mediaDevices
     .getUserMedia({
-      audio: false,
+      audio: true,
       video: true,
     })
     .then((stream) => {
-      // console.log("stream===========0000000000", stream);
+      // console.log("get stream", stream);
       myVideoStream = stream;
 
       myVideo.setAttribute("id", MyuserId);
@@ -187,7 +187,7 @@ function stopSharingFunction() {
   // Call your function or perform necessary actions to handle the "stop sharing" event
   navigator.mediaDevices
     .getUserMedia({
-      audio: false,
+      audio: true,
       video: true,
     })
     .then((stream) => {
