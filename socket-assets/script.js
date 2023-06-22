@@ -91,12 +91,12 @@ peer.on("open", (id) => {
       addVideoStream(myVideo, myVideoStream);
 
       peer.on("call", async (call) => {
-        console.error('someone call me===========', call)
-        console.error('someone call me===========', call.metadata.type)
+        console.warn(call.metadata.type, 'someone call me=', call)
+        // console.error('someone call me===========', )
         var screen_title = call.metadata.type;
         call.answer(myVideoStream);
         var element = document.getElementById(call.peer);
-        console.error("get alreaady element", element)
+        // console.error("get alreaady element", element)
         if (element) {
           element.setAttribute("amw-zoom", screen_title + '###' + call.peer);
         } else {
@@ -104,7 +104,12 @@ peer.on("open", (id) => {
           element.setAttribute("id", call.peer);
           element.setAttribute("amw-zoom", screen_title + '###' + call.peer);
         }
-        showHideBehlfScreenType(element, call, screen_title)
+        call.on("stream", (userVideoStream) => {
+          addVideoStream(element, userVideoStream);
+        });
+        setTimeout(() => {
+          showHideBehlfScreenType(element, call, screen_title)
+        }, 2000);
       });
       socket.on("user-connected", (userId, userName, profile) => {
         connectToNewUser(userId, myVideoStream, userName, profile);
@@ -114,38 +119,25 @@ peer.on("open", (id) => {
 
 async function showHideBehlfScreenType(element, call, screen_title) {
   var nodes = videoGrid.getElementsByTagName("video");
-  console.log(screen_title, "nodes", nodes);
-  for (var i = 0; i < nodes.length; i++) {
-    // for await (var node of nodes) {
-    const node = nodes[i];
-    console.log("nodes[i]========", node);
-    // const id = node.id;
+  // console.log(screen_title, "nodes", nodes);
+  for await (var node of nodes) {
     var userLabel = document.getElementById('user-video-img_' + node.id);
     if (screen_title !== 'video_share') {
-
-      console.log('test000000000000000000')
       if (node.id !== call.peer) {
-        console.log('test111111111111111111111')
         node.style.cssText = 'display:none';
         if (userLabel) {
           userLabel.style.cssText = 'display:none';
         }
       } else {
-        console.log('test22222222222222222222')
         element.style.cssText = 'width:100% !important;height: 100% !important; padding: 1px !important'
       }
     } else {
-      console.log('33333333333333333')
       node.style = 'display:block !important'
       if (userLabel) {
         userLabel.style.cssText = 'display:block !important';
       }
     }
   }
-
-  call.on("stream", (userVideoStream) => {
-    addVideoStream(element, userVideoStream);
-  });
 }
 
 var customData = {
@@ -156,7 +148,7 @@ var customData = {
 
 
 const connectToNewUser = (userId, stream, userName, profile) => {
-  console.log("I call someone" + userId);
+  console.warn("I call someone" + userId);
   customData.userId = userId;
   const call = peer.call(userId, stream, { metadata: customData });
   const video = document.createElement("video");
