@@ -57,7 +57,7 @@ exports.saveMeetings = async (req, res) => {
               },
               templatePath:
                 "node-api/public/assets/emailtemplates/amw-meet-invitation.html",
-              subject: "AMW ZOOM MEETING FOR " + userResp.title.toUpperCase(),
+              subject: "AMW MEETING FOR " + userResp.title.toUpperCase(),
               html: "",
               templateName: "amw-meet-invitation", // NEW
             };
