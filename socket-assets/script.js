@@ -92,6 +92,7 @@ peer.on("open", (id) => {
       addVideoStream(myVideo, myVideoStream);
 
       peer.on("call", async (call) => {
+        $("#be-loading").show();
         console.warn(call.metadata.type, 'someone call me=', call)
         // console.error('someone call me===========', )
         var screen_title = call.metadata.type;
@@ -105,7 +106,6 @@ peer.on("open", (id) => {
           element.setAttribute("id", call.peer);
           element.setAttribute("amw-zoom", screen_title + '###' + call.peer);
         }
-        $("#be-loading").show();
         call.on("stream", (userVideoStream) => {
           addVideoStream(element, userVideoStream);
         });
