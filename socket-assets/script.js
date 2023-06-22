@@ -88,6 +88,7 @@ peer.on("open", (id) => {
 
       myVideo.setAttribute("id", MyuserId);
       myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
+      $("#be-loading").hide();
       addVideoStream(myVideo, myVideoStream);
 
       peer.on("call", async (call) => {
@@ -104,6 +105,7 @@ peer.on("open", (id) => {
           element.setAttribute("id", call.peer);
           element.setAttribute("amw-zoom", screen_title + '###' + call.peer);
         }
+        $("#be-loading").show();
         call.on("stream", (userVideoStream) => {
           addVideoStream(element, userVideoStream);
         });
@@ -138,6 +140,7 @@ async function showHideBehlfScreenType(element, call, screen_title) {
       }
     }
   }
+  $("#be-loading").hide();
 }
 
 var customData = {
