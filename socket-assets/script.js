@@ -4,6 +4,7 @@ const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 const screenShare = document.querySelector("#screenShare");
+var onlineDiv = document.getElementById('online-users');
 myVideo.muted = true;
 var MyuserId = '';
 var roomUsers = [];
@@ -279,14 +280,13 @@ stopVideo.addEventListener("click", () => {
 
 socket.on('clear-grid', (roomId, userId) => {
   var element = document.getElementById(userId);
-  var alreadyUser = document.getElementById('user-video-img_' + userId);
+  var onlineUser = document.getElementById('online_user_' + userId);
   if (element) {
     videoGrid.removeChild(element);
-    if (alreadyUser) {
-      videoGrid.removeChild(alreadyUser);
-    }
   }
-  // videoGrid.removeChild(videoGrid.firstElementChild);
+  if (onlineUser) {
+    onlineDiv.removeChild(onlineUser);
+  }
 });
 
 
@@ -305,13 +305,13 @@ socket.on("set_profile", async (roomsUsers) => {
   roomUsers = roomsUsers[ROOM_ID]
   var nodes = videoGrid.getElementsByTagName("video");
   // console.log("nodes=========", nodes);
-  var onlineDiv = document.getElementById('online-users');
+
   onlineDiv.innerHTML = '';
   for await (var node of nodes) {
     const foundUser = roomUsers.find((ele) => ele.userId === node.id);
     if (foundUser) {
       console.log("foundUser", foundUser);
-      onlineDiv.innerHTML = onlineDiv.innerHTML + `<div title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
+      onlineDiv.innerHTML = onlineDiv.innerHTML + `<div id="online_user_${foundUser.userId}" title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
     </div>`;
     }
   }
