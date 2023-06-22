@@ -297,16 +297,26 @@ socket.on("createMessage", (message, userName, profile) => {
     `<div class="message">
         <b><img src="${profile}" class="profile-img cursor-pointer"> <span> ${userName === user ? "me" : userName
     }</span> </b>
-        <span>${message}</span>
+    <span>${message}</span>
     </div>`;
 });
 
 socket.on("set_profile", async (roomsUsers) => {
   roomUsers = roomsUsers[ROOM_ID]
-  // await for (let index = 0; index < roomUsers.length; index++) {
+  var nodes = videoGrid.getElementsByTagName("video");
+  // console.log("nodes=========", nodes);
+  var onlineDiv = document.getElementById('online-users');
+  onlineDiv.innerHTML = '';
+  for await (var node of nodes) {
+    const foundUser = roomUsers.find((ele) => ele.userId === node.id);
+    if (foundUser) {
+      console.log("foundUser", foundUser);
+      onlineDiv.innerHTML = onlineDiv.innerHTML + `<div title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
+    </div>`;
+    }
+  }
   // for await (const element of roomUsers) {
-  //   // console.log("element======", element);
-  //   createUseName(element)
+  //   // createUseName(element)
   // }
 });
 

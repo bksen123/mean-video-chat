@@ -124,6 +124,7 @@ video {
   display: flex;
   flex-direction: column;
   flex: 0.3;
+  padding: 0px !important;
   /* background-color: #242f41; */
   background-color: gray;
 }
@@ -292,4 +293,8 @@ video {
   left: 42%;
   right: 50%;
   top: 50%;
+}
+
+.online-user {
+  border: 3px solid green !important;
 }

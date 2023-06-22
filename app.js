@@ -161,7 +161,7 @@ io.on("connection", (socket) => {
       }
       io.to(roomId).emit("set_profile", rooms);
       console.log("rooms[roomId]=========", rooms[roomId])
-    }, 1000);
+    }, 2000);
 
     socket.on('disconnect', () => {
       console.log(roomId, 'user-disconnect', userId)
