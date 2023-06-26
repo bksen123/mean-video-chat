@@ -313,16 +313,23 @@ socket.on("createMessage", (message, userName, profile) => {
 socket.on("set_profile", async (roomsUsers) => {
   roomUsers = roomsUsers[ROOM_ID]
   var nodes = videoGrid.getElementsByTagName("video");
-  // console.log("nodes=========", nodes);
+  // console.log("nodes=========", nodes.length);
+  // console.log("roomUsers=========", nodes.length);
 
+  // onlineDiv.innerHTML = '';
+  // for await (var node of nodes) {
+  //   const foundUser = roomUsers.find((ele) => ele.userId === node.id);
+  //   if (foundUser) {
+  //     console.log("foundUser", foundUser);
+  //     onlineDiv.innerHTML = onlineDiv.innerHTML + `<div id="online_user_${foundUser.userId}" title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
+  //   </div>`;
+  //   }
+  // }
   onlineDiv.innerHTML = '';
-  for await (var node of nodes) {
-    const foundUser = roomUsers.find((ele) => ele.userId === node.id);
-    if (foundUser) {
-      console.log("foundUser", foundUser);
-      onlineDiv.innerHTML = onlineDiv.innerHTML + `<div id="online_user_${foundUser.userId}" title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
+  for await (var foundUser of roomUsers) {
+    console.log("foundUser", foundUser);
+    onlineDiv.innerHTML = onlineDiv.innerHTML + `<div id="online_user_${foundUser.userId}" title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
     </div>`;
-    }
   }
   // for await (const element of roomUsers) {
   //   // createUseName(element)

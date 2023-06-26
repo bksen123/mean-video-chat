@@ -157,16 +157,18 @@ io.on("connection", (socket) => {
       } else {
         rooms[roomId] = [{ roomId, userId, userName, profile }]
       }
-      io.to(roomId).emit("set_profile", rooms);
+      if (rooms[roomId] && rooms[roomId].length) {
+        io.to(roomId).emit("set_profile", rooms);
+      }
       console.log("rooms[roomId]=========", rooms[roomId])
-    }, 2000);
+    }, 4000);
 
     socket.on('disconnect', () => {
       if (rooms[roomId]) {
         const foundIndex = rooms[roomId].findIndex((user) => user.userId === userId);
         rooms[roomId].splice(foundIndex, 1);
       }
-      if (!rooms[roomId].length) {
+      if (rooms[roomId] && !rooms[roomId].length) {
         delete rooms[roomId];
       }
       console.log("rooms[roomId]=========", rooms[roomId])
