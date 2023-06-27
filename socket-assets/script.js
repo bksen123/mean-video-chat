@@ -41,7 +41,7 @@ if (userName) {
 var peer = new Peer({
   // host: '127.0.0.1',
   host: "/",
-  // port: 3000, //it will be used for local
+  port: 3000, //it will be used for local
   path: "/peerjs",
   config: {
     iceServers: [
@@ -88,6 +88,8 @@ peer.on("open", (id) => {
       myVideoStream = stream;
 
       myVideo.setAttribute("id", MyuserId);
+      myVideo.onclick = checkScreenShare;
+
       myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
       $("#be-loading").hide();
       addVideoStream(myVideo, myVideoStream);
@@ -107,6 +109,8 @@ peer.on("open", (id) => {
           element.setAttribute("id", call.peer);
           element.setAttribute("amw-zoom", screen_title + '###' + call.peer);
         }
+        element.onclick = checkScreenShare;
+
         call.on("stream", (userVideoStream) => {
           addVideoStream(element, userVideoStream);
         });
@@ -144,6 +148,17 @@ async function showHideBehlfScreenType(element, call, screen_title) {
   $("#be-loading").hide();
 }
 
+function checkScreenShare() {
+  var screen_title = this.getAttribute("amw-zoom");
+  if (screen_title) {
+    screen_title = screen_title.split("###")
+    screen_title = screen_title[0];
+    if (screen_title === 'screen_share') {
+      showHideBehlfScreenType(this, { peer: this.id }, screen_title);
+    }
+  }
+}
+
 var customData = {
   type: 'video_share',
   userId: MyuserId,
@@ -158,6 +173,8 @@ const connectToNewUser = (userId, stream, userName, profile) => {
   const video = document.createElement("video");
   video.setAttribute("id", userId);
   video.setAttribute("amw-zoom", 'video_share###' + userId);
+  video.onclick = checkScreenShare;
+
   // video.setAttribute("title", userName);
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
@@ -335,6 +352,7 @@ socket.on("set_profile", async (roomsUsers) => {
   //   // createUseName(element)
   // }
 });
+
 
 function createUseName(element) {
   var setTitle = document.getElementById(element.userId);
