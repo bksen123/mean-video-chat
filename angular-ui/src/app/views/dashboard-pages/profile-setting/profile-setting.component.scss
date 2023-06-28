@@ -1,0 +1,109 @@
+@import "../../../scss/variables";
+
+.profile-setting {
+  .card {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+    border-radius: .25rem;
+
+    .fw {
+      font-weight: 500;
+    }
+
+    .form-control {
+      font-size: 14px;
+
+      &:focus {
+        color: #5c6873;
+        border-color: #E4E7EB;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .h-100 {
+    height: 100% !important;
+  }
+
+  ul {
+    margin: 0px;
+    padding: 0px;
+
+    li {
+      padding: 3px 0;
+
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .hrLine {
+    color: $primaryClr;
+    height: 2px;
+  }
+
+  input[type="file"] {
+    display: none;
+    cursor: pointer;
+  }
+
+  .profile-pic {
+    // height: 150px;
+    // width: 150px;
+    position: relative;
+    text-align: center;
+    color: transparent;
+    // transition: all .3s ease;
+    cursor: pointer;
+    // border-radius: 50%;
+
+    span {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      top: 20;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all .3s ease;
+      border-radius: 50% !important;
+    }
+
+    :hover {
+      // background-color: rgba(0, 0, 0, .6);
+      z-index: 9;
+      color: black;
+      transition: all .3s ease;
+      text-decoration: none;
+    }
+  }
+
+  .rmv {
+    cursor: pointer;
+    color: #fff;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    display: inline-block;
+    background: rgba(255, 0, 0, 1);
+    margin: -5px -10px;
+    z-index: 10000;
+  }
+
+  .btn_upload {
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    color: #fff;
+    background-color: #2a72d4;
+    border: 1px solid #166b8a;
+    padding: 5px 10px;
+  }
+
+  .btn_upload:hover,
+  .btn_upload:focus {
+    background-color: #7ca9e6;
+  }
+
+}

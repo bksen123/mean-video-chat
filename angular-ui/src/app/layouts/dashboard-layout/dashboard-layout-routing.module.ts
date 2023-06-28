@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardLayoutComponent } from './dashboard-layout.component';
 import { AuthGuard } from '../../shared-ui';
+import { ProfileSettingComponent } from 'src/app/views/dashboard-pages/profile-setting/profile-setting.component';
 
 const routes: Routes = [
   {
@@ -23,13 +24,10 @@ const routes: Routes = [
             (mod) => mod.UsersModule
           ),
       },
-      // {
-      //   path: 'meet-online',
-      //   loadChildren: () =>
-      //     import('../../views/dashboard-pages/zoom-meeting/zoom-meeting.module').then(
-      //       (mod) => mod.ZoomMeetingModule
-      //     ),
-      // }
+      {
+        path: 'setting',
+        component: ProfileSettingComponent
+      }
     ],
   },
 ];
