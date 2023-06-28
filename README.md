@@ -31,5 +31,4 @@ Peer.Js:  PeerJS is a WebRTC framework for communicating between Devices with me
 
 Streaming => It's live video and audio row material to real-time communicated by PEER js with Mean stack support.
 
-Cloud Server:  we use Render cloud server for hosting products, Later we will show the demo to you in here.
-
+Cloud Server:  we use Render cloud server for hosting products
