@@ -5,7 +5,7 @@ Video-chat-v1 is a video chat app that makes it easy to groups up with people yo
 Check out the live demo: https://amw-meet.onrender.com
 
 
-This app is build using NodeJS, Socket.io, and Peerjs(WebRTC) https://peerjs.com/docs/#start
+This app is build using NodeJS, ExpressJS, Socket.io, angular and Peerjs(WebRTC) https://peerjs.com/docs/#start
 
 ## How to run the project?
 1. Clone this repository in your local system.
