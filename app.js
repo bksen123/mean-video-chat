@@ -113,7 +113,6 @@ app.get("/:room", (req, res) => {
       uuZoomId: meetingDetails[0],
       userId: meetingDetails[1]
     }, req, (error, resp) => {
-      // console.log("req.session.currentUser====", req.session.currentUser);
       // console.log("resp====", resp);
       if (!req.session.currentUser) {
         res.redirect('/#/login/' + room);
@@ -127,7 +126,6 @@ app.get("/:room", (req, res) => {
           // res.send(resp.message);
           res.render("error", { userDetails: userDetails });
         } else {
-          // console.log("userDetails=========", userDetails);
           res.render("room", { userDetails: userDetails });
         }
       }
@@ -140,19 +138,40 @@ app.get("/:room", (req, res) => {
   }
 });
 
+var rooms = {}
+
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName, profile) => {
     socket.join(roomId);
     setTimeout(() => {
       console.log(roomId, 'user-connected', userId)
-      socket.to(roomId).broadcast.emit("user-connected", userId);
+      socket.to(roomId).broadcast.emit("user-connected", userId, userName, profile);
     }, 500)
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName, profile);
     });
 
+    setTimeout(() => {
+      if (rooms[roomId]) {
+        rooms[roomId].push({ roomId, userId, userName, profile })
+      } else {
+        rooms[roomId] = [{ roomId, userId, userName, profile }]
+      }
+      if (rooms[roomId] && rooms[roomId].length) {
+        io.to(roomId).emit("set_profile", rooms);
+      }
+      console.log("rooms[roomId]=========", rooms[roomId])
+    }, 2000);
+
     socket.on('disconnect', () => {
-      console.log(roomId, 'user-disconnect', userId)
+      if (rooms[roomId]) {
+        const foundIndex = rooms[roomId].findIndex((user) => user.userId === userId);
+        rooms[roomId].splice(foundIndex, 1);
+      }
+      if (rooms[roomId] && !rooms[roomId].length) {
+        delete rooms[roomId];
+      }
+      console.log("rooms[roomId]=========", rooms[roomId])
       socket.broadcast.emit('clear-grid', roomId, userId);
     });
   });

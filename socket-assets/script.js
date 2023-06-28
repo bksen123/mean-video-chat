@@ -4,13 +4,17 @@ const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 const screenShare = document.querySelector("#screenShare");
+var onlineDiv = document.getElementById('online-users');
 myVideo.muted = true;
-var MyuserId = ''
+var MyuserId = '';
+var roomUsers = [];
+
 
 // navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-screenShare.addEventListener("click", () => {
-  alert("Screen Share feature coming soon!");
-});
+// screenShare.addEventListener("click", () => {
+//   alert("Screen Share feature coming soon!");
+// });
+
 
 backBtn.addEventListener("click", () => {
   document.querySelector(".main__left").style.display = "flex";
@@ -66,50 +70,162 @@ var peer = new Peer({
   debug: 3,
 });
 
-let myVideoStream;
-navigator.mediaDevices
-  .getUserMedia({
-    audio: true,
-    video: true,
-  })
-  .then((stream) => {
-    // console.log("stream===========0000000000", stream);
-    myVideoStream = stream;
-    // setTimeout(() => {
-    myVideo.setAttribute("id", MyuserId);
-    addVideoStream(myVideo, stream);
-    // }, 1000);
 
-    peer.on("call", (call) => {
-      call.answer(stream);
-      const video = document.createElement("video");
-      call.on("stream", (userVideoStream) => {
-        if (call.peer) {
-          video.setAttribute("id", call.peer);
-          addVideoStream(video, userVideoStream);
+
+let myVideoStream;
+peer.on("open", (id) => {
+  MyuserId = id;
+  socket.emit("join-room", ROOM_ID, id, user, profile); // here is join room with peer user id
+
+
+  navigator.mediaDevices
+    .getUserMedia({
+      audio: true,
+      video: true,
+    })
+    .then((stream) => {
+      // console.log("get stream", stream);
+      myVideoStream = stream;
+
+      myVideo.setAttribute("id", MyuserId);
+      myVideo.onclick = checkScreenShare;
+
+      myVideo.setAttribute("amw-zoom", 'video_share###' + MyuserId);
+      $("#be-loading").hide();
+      addVideoStream(myVideo, myVideoStream);
+
+      peer.on("call", async (call) => {
+        $("#be-loading").show();
+        console.warn(call.metadata.type, 'someone call me=', call)
+        // console.error('someone call me===========', )
+        var screen_title = call.metadata.type;
+        call.answer(myVideoStream);
+        var element = document.getElementById(call.peer);
+        // console.error("get alreaady element", element)
+        if (element) {
+          element.setAttribute("amw-zoom", screen_title + '###' + call.peer);
+        } else {
+          element = document.createElement("video");
+          element.setAttribute("id", call.peer);
+          element.setAttribute("amw-zoom", screen_title + '###' + call.peer);
         }
+        element.onclick = checkScreenShare;
+
+        call.on("stream", (userVideoStream) => {
+          addVideoStream(element, userVideoStream);
+        });
+        setTimeout(() => {
+          showHideBehlfScreenType(element, call, screen_title)
+        }, 2000);
+      });
+      socket.on("user-connected", (userId, userName, profile) => {
+        connectToNewUser(userId, myVideoStream, userName, profile);
       });
     });
+});
 
-    socket.on("user-connected", (userId) => {
-      connectToNewUser(userId, stream);
-    });
-  });
+async function showHideBehlfScreenType(element, call, screen_title) {
+  var nodes = videoGrid.getElementsByTagName("video");
+  // console.log(screen_title, "nodes", nodes);
+  for await (var node of nodes) {
+    var userLabel = document.getElementById('user-video-img_' + node.id);
+    if (screen_title !== 'video_share') {
+      if (node.id !== call.peer) {
+        node.style.cssText = 'display:none';
+        if (userLabel) {
+          userLabel.style.cssText = 'display:none';
+        }
+      } else {
+        element.style.cssText = 'width:100% !important;height: 100% !important; padding: 1px !important'
+      }
+    } else {
+      node.style = 'display:block !important'
+      if (userLabel) {
+        userLabel.style.cssText = 'display:block !important';
+      }
+    }
+  }
+  $("#be-loading").hide();
+}
 
-const connectToNewUser = (userId, stream) => {
-  console.log("I call someone" + userId);
-  const call = peer.call(userId, stream);
+function checkScreenShare() {
+  var screen_title = this.getAttribute("amw-zoom");
+  if (screen_title) {
+    screen_title = screen_title.split("###")
+    screen_title = screen_title[0];
+    if (screen_title === 'screen_share') {
+      showHideBehlfScreenType(this, { peer: this.id }, screen_title);
+    }
+  }
+}
+
+var customData = {
+  type: 'video_share',
+  userId: MyuserId,
+};
+
+
+
+const connectToNewUser = (userId, stream, userName, profile) => {
+  console.warn("I call someone" + userId);
+  customData.userId = userId;
+  const call = peer.call(userId, stream, { metadata: customData });
   const video = document.createElement("video");
   video.setAttribute("id", userId);
+  video.setAttribute("amw-zoom", 'video_share###' + userId);
+  video.onclick = checkScreenShare;
+
+  // video.setAttribute("title", userName);
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
 };
 
-peer.on("open", (id) => {
-  MyuserId = id;
-  socket.emit("join-room", ROOM_ID, id, user, profile);
-});
+let captureStream
+screenShare.addEventListener('click', async () => {
+  // console.log('scree share stated by user_id' + user_id)
+  captureStream = await navigator.mediaDevices.getDisplayMedia({
+    audio: true,
+    video: { mediaSource: "screen" }
+  });
+  //Instead of adminId, pass peerId who will taking captureStream in call
+  captureStream.getVideoTracks()[0].onended = function () {
+    stopSharingFunction();
+  };
+  myVideoStream = captureStream;
+  if (roomUsers.length) {
+    customData.type = 'screen_share';
+    roomUsers.forEach(element => {
+      if (MyuserId !== element.userId) {
+        peer.call(element.userId, captureStream, { metadata: customData });
+      }
+    });
+  }
+})
+
+
+function stopSharingFunction() {
+  // Call your function or perform necessary actions to handle the "stop sharing" event
+  navigator.mediaDevices
+    .getUserMedia({
+      audio: true,
+      video: true,
+    })
+    .then((stream) => {
+      myVideoStream = stream;
+
+      // console.log('screen share stoped by user_id' + user_id)
+      if (roomUsers.length) {
+        customData.type = 'video_share';
+        roomUsers.forEach(element => {
+          if (MyuserId !== element.userId) {
+            peer.call(element.userId, stream, { metadata: customData });
+          }
+        });
+      }
+    });
+}
+
 
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
@@ -136,6 +252,8 @@ text.addEventListener("keydown", (e) => {
     text.value = "";
   }
 });
+
+
 
 // const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
@@ -179,11 +297,24 @@ stopVideo.addEventListener("click", () => {
 
 socket.on('clear-grid', (roomId, userId) => {
   var element = document.getElementById(userId);
+  var onlineUser = document.getElementById('online_user_' + userId);
+  // console.log(element, "amw-zoom")
   if (element) {
     videoGrid.removeChild(element);
+    // LOGIC FOR REMOVED SHARE USER THEN SO ALL USERS WITH VIDEO
+    var screen_title = element.getAttribute("amw-zoom");
+    screen_title = screen_title.split("###")
+    screen_title = screen_title[0];
+    if (screen_title === 'screen_share') {
+      showHideBehlfScreenType(element, null, 'video_share')
+    }
   }
-  // videoGrid.removeChild(videoGrid.firstElementChild);
+  if (onlineUser) {
+    // REMOVED ONLINE USER FROM LIST when unjoin roome
+    onlineDiv.removeChild(onlineUser);
+  }
 });
+
 
 socket.on("createMessage", (message, userName, profile) => {
   // console.log('test========', message, userName, profile)
@@ -192,10 +323,58 @@ socket.on("createMessage", (message, userName, profile) => {
     `<div class="message">
         <b><img src="${profile}" class="profile-img cursor-pointer"> <span> ${userName === user ? "me" : userName
     }</span> </b>
-        <span>${message}</span>
+    <span>${message}</span>
     </div>`;
 });
 
+socket.on("set_profile", async (roomsUsers) => {
+  roomUsers = roomsUsers[ROOM_ID]
+  var nodes = videoGrid.getElementsByTagName("video");
+  // console.log("nodes=========", nodes.length);
+  // console.log("roomUsers=========", nodes.length);
+
+  // onlineDiv.innerHTML = '';
+  // for await (var node of nodes) {
+  //   const foundUser = roomUsers.find((ele) => ele.userId === node.id);
+  //   if (foundUser) {
+  //     console.log("foundUser", foundUser);
+  //     onlineDiv.innerHTML = onlineDiv.innerHTML + `<div id="online_user_${foundUser.userId}" title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
+  //   </div>`;
+  //   }
+  // }
+  onlineDiv.innerHTML = '';
+  for await (var foundUser of roomUsers) {
+    console.log("foundUser", foundUser);
+    onlineDiv.innerHTML = onlineDiv.innerHTML + `<div id="online_user_${foundUser.userId}" title="${foundUser.userName}" class="message "> <b><img src="${foundUser.profile}" class="profile-img cursor-pointer online-user"></b>
+    </div>`;
+  }
+  // for await (const element of roomUsers) {
+  //   // createUseName(element)
+  // }
+});
+
+
+function createUseName(element) {
+  var setTitle = document.getElementById(element.userId);
+  // console.log("setTitle========", setTitle);
+  var alreadyUser = document.getElementById('user-video-img_' + element.userId);
+  if (setTitle) {
+    // console.log("alreadyUser=====", alreadyUser)
+    if (!alreadyUser) {
+      // console.log('coming---------')
+      setTitle.setAttribute("title", element.userName);
+      const spanElement = document.createElement('span');
+      spanElement.setAttribute("id", 'user-video-img_' + element.userId);
+      spanElement.setAttribute("class", 'user-video-img');
+      spanElement.innerHTML = element.userName;
+      setTitle.insertAdjacentElement('afterend', spanElement);
+    }
+  } else {
+    if (alreadyUser) {
+      videoGrid.removeChild(alreadyUser);
+    }
+  }
+}
 // let scroller = document.querySelector("#scroller");
 // let anchor = document.querySelector("#anchor");
 
